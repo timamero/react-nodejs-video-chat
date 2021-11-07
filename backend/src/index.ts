@@ -2,6 +2,7 @@ import app from './app';
 import http from 'http';
 import { Server } from 'socket.io';
 import chatHandlers from './controllers/chatHandler';
+import videoHandlers from './controllers/videoHandler';
 
 const port = 3001;
 const server = http.createServer(app);
@@ -21,6 +22,7 @@ io.on('connection', (socket) => {
   console.log('a user connected');
 
   chatHandlers.chatMessage(socket, io);
+  videoHandlers.streamVideo(socket, io);
 
   socket.on('disconnect', () => {
     console.log('user disconnected');
