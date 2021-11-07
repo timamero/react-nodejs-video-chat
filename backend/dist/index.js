@@ -3,14 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const cors_1 = __importDefault(require("cors"));
+const app_1 = __importDefault(require("./app"));
 const http_1 = __importDefault(require("http"));
 const socket_io_1 = require("socket.io");
-const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
+const chatHandler_1 = __importDefault(require("./controllers/chatHandler"));
 const port = 3001;
-const server = http_1.default.createServer(app);
+const server = http_1.default.createServer(app_1.default);
 const options = {
     path: '/',
     serveClient: false,
@@ -20,13 +18,9 @@ const options = {
     },
 };
 const io = new socket_io_1.Server(server, options);
-// io.path('/')
 io.on('connection', (socket) => {
     console.log('a user connected');
-    socket.on('chat message', (msg) => {
-        io.emit('chat message', msg);
-        console.log('message: ' + msg);
-    });
+    chatHandler_1.default.chatMessage(socket, io);
     socket.on('disconnect', () => {
         console.log('user disconnected');
     });

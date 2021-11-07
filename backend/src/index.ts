@@ -1,13 +1,10 @@
-import express from 'express';
-import cors from 'cors'
+import app from './app';
 import http from 'http';
-import { Server } from 'socket.io'
+import { Server } from 'socket.io';
+import chatHandlers from './controllers/chatHandler';
 
-const app = express();
-app.use(cors())
-
-const port = 3001
-const server = http.createServer(app)
+const port = 3001;
+const server = http.createServer(app);
 
 const options = {
   path: '/',
@@ -19,22 +16,15 @@ const options = {
 }
 
 const io: Server = new Server(server, options);
-// io.path('/')
-
-
 
 io.on('connection', (socket) => {
-  console.log('a user connected')
+  console.log('a user connected');
 
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg)
-    console.log('message: ' + msg)
-  })
+  chatHandlers.chatMessage(socket, io);
 
   socket.on('disconnect', () => {
-    console.log('user disconnected')
+    console.log('user disconnected');
   })
 })
 
 io.listen(port);
-
