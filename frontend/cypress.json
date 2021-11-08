@@ -1,3 +1,10 @@
 {
-  "baseUrl": "http://localhost:3000"
+  "baseUrl": "http://localhost:3000",
+  "testFiles": "cypress/integration/*.spec.ts",
+  "component": {
+    "componentFolder": "src",
+    "testFiles": "**/*.test.{js,ts,jsx,tsx}",
+    "viewportHeight": 500,
+    "viewportWidth": 700
+  }
 }

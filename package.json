@@ -8,6 +8,7 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "cypress:prestart": "npm run dev",
     "cypress-e2e": "cd frontend && npx cypress open",
+    "cypress-ct": "cd frontend && npx cypress open-ct",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

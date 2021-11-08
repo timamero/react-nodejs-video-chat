@@ -34,3 +34,8 @@ npm start
 npm run cypress:prestart
 npm run cypress-e2e
 ```
+2. To run component testing run the following commands from the root folder.
+```sh
+npm run cypress:prestart
+npm run cypress-ct
+```
