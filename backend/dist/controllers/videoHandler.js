@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const streamVideo = (socket, io) => {
-    socket.on('stream video', (video) => {
-        io.emit('stream video', video);
-        console.log('streaming video', video);
+const streamUserVideo = (socket, io) => {
+    socket.on('streamUser', (video) => {
+        io.emit('streamUser', video);
+        console.log('streaming', video);
     });
 };
 const videoHandlers = {
-    streamVideo
+    streamUserVideo
 };
 exports.default = videoHandlers;

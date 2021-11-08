@@ -22,7 +22,7 @@ const io = new socket_io_1.Server(server, options);
 io.on('connection', (socket) => {
     console.log('a user connected');
     chatHandler_1.default.chatMessage(socket, io);
-    videoHandler_1.default.streamVideo(socket, io);
+    videoHandler_1.default.streamUserVideo(socket, io);
     socket.on('disconnect', () => {
         console.log('user disconnected');
     });

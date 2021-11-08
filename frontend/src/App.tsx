@@ -17,7 +17,7 @@ const App: React.FC = () => {
   return (
     <div className="App container is-fluid is-flex is-flex-direction-row">
       <Video />
-      {/* <Chat /> */}
+      <Chat />
     </div>
   );
 }
