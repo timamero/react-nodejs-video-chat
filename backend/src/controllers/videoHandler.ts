@@ -1,14 +1,14 @@
 import { Server, Socket } from 'socket.io';
 
-const streamVideo = (socket: Socket, io: Server) => {
-   socket.on('stream video', (video) => {
-    io.emit('stream video', video);
-    console.log('streaming video');
+const streamUserVideo = (socket: Socket, io: Server) => {
+    socket.on('streamUser', (video) => {
+    io.emit('streamUser', video);
+    console.log('streaming', video);
   })
 }
 
 const videoHandlers = {
-  streamVideo
+  streamUserVideo
 }
 
 export default videoHandlers;
