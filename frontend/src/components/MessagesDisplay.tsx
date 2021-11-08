@@ -15,15 +15,15 @@ const MessagesDisplay: React.FC = () => {
     return Math.floor((Math.random() * 10000))
   }
 
-  if (socket) {
-    socket.on('chat message', function(msg: string) {
-      const newMessage = {
-        content: msg,
-        id: generateRandomNum()
-      }
-      setMessages(messages.concat(newMessage))
-    })
-  }
+  // if (socket) {
+  socket.on('chat message', function(msg: string) {
+    const newMessage = {
+      content: msg,
+      id: generateRandomNum()
+    }
+    setMessages(messages.concat(newMessage))
+  })
+  // }
 
   return (
     <div id="display" className="box is-flex-grow-5">

@@ -4,7 +4,7 @@ import { SocketContext } from "../context/socket";
 
 const MessageForm: React.FC = () => {
   const socket = useContext(SocketContext)
-  
+
   const handleMessageSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     const target = e.target as typeof e.target & {
@@ -13,7 +13,7 @@ const MessageForm: React.FC = () => {
 
     const message = target.message.value
 
-    if (message && socket) {
+    if (message) {
       socket.emit('chat message', message);
       target.message.value = '';
     }
