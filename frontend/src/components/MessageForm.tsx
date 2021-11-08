@@ -1,10 +1,24 @@
-import React from "react";
+import React, { useContext } from "react";
+import { SocketContext } from "../context/socket";
 
-interface MessageFormProps {
-  handleMessageSubmit: React.FormEventHandler
-}
 
-const MessageForm: React.FC<MessageFormProps> = ({ handleMessageSubmit }) => {
+const MessageForm: React.FC = () => {
+  const socket = useContext(SocketContext)
+  
+  const handleMessageSubmit = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    const target = e.target as typeof e.target & {
+      message: { value: string };
+    };
+
+    const message = target.message.value
+
+    if (message && socket) {
+      socket.emit('chat message', message);
+      target.message.value = '';
+    }
+  }
+  
   return (
     <form id="form" onSubmit={handleMessageSubmit} className="is-flex is-flex-direction-row mb-2">
       <input 
