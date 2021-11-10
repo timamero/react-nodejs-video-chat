@@ -1,9 +1,11 @@
 // To do: 
 // Create VideoGrid component to display 1-4 users
 // Emit event and stream to server
-
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { SocketContext } from '../context/socket';
+
+
+/// <reference types="@types/dom-mediacapture-record" />
 
 const Video = () => {
   const socket = useContext(SocketContext);
@@ -31,6 +33,23 @@ const Video = () => {
         stream = await navigator.mediaDevices.getUserMedia(constraints);
         setMediaStream(stream);
         setShowVideo(!showVideo);
+
+        // var mediaRecorder = new MediaRecorder(stream)
+        // let chunks: []
+        
+        // mediaRecorder.onstart = e => {
+        //   chunks = []
+        // };
+
+        // mediaRecorder.ondataavailable = (e: BlobEvent) => {
+        //   (chunks as Blob[]).push(e.data) 
+        // };
+
+        // mediaRecorder.onstop = e => {
+        //   var blob = new Blob(chunks, { 'type': 'video/mp4' })
+        //   socket.emit('streamUser', blob);
+        // }
+
       } catch(err) {
         console.log(err);
       }
@@ -48,7 +67,10 @@ const Video = () => {
   }
 
   if (mediaStream) {
+    // https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection
+    // https://stackoverflow.com/questions/50976084/how-do-i-stream-live-audio-from-the-browser-to-google-cloud-speech-via-socket-io/50976085#50976085
       startStream(mediaStream);
+      socket.emit('streamUser', mediaStream);
     }
 
   return (
