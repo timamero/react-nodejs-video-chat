@@ -1,8 +1,6 @@
 import React, { useContext } from 'react';
 import { SocketContext } from './context/socket';
-import Chat from './components/Chat';
-import Video from './components/Video';
-import VideoDisplay from './components/VideoDisplay';
+import Room from './components/Room';
 
 const App: React.FC = () => {
   const socket = useContext(SocketContext)
@@ -17,9 +15,7 @@ const App: React.FC = () => {
 
   return (
     <div className="App container is-fluid is-flex is-flex-direction-row">
-      <VideoDisplay />
-      <Video />
-      <Chat />
+      <Room />
     </div>
   );
 }

@@ -19,7 +19,8 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["node", "dom-mediacapture-record"]
+    "types": ["node", "dom-mediacapture-record"],
+    "sourceMap": true
     // "extends": "./cypress/tsconfig.json"
   },
   "include": [
