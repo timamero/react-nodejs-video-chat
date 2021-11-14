@@ -1,4 +1,5 @@
 import React from 'react';
+import ActiveUsers from '../components/ActiveUsers';
 import NewUserForm from '../components/NewUserForm';
 
 const Home = () => {
@@ -6,8 +7,7 @@ const Home = () => {
     <div>
       <div id="activeUsersList">
         <NewUserForm />
-        <h2>Active Users</h2>
-        placeholder for active users
+        <ActiveUsers />
       </div>
     </div>
   )
