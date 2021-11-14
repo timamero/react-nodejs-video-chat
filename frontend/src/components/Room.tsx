@@ -2,7 +2,7 @@
 import React, { useContext, useRef} from 'react'
 import { SocketContext } from '../context/socket';
 
-const RoomV2: React.FC = () => {
+const Room: React.FC = () => {
   const socket = useContext(SocketContext);
 
   const streamRef = useRef<HTMLVideoElement|null>(null);
@@ -261,4 +261,4 @@ const RoomV2: React.FC = () => {
   )
 }
 
-export default RoomV2;
+export default Room;
