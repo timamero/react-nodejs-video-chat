@@ -23,6 +23,7 @@ io.on('connection', (socket) => {
 
   chatHandlers.chatMessage(socket, io);
   videoHandlers.streamUserVideo(socket, io);
+  videoHandlers.streamPeers(socket, io);
 
   socket.on('disconnect', () => {
     console.log('user disconnected');
