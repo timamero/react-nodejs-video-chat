@@ -19,7 +19,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["node", "dom-mediacapture-record"],
+    "types": ["node", "cypress", "cypress-localstorage-commands"],
     "sourceMap": true
     // "extends": "./cypress/tsconfig.json"
   },
