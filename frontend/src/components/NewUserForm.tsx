@@ -1,10 +1,9 @@
 import React, { useState, FormEvent } from "react";
-import { useDispatch } from "react-redux";
-import { setNewUser } from "../store/userSlice";
+import { useAppDispatch } from "../app/hooks";
+import { setNewUser } from "../app/features/userSlice";
 
 const NewUserForm = () => {
-  const dispatch = useDispatch();
-
+  const dispatch = useAppDispatch();
   const [usernameInput, setUsernameInput] = useState<string>('')
 
   const handleUsernameSubmit = (event: FormEvent) => {

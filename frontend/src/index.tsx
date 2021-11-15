@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { SocketContext, socket } from './context/socket';
 import './index.css';
 import App from './App';
-import { store } from './store';
+import { store } from './app/store';
 import { Provider } from 'react-redux'
 
 ReactDOM.render(
