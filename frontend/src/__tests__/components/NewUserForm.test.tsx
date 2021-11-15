@@ -1,21 +1,8 @@
 import React from "react";
 import { mount } from '@cypress/react';
-import { Provider } from "react-redux";
 import NewUserForm from "../../components/NewUserForm";
-import { Store } from "redux";
 import { store } from '../../app/store';
-
-interface ReduxProviderProps {
-  children: JSX.Element;
-  store: Store;
-}
-
-const ReduxProvider: React.FC<ReduxProviderProps> = ({ children, store }) => {   
-  return (
-    <Provider store={store}>
-      {children}
-    </Provider>
-)}
+import { ReduxProvider } from '../helpers';
 
 describe('NewUserForm tests', () => {
   beforeEach(() => {
