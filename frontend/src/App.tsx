@@ -6,7 +6,7 @@ import {
   Link
 } from "react-router-dom";
 import { SocketContext } from './context/socket';
-// import Room from './components/Room';
+import Room from './components/Room';
 import Home from './pages/Home';
 
 const App: React.FC = () => {
@@ -33,6 +33,7 @@ const App: React.FC = () => {
 
         <Routes>
           <Route path='/' element={<Home />}/>
+          <Route path='/testroom' element={<Room />} />
         </Routes>
       </div>
     </Router>
