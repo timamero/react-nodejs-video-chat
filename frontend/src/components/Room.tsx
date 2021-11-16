@@ -1,3 +1,8 @@
+/*
+Reference Room component
+*/
+
+
 // https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Signaling_and_video_calling
 import React, { useContext, useRef} from 'react'
 import { SocketContext } from '../context/socket';

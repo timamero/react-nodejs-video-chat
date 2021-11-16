@@ -1,17 +1,19 @@
 import React from 'react';
 import ActiveUsers from '../components/ActiveUsers';
+import Layout from '../components/Layout';
 import NewUserForm from '../components/NewUserForm';
-import Header from '../components/Header';
+import { useAppSelector } from '../app/hooks';
 
 const Home = () => {
+  const username = useAppSelector(state => state.user.username)
   return (
-    <div>
-      <div>
-        <Header />
+    <Layout>
+      {!username 
+       && 
         <NewUserForm />
-        <ActiveUsers />
-      </div>
-    </div>
+      } 
+      <ActiveUsers />
+    </Layout>
   )
 }
 
