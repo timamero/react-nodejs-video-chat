@@ -1,11 +1,13 @@
 import React from 'react';
 import ActiveUsers from '../components/ActiveUsers';
 import NewUserForm from '../components/NewUserForm';
+import Header from '../components/Header';
 
 const Home = () => {
   return (
     <div>
-      <div id="activeUsersList">
+      <div>
+        <Header />
         <NewUserForm />
         <ActiveUsers />
       </div>
