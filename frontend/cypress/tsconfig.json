@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "lib": ["es5", "dom"],
-    "types": ["cypress"],
+    "types": ["cypress", "cypress-localstorage-commands"],
     "isolatedModules": false,
   },
   "extends": "../tsconfig.json",

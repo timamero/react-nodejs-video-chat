@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -7,9 +7,20 @@ import {
 import { SocketContext } from './context/socket';
 import Room from './components/Room';
 import Home from './pages/Home';
+import { useAppDispatch } from './app/hooks';
+import { setNewUser } from './app/features/userSlice';
 
 const App: React.FC = () => {
+  const dispatch = useAppDispatch()
   const socket = useContext(SocketContext)
+
+  useEffect(() => {
+    const usernameFromLocalStorage = window.localStorage.getItem('chat-username')
+
+    if (usernameFromLocalStorage) {
+      dispatch(setNewUser(usernameFromLocalStorage))
+    }
+  }, [dispatch])
 
   if (socket) {
     socket.connect()
