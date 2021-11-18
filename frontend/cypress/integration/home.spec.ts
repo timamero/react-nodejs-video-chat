@@ -34,3 +34,12 @@ describe('home page with username stored in localStorage', () => {
   })
 })
 
+describe('user can create a username', () => {
+  it('user successfully creates username', () => {
+    return
+  })
+
+  it('if username is not unique error message is displayed', () => {
+    return
+  })
+})

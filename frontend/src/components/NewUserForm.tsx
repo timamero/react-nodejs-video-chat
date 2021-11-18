@@ -1,8 +1,10 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, useContext, FormEvent } from "react";
 import { useAppDispatch } from "../app/hooks";
 import { setNewUser } from "../app/features/userSlice";
+import { SocketContext } from "../context/socket";
 
 const NewUserForm = () => {
+  const socket = useContext(SocketContext)
   const dispatch = useAppDispatch();
   const [usernameInput, setUsernameInput] = useState<string>('')
 
@@ -12,6 +14,8 @@ const NewUserForm = () => {
     window.localStorage.setItem('chat-username', usernameInput)
     dispatch(setNewUser(usernameInput))
     setUsernameInput('')
+
+    socket.emit('user entered', usernameInput)
   }
 
   return (
