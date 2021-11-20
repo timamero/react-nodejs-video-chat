@@ -26,7 +26,9 @@ cd frontend
 npm start
 ```
 
-4. Open the browser and go to http://localhost:3000/. You can test the connection by opening multiple tabs to the site and sending messages.
+4. Open the browser and go to http://localhost:3000/.
+
+5. To demo the video chat room go to http://localhost:3000/testroom.
 
 ## 🧪 Testing
 1. To run E2E testing run the following commands from the root folder.
