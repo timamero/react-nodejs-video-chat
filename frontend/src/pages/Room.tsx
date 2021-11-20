@@ -1,9 +1,12 @@
 /*
 Test Room component
+
+https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Signaling_and_video_calling
+
+To do:
+- Close peer connection correctly
 */
-
-
-// https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Signaling_and_video_calling
+ 
 import React, { useContext, useRef} from 'react'
 import { SocketContext } from '../context/socket';
 
@@ -18,7 +21,7 @@ const Room: React.FC = () => {
 
   const mediaConstraints = {
     audio: true,
-    video: { width: 400, height: 200 }
+    video: { width: 300, height: 150 }
   }
 
   socket.on('userWaiting', message => {
@@ -246,22 +249,30 @@ const Room: React.FC = () => {
   }
 
   return (
-    <div className="container is-fluid is-flex is-flex-direction-row">
+    <div className="container is-fluid is-flex is-flex-direction-column">
+    <div>
+      <h3>Instructions for testing</h3>
+      <p>1. Open test room in a second browser</p>
+      <p>2. Enter a username into each client</p>
+      <p>3. Wait for clients to connect</p>
+
+    </div>
     <form onSubmit={submitUsername}>
       <label>Username
-        <input type="text" id="username" required/>
+        <input type="text" id="username" className="input" required/>
       </label>
-      <button type="submit">Create Username</button>
+      <button type="submit" className="button is-primary">Create Username</button>
     </form>
     
-    {/* <button onClick={startVideoChat}>Enter Video Chat</button> */}
-    <button onClick={endVideoChat}>Close Video Chat</button>
+    <div>
+      <button onClick={endVideoChat} className="button is-danger">End Video Chat</button>
 
-      <div>
+      <div className="is-flex is-flex-direction-row">
         <video ref={el => { streamRef.current = el}} id="videoStream" autoPlay>There is a problem playing the video.</video>
         <video ref={el => { remoteStreamRef.current = el}} id="remoteVideoStream" autoPlay>There is a problem playing the video.</video>
       </div>
-
+    </div>
+    
   </div>
   )
 }
