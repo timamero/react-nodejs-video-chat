@@ -1,5 +1,5 @@
 /*
-Reference Room component
+Test Room component
 */
 
 
