@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-export interface ActiveUsersState {
-  users: string[];
+import { User } from './types'
+interface ActiveUsersState {
+  users: User[];
 }
 
 const initialState: ActiveUsersState = {
@@ -12,9 +12,9 @@ export const activeUsersSlice = createSlice({
   name: 'activeUsers',
   initialState,
   reducers: {
-    getAllActiveUsers: (state, action: PayloadAction<string[]>) => {
+    getAllActiveUsers: (state, action: PayloadAction<User[]>) => {
       state.users = action.payload
-    },
+    }
   }
 })
 

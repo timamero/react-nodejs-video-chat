@@ -7,29 +7,40 @@ import {
 import { SocketContext } from './context/socket';
 import Room from './components/Room';
 import Home from './pages/Home';
-import { useAppDispatch } from './app/hooks';
-import { setNewUser } from './app/features/userSlice';
+import { useAppDispatch, useAppSelector } from './app/hooks';
+import { setNewUser, setId } from './app/features/userSlice';
+import { getAllActiveUsers } from './app/features/activeUsersSlice';
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
   const socket = useContext(SocketContext)
 
+  socket.connect()
+
   useEffect(() => {
     const usernameFromLocalStorage = window.localStorage.getItem('chat-username')
 
     if (usernameFromLocalStorage) {
+      socket.emit('user entered', usernameFromLocalStorage)
       dispatch(setNewUser(usernameFromLocalStorage))
     }
-  }, [dispatch])
+  }, [dispatch, socket])
 
-  if (socket) {
-    socket.connect()
+  
+  socket.on('connect', () => {
+    console.log('Connected to server')
+  })
 
-    socket.on('connect', () => {
-      console.log('react connected')
-    }) 
-  }
+  socket.on('get user list', users => {
+    console.log('receiving user list', users)
+    dispatch(getAllActiveUsers(users))
+  })
 
+  socket.on('get socket id', id => {
+    console.log('setting app user id')
+    dispatch(setId(id))
+  })
+    
   return (
     <Router>
       <div className="App">
