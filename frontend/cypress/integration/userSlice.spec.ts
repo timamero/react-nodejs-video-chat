@@ -1,3 +1,4 @@
+/* eslint-disable jest/valid-expect */
 import reducer, { setNewUser, setId } from '../../src/app/features/userSlice'
 
 describe('userSlice tests', () => {
