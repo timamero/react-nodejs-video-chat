@@ -13,7 +13,7 @@ describe('activeUserSlice tests', () => {
       })
   })
 
-  it.only('get all active users', () => {
+  it('get all active users', () => {
     const previousState = { users: []}
 
     const userArr = [
