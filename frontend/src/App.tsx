@@ -5,7 +5,7 @@ import {
   Route,
 } from "react-router-dom";
 import { SocketContext } from './context/socket';
-import Room from './pages/Room';
+import TestRoom from './pages/TestRoom';
 import Home from './pages/Home';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import { setNewUser, setId } from './app/features/userSlice';
@@ -46,7 +46,7 @@ const App: React.FC = () => {
       <div className="App">
         <Routes>
           <Route path='/' element={<Home />}/>
-          <Route path='/testroom' element={<Room />} />
+          <Route path='/testroom' element={<TestRoom />} />
         </Routes>
       </div>
     </Router>

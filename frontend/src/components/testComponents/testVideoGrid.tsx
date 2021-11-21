@@ -1,16 +1,7 @@
-/*
-Test Room component
+import React, { useContext, useRef, memo } from "react";
+import { SocketContext } from "../../context/socket";
 
-https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Signaling_and_video_calling
-
-To do:
-- Close peer connection correctly
-*/
- 
-import React, { useContext, useRef} from 'react'
-import { SocketContext } from '../context/socket';
-
-const Room: React.FC = () => {
+const TestVideoGrid = memo(() => {
   const socket = useContext(SocketContext);
 
   const streamRef = useRef<HTMLVideoElement|null>(null);
@@ -45,21 +36,10 @@ const Room: React.FC = () => {
     handleNewICECandidate(candidate)
   })
 
-  function submitUsername (event: React.SyntheticEvent) {
-    event.preventDefault()
-    const target = event.target as typeof event.target & {
-      username: { value: string };
-    };
-    const newUsername = target.username.value;
-    socket.emit('userEnterRoom', newUsername)
-    target.username.value = ''
-  }
-
   async function createPeerConnection() {   
     myPeerConnection = new RTCPeerConnection() // For peers to connect from different networks, need to specify TURN or STUN servers
 
     // Set up event handlers for the ICE negotiation process.
-
     myPeerConnection.onicecandidate = handleICECandidateEvent;
     myPeerConnection.oniceconnectionstatechange = handleICEConnectionStateChangeEvent;
     myPeerConnection.onicegatheringstatechange = handleICEGatheringStateChangeEvent;
@@ -249,21 +229,6 @@ const Room: React.FC = () => {
   }
 
   return (
-    <div className="container is-fluid is-flex is-flex-direction-column">
-    <div>
-      <h3>Instructions for testing</h3>
-      <p>1. Open test room in a second browser</p>
-      <p>2. Enter a username into each client</p>
-      <p>3. Wait for clients to connect</p>
-
-    </div>
-    <form onSubmit={submitUsername}>
-      <label>Username
-        <input type="text" id="username" className="input" required/>
-      </label>
-      <button type="submit" className="button is-primary">Create Username</button>
-    </form>
-    
     <div>
       <button onClick={endVideoChat} className="button is-danger">End Video Chat</button>
 
@@ -272,9 +237,7 @@ const Room: React.FC = () => {
         <video ref={el => { remoteStreamRef.current = el}} id="remoteVideoStream" autoPlay>There is a problem playing the video.</video>
       </div>
     </div>
-    
-  </div>
   )
-}
+})
 
-export default Room;
+export default TestVideoGrid
