@@ -7,7 +7,7 @@ A video chat app created with Socket.io, Typescript, React, Node.js, and Express
 ## 🚀 Quick Start
 1. Clone this repository
 ```sh
-git clone https://github.com/timamero/react-nodejs-chat.git
+git clone https://github.com/timamero/react-nodejs-video-chat.git
 ```
 2. Install dependencies
 ```sh
