@@ -27,7 +27,7 @@ describe('userSlice tests', () => {
       })
   })
 
-  it.only('set id', () => {
+  it('set id', () => {
     const previousState = {
       id: '',
       username: 'sampleUser'
