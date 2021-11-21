@@ -1,7 +1,11 @@
 import React, { useContext, useRef, memo } from "react";
 import { SocketContext } from "../../context/socket";
 
-const TestVideoGrid = memo(() => {
+interface TestVideoGridProps {
+  resetUsername: Function;
+}
+// Need to wrap component in memo so that it is not re-rendered
+const TestVideoGrid: React.FC<TestVideoGridProps> = memo(({resetUsername}) => {
   const socket = useContext(SocketContext);
 
   const streamRef = useRef<HTMLVideoElement|null>(null);
@@ -226,6 +230,7 @@ const TestVideoGrid = memo(() => {
 
   function endVideoChat () {
     closeVideoCall();
+    resetUsername();
   }
 
   return (

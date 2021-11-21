@@ -18,8 +18,6 @@ const TestUsernameForm: React.FC<testUsernameFormProps> = ({submitUsername, user
         </form>
       }
     </div>
-    
-    
   )
 }
 

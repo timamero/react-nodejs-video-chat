@@ -7,7 +7,7 @@ To do:
 - Close peer connection correctly
 */
  
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useCallback } from 'react'
 import TestUsernameForm from '../components/testComponents/testUsernameForm';
 import TestVideoGrid from '../components/testComponents/testVideoGrid';
 import { SocketContext } from '../context/socket';
@@ -16,7 +16,7 @@ const TestRoom: React.FC = () => {
   const socket = useContext(SocketContext);
   const [username, setUsername] = useState<string>('')
 
-  function submitUsername (event: React.SyntheticEvent) {
+  const submitUsername = (event: React.SyntheticEvent) => {
     event.preventDefault()
     const target = event.target as typeof event.target & {
       username: { value: string };
@@ -27,6 +27,10 @@ const TestRoom: React.FC = () => {
     setUsername(newUsername)
   }
 
+  const resetUsername = useCallback(() => {
+    setUsername('');
+  }, [])
+
   return (
     <div className="container is-fluid is-flex is-flex-direction-column">
     <div>
@@ -36,7 +40,7 @@ const TestRoom: React.FC = () => {
       <p>3. Wait for clients to connect</p>
     </div>
     <TestUsernameForm submitUsername={submitUsername} username={username}/>
-    <TestVideoGrid />
+    {username && <TestVideoGrid resetUsername={resetUsername}/>}
   </div>
   )
 }
