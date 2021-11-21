@@ -20,9 +20,9 @@ describe('home page with no username stored in localStorage', () => {
 
 describe('home page with username stored in localStorage', () => {
   beforeEach(() => {
-    cy.visit('/')
     cy.clearLocalStorageSnapshot()
     cy.setLocalStorage('chat-username', 'sampleUser')
+    cy.visit('/')
   })
 
   it('Header component display correct message', () => {
@@ -34,9 +34,16 @@ describe('home page with username stored in localStorage', () => {
   })
 })
 
-describe('user can create a username', () => {
+describe.only('user can create a username', () => {
+  beforeEach(() => {
+    cy.clearLocalStorageSnapshot()
+    cy.visit('/')
+  })
+
   it('user successfully creates username', () => {
-    return
+    cy.get('#usernameInput').type('sampleUser')
+    cy.get('#submitUsername').click()
+    cy.getLocalStorage('chat-username').should('equal', 'sampleUser')
   })
 
   it('if username is not unique error message is displayed', () => {
