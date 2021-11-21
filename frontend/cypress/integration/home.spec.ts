@@ -34,7 +34,7 @@ describe('home page with username stored in localStorage', () => {
   })
 })
 
-describe.only('user can create a username', () => {
+describe('user can create a username', () => {
   beforeEach(() => {
     cy.clearLocalStorageSnapshot()
     cy.visit('/')
