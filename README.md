@@ -42,3 +42,7 @@ npm run cypress-e2e
 npm run cypress:prestart
 npm run cypress-ct
 ```
+
+
+E2E tests are located in `frontend/cypress/integration`.
+Component tests are located in `frontend/src/__tests__`.
