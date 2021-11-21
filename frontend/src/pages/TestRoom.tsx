@@ -7,13 +7,14 @@ To do:
 - Close peer connection correctly
 */
  
-import React, { useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import TestUsernameForm from '../components/testComponents/testUsernameForm';
 import TestVideoGrid from '../components/testComponents/testVideoGrid';
 import { SocketContext } from '../context/socket';
 
 const TestRoom: React.FC = () => {
   const socket = useContext(SocketContext);
+  const [username, setUsername] = useState<string>('')
 
   function submitUsername (event: React.SyntheticEvent) {
     event.preventDefault()
@@ -23,6 +24,7 @@ const TestRoom: React.FC = () => {
     const newUsername = target.username.value;
     socket.emit('userEnterRoom', newUsername)
     target.username.value = ''
+    setUsername(newUsername)
   }
 
   return (
@@ -33,7 +35,7 @@ const TestRoom: React.FC = () => {
       <p>2. Enter a username into each client</p>
       <p>3. Wait for clients to connect</p>
     </div>
-    <TestUsernameForm submitUsername={submitUsername} />
+    <TestUsernameForm submitUsername={submitUsername} username={username}/>
     <TestVideoGrid />
   </div>
   )
