@@ -14,10 +14,14 @@ const Home = () => {
       :
         <ActiveUsers />
       } 
-      <div className="modal">
+      <div className="modal is-active">
         <div className="modal-background"></div>
         <div className="modal-content box">
-          Invited to chat
+          <p className="has-text-centered is-size-4 my-2">Invited to chat</p>
+          <div className="is-flex is-flex-direction-row is-justify-content-space-around">
+            <button className="button is-primary">Accept</button>
+            <button className="button is-danger">Decline</button>
+          </div>
         </div>
         <button className="modal-close is-large" aria-label="close"></button>
       </div>
