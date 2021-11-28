@@ -11,7 +11,7 @@ const TestVideoGrid: React.FC<TestVideoGridProps> = memo(({resetUsername}) => {
   const streamRef = useRef<HTMLVideoElement|null>(null);
   const remoteStreamRef = useRef<HTMLVideoElement|null>(null);
 
-  let myPeerConnection: RTCPeerConnection;    // RTCPeerConnection
+  let myPeerConnection: RTCPeerConnection | null = null;    // RTCPeerConnection
   let webcamStream: MediaStream;        // MediaStream from webcam
 
   const mediaConstraints = {
@@ -53,24 +53,27 @@ const TestVideoGrid: React.FC<TestVideoGridProps> = memo(({resetUsername}) => {
   }
 
   async function handleNegotiationNeededEvent() {
-    try {
-      const offer = await myPeerConnection.createOffer({
-        offerToReceiveAudio: true, 
-        offerToReceiveVideo: true
-      });
-    
-      if (myPeerConnection.signalingState !== 'stable') {
-        console.log('connection is not stable yet...')
-        return;
+    if (myPeerConnection) {
+      try {
+        const offer = await myPeerConnection.createOffer({
+          offerToReceiveAudio: true, 
+          offerToReceiveVideo: true
+        });
+      
+        if (myPeerConnection.signalingState !== 'stable') {
+          console.log('connection is not stable yet...')
+          return;
+        }
+
+        await myPeerConnection.setLocalDescription(offer)
+
+        // send offer to remote peer
+        socket.emit('videoChatOffer', {sdp: myPeerConnection.localDescription})
+      } catch (err) {
+        console.log('error in handleNegotiationNeededEvent: ', err)
       }
-
-      await myPeerConnection.setLocalDescription(offer)
-
-      // send offer to remote peer
-      socket.emit('videoChatOffer', {sdp: myPeerConnection.localDescription})
-    } catch (err) {
-      console.log('error in handleNegotiationNeededEvent: ', err)
     }
+    
   }
 
   async function startVideoChat() {
@@ -82,7 +85,9 @@ const TestVideoGrid: React.FC<TestVideoGridProps> = memo(({resetUsername}) => {
     try {
       webcamStream = await navigator.mediaDevices.getUserMedia(mediaConstraints)
       webcamStream.getTracks().forEach((track: MediaStreamTrack) => {
-        myPeerConnection.addTrack(track, webcamStream)
+        if (myPeerConnection) {
+          myPeerConnection.addTrack(track, webcamStream)
+        }
       })
       if (streamRef.current) {
         streamRef.current.srcObject = webcamStream;
@@ -98,67 +103,74 @@ const TestVideoGrid: React.FC<TestVideoGridProps> = memo(({resetUsername}) => {
       createPeerConnection()
     } 
 
-    // Set up remote description to the received SDP offer
-    const desc = new RTCSessionDescription(sdp)
-    try {
-      if (myPeerConnection.signalingState !== 'stable') {
-        console.log('handle video chat offer not stable')
-        await Promise.all([
-          myPeerConnection.setLocalDescription({type: 'rollback'}),
-          myPeerConnection.setRemoteDescription(sdp)
-        ]);
-        return;
-      } else {
-        await myPeerConnection.setRemoteDescription(desc)
-      }
-
-      // Get webcam stream
-      if (!webcamStream) {
-        // Get access to webcam stream and display it in local stream
-        try {
-          webcamStream = await navigator.mediaDevices.getUserMedia(mediaConstraints)
-          if (streamRef.current) {
-            streamRef.current.srcObject = webcamStream;
-          }
-        } catch (err) {
-          console.log('error in handleVideoChatOffer - local webcam stream', err)
-        }
-
-        // Add tracks from stream to the RTCPeerConnection
-        if (webcamStream) {
-          try {
-            webcamStream.getTracks().forEach((track: MediaStreamTrack) => {
-              myPeerConnection.addTrack(track, webcamStream)
-            })
-          } catch (err) {
-            console.log('error in handleVideoChatOffer - webcam stream add tracks', err)
-          }
-        }
-      }
-
-      // Send answer to caller
+    if (myPeerConnection) {
+      // Set up remote description to the received SDP offer
+      const desc = new RTCSessionDescription(sdp)
       try {
-        const answer = await myPeerConnection.createAnswer({
-          offerToReceiveVideo: true,
-          offerToReceiveAudio: true,
-        })
-        await myPeerConnection.setLocalDescription(new RTCSessionDescription(answer))
-        socket.emit('videoChatAnswer', {sdp: myPeerConnection.localDescription})
+        if (myPeerConnection.signalingState !== 'stable') {
+          console.log('handle video chat offer not stable')
+          await Promise.all([
+            myPeerConnection.setLocalDescription({type: 'rollback'}),
+            myPeerConnection.setRemoteDescription(sdp)
+          ]);
+          return;
+        } else {
+          await myPeerConnection.setRemoteDescription(desc)
+        }
+
+        // Get webcam stream
+        if (!webcamStream) {
+          // Get access to webcam stream and display it in local stream
+          try {
+            webcamStream = await navigator.mediaDevices.getUserMedia(mediaConstraints)
+            if (streamRef.current) {
+              streamRef.current.srcObject = webcamStream;
+            }
+          } catch (err) {
+            console.log('error in handleVideoChatOffer - local webcam stream', err)
+          }
+
+          // Add tracks from stream to the RTCPeerConnection
+          if (webcamStream) {
+            try {
+              webcamStream.getTracks().forEach((track: MediaStreamTrack) => {
+                if (myPeerConnection) {
+                  myPeerConnection.addTrack(track, webcamStream)
+                }
+              })
+            } catch (err) {
+              console.log('error in handleVideoChatOffer - webcam stream add tracks', err)
+            }
+          }
+        }
+
+        // Send answer to caller
+        try {
+          const answer = await myPeerConnection.createAnswer({
+            offerToReceiveVideo: true,
+            offerToReceiveAudio: true,
+          })
+          await myPeerConnection.setLocalDescription(new RTCSessionDescription(answer))
+          socket.emit('videoChatAnswer', {sdp: myPeerConnection.localDescription})
+        } catch (err) {
+          console.log('error in handleVideoChatOffer - sending answer', err)
+        }
       } catch (err) {
-        console.log('error in handleVideoChatOffer - sending answer', err)
+        console.log('error in handleVideoChatOffer')
       }
-    } catch (err) {
-      console.log('error in handleVideoChatOffer')
-    }
+    } 
   }
 
   async function handleVideoChatAnswer(sdp: RTCSessionDescription) {
-    try {
-      const desc = new RTCSessionDescription(sdp);
-      await myPeerConnection.setRemoteDescription(desc)
-    } catch (err) {
-      console.log('error in handleVideoChatAnswer', err)
-    }  
+    if (myPeerConnection) {
+      try {
+        const desc = new RTCSessionDescription(sdp);
+        await myPeerConnection.setRemoteDescription(desc)
+      } catch (err) {
+        console.log('error in handleVideoChatAnswer', err)
+      } 
+    }
+     
   }
 
   function handleICECandidateEvent(event: RTCPeerConnectionIceEvent) {
@@ -168,26 +180,33 @@ const TestVideoGrid: React.FC<TestVideoGridProps> = memo(({resetUsername}) => {
   }
 
   async function handleNewICECandidate(candidate: RTCIceCandidate) {
-    candidate = new RTCIceCandidate(candidate)
-    try {
-      await myPeerConnection.addIceCandidate(candidate)
-    } catch (err) {
-      console.log('error in handleNewICECandidate', err)
+    if (myPeerConnection) {
+      candidate = new RTCIceCandidate(candidate)
+      try {
+        await myPeerConnection.addIceCandidate(candidate)
+      } catch (err) {
+        console.log('error in handleNewICECandidate', err)
+      } 
     } 
   }
 
   function handleICEGatheringStateChangeEvent(event: any) {
-    console.log(`ice gathering state changed to: ${myPeerConnection.iceGatheringState}`)
+    if (myPeerConnection) {
+      console.log(`ice gathering state changed to: ${myPeerConnection.iceGatheringState}`)
+    } 
   }
 
   function handleICEConnectionStateChangeEvent(event: any) {
-    switch(myPeerConnection.iceConnectionState) {
-      case 'closed':
-      case 'failed':
-      case 'disconnected':
-        closeVideoCall();
-        break;
+    if (myPeerConnection) {
+      switch(myPeerConnection.iceConnectionState) {
+        case 'closed':
+        case 'failed':
+        case 'disconnected':
+          closeVideoCall();
+          break;
+      }
     }
+    
   }
 
   function handleTrackEvent(event: RTCTrackEvent) {
@@ -199,33 +218,50 @@ const TestVideoGrid: React.FC<TestVideoGridProps> = memo(({resetUsername}) => {
   function closeVideoCall() {
     console.log('closing peer connection') 
 
-    myPeerConnection.ontrack = null;
-    myPeerConnection.onicecandidate = null;
-    myPeerConnection.oniceconnectionstatechange = null;
-    myPeerConnection.onsignalingstatechange = null;
-    myPeerConnection.onicegatheringstatechange = null;
-    myPeerConnection.onnegotiationneeded = null;
+    if (myPeerConnection) {
+      console.log('starting to cleear peer methods')
+      myPeerConnection.ontrack = null;
+      // myPeerConnection.onremovetrack = null;
+      // myPeerConnection.onremovestream = null;
+      myPeerConnection.onicecandidate = null;
+      myPeerConnection.oniceconnectionstatechange = null;
+      myPeerConnection.onsignalingstatechange = null;
+      myPeerConnection.onicegatheringstatechange = null;
+      myPeerConnection.onnegotiationneeded = null;
 
-    myPeerConnection.getTransceivers().forEach(transceiver => {
-      transceiver.stop();
-    });
+      // myPeerConnection.getTransceivers().forEach(transceiver => {
+      //   transceiver.stop();
+      // });
 
-    myPeerConnection.close();
+      myPeerConnection.close();
+      myPeerConnection = null;
+      console.log('closed peer connection')
+    }
+    
 
     if (webcamStream && streamRef.current) {
         streamRef.current.pause();
         webcamStream.getTracks().forEach(track => {
-          track.stop()
+          track.stop();
         })
+        streamRef.current.srcObject = null
       }
+
+    if (remoteStreamRef.current) {
+      remoteStreamRef.current.pause();
+      remoteStreamRef.current.srcObject = null 
+    }
   }
 
   function handleSignalingStateChangeEvent(event: any) {
-    switch (myPeerConnection.signalingState) {
-      case 'closed':
-        closeVideoCall();
-        break;
+    if (myPeerConnection) {
+      switch (myPeerConnection.signalingState) {
+        case 'closed':
+          closeVideoCall();
+          break;
+      }
     }
+    
   }
 
   function endVideoChat () {

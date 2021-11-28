@@ -34,7 +34,7 @@ const TestRoom: React.FC = () => {
   return (
     <div className="container is-fluid is-flex is-flex-direction-column">
     <div>
-      <h3>Instructions for testing</h3>
+      <h3>Test Room - Video Chat Demo</h3>
       <p>1. Open test room in a second browser</p>
       <p>2. Enter a username into each client</p>
       <p>3. Wait for clients to connect</p>
