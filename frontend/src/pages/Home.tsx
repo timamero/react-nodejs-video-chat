@@ -15,7 +15,7 @@ const Home = () => {
       :
         <ActiveUsers />
       } 
-      <Modal modalContent={modalContent} confirmBtnText={confirmBtnText} declineBtnText={declineBtnText} isActive={isActive}/>
+      <Modal />
     </Layout>
   )
 }
