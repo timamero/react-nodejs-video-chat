@@ -9,10 +9,12 @@ const Home = () => {
   return (
     <Layout>
       {!username 
-       && 
+       ? 
         <NewUserForm />
+      :
+        <ActiveUsers />
       } 
-      <ActiveUsers />
+      
     </Layout>
   )
 }
