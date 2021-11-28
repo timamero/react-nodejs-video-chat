@@ -15,6 +15,7 @@ const NewUserForm = () => {
     dispatch(setNewUser(usernameInput))
     setUsernameInput('')
 
+    // Send server event when a new user creates a username
     socket.emit('user entered', usernameInput)
   }
 
