@@ -14,7 +14,13 @@ const Home = () => {
       :
         <ActiveUsers />
       } 
-      
+      <div className="modal">
+        <div className="modal-background"></div>
+        <div className="modal-content box">
+          Invited to chat
+        </div>
+        <button className="modal-close is-large" aria-label="close"></button>
+      </div>
     </Layout>
   )
 }
