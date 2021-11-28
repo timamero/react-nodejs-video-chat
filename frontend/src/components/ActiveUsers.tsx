@@ -15,9 +15,10 @@ const ActiveUsers = () => {
         activeUsers
           .filter(user => user.id !== appId)
           .map(user => (
-          <p key={user.id} className="panel-block is-active">
-            {user.username}
-          </p>
+          <div key={user.id} className="panel-block is-active is-flex is-flex-direction-row is-justify-content-center">
+            <p className="mx-4">{user.username}</p>
+            <button className="button is-link is-light">Invite to Chat</button>
+          </div>
         ))
         :
         <p className="panel-block is-active">
