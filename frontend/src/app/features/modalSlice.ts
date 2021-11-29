@@ -18,8 +18,11 @@ export const modalSlice = createSlice({
       state.declineBtnText = action.payload.declineBtnText;
       state.isActive = action.payload.isActive;
     },
-    resetModal: (state, action: PayloadAction<Modal>) => {
-      state = action.payload
+    resetModal: (state) => {
+      state.modalContent = '';
+      state.confirmBtnText = '';
+      state.declineBtnText = '';
+      state.isActive = false;
     }
   }
 })
