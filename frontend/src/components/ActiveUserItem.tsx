@@ -1,13 +1,24 @@
 import React from "react";
+import { setModal } from "../app/features/modalSlice";
 import { User } from "../app/features/types";
+import { useAppDispatch } from '../app/hooks';
+
 
 interface ActiveUserItemProps {
   user: User;
 }
 
 const ActiveUserItem: React.FC<ActiveUserItemProps> = ({ user }) => {
+  const dispatch = useAppDispatch();
+  
   const handleInviteToChatClick = () => {
-    console.log('invite')
+    const modalData = {
+      modalContent: `Would you like to invite ${user.username} to private chat?`,
+      confirmBtnText: 'Yes, send invite.',
+      declineBtnText: 'No, cancel invite.',
+      isActive: true
+    }
+    dispatch(setModal(modalData))
   }
 
   return (

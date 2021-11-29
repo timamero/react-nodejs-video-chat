@@ -13,10 +13,13 @@ export const modalSlice = createSlice({
   initialState,
   reducers: {
     setModal: (state, action: PayloadAction<Modal>) => {
-      state = {...action.payload}
+      state.modalContent = action.payload.modalContent;
+      state.confirmBtnText = action.payload.confirmBtnText;
+      state.declineBtnText = action.payload.declineBtnText;
+      state.isActive = action.payload.isActive;
     },
     resetModal: (state, action: PayloadAction<Modal>) => {
-      state = {...action.payload}
+      state = action.payload
     }
   }
 })
