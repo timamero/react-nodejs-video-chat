@@ -45,6 +45,9 @@ const App: React.FC = () => {
     console.log('setting app user id')
     dispatch(setId(id))
   })
+  socket.on('invite requested', inviterId => {
+    console.log('invite from ', inviterId)
+  })
  
   return (
     <Router>
