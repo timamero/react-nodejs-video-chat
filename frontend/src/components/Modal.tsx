@@ -14,7 +14,7 @@ const ActionModal: React.FC = () => {
   }
 
   const handleAcceptandCloseModal = () => {
-    socket.emit(modalData.socketEvent, modalData.inviteeId)
+    socket.emit(modalData.socketEvent, modalData.peerId)
     dispatch(resetModal())
   }
 

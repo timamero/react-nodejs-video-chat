@@ -7,13 +7,17 @@ import {
 import { SocketContext } from './context/socket';
 import TestRoom from './pages/TestRoom';
 import Home from './pages/Home';
-import { useAppDispatch } from './app/hooks';
+import { useAppDispatch, useAppSelector } from './app/hooks';
 import { setNewUser, setId } from './app/features/userSlice';
 import { getAllActiveUsers } from './app/features/activeUsersSlice';
+import { User } from './app/features/types';
+import { setModal } from './app/features/modalSlice';
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
   const socket = useContext(SocketContext)
+
+  const activeUsers = useAppSelector(state => state.activeUsers.users)
 
   useEffect(() => {
     const usernameFromLocalStorage = window.localStorage.getItem('chat-username')
@@ -47,6 +51,20 @@ const App: React.FC = () => {
   })
   socket.on('invite requested', inviterId => {
     console.log('invite from ', inviterId)
+    const inviter = activeUsers.find((user: User) => user.id === inviterId)
+
+    if (inviter) {
+        const modalData = {
+        modalContent: `Would you like to invite ${inviter.username} to private chat?`,
+        confirmBtnText: 'Yes, accept invite.',
+        declineBtnText: 'No, decline invite.',
+        isActive: true,
+        peerId: null,
+        socketEvent: 'invite accepted'  // Send server event when user invites another user to a private chat
+      }
+
+      dispatch(setModal(modalData))
+    }  
   })
  
   return (
