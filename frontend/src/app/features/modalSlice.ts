@@ -5,7 +5,9 @@ const initialState: Modal = {
   modalContent: '',
   confirmBtnText: '',
   declineBtnText: '',
-  isActive: false
+  isActive: false,
+  inviteeId: '',
+  socketEvent: ''
 }
 
 export const modalSlice = createSlice({
@@ -17,12 +19,16 @@ export const modalSlice = createSlice({
       state.confirmBtnText = action.payload.confirmBtnText;
       state.declineBtnText = action.payload.declineBtnText;
       state.isActive = action.payload.isActive;
+      state.inviteeId = action.payload.inviteeId;
+      state.socketEvent = action.payload.socketEvent;
     },
     resetModal: (state) => {
       state.modalContent = '';
       state.confirmBtnText = '';
       state.declineBtnText = '';
       state.isActive = false;
+      state.inviteeId = '';
+      state.socketEvent = '';
     }
   }
 })

@@ -8,4 +8,6 @@ export interface Modal {
   confirmBtnText: string;
   declineBtnText: string;
   isActive: boolean;
+  inviteeId: string;
+  socketEvent: string;
 }
