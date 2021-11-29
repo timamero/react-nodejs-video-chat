@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext} from "react";
 import { setModal } from "../app/features/modalSlice";
 import { User } from "../app/features/types";
 import { useAppDispatch } from '../app/hooks';
+import { SocketContext } from "../context/socket";
 
 
 interface ActiveUserItemProps {
@@ -9,6 +10,7 @@ interface ActiveUserItemProps {
 }
 
 const ActiveUserItem: React.FC<ActiveUserItemProps> = ({ user }) => {
+  const socket = useContext(SocketContext)
   const dispatch = useAppDispatch();
   
   const handleInviteToChatClick = () => {
@@ -19,6 +21,9 @@ const ActiveUserItem: React.FC<ActiveUserItemProps> = ({ user }) => {
       isActive: true
     }
     dispatch(setModal(modalData))
+
+    // Send server event when user invites another user to a private chat
+    socket.emit('invite private chat', user.id)
   }
 
   return (
