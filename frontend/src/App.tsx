@@ -55,11 +55,11 @@ const App: React.FC = () => {
 
     if (inviter) {
         const modalData = {
-        modalContent: `Would you like to invite ${inviter.username} to private chat?`,
+        modalContent: `${inviter.username} has invited you to a private chat?`,
         confirmBtnText: 'Yes, accept invite.',
         declineBtnText: 'No, decline invite.',
         isActive: true,
-        peerId: null,
+        peerId: inviterId,
         socketEvent: 'invite accepted'  // Send server event when user invites another user to a private chat
       }
 

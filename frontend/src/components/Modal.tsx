@@ -14,6 +14,7 @@ const ActionModal: React.FC = () => {
   }
 
   const handleAcceptandCloseModal = () => {
+    // When user accepts/confirms, the corresponding socket event will be sent to server
     socket.emit(modalData.socketEvent, modalData.peerId)
     dispatch(resetModal())
   }
