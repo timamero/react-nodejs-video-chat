@@ -18,8 +18,9 @@ const ActiveUserItem: React.FC<ActiveUserItemProps> = ({ user }) => {
       declineBtnText: 'No, cancel invite.',
       isActive: true,
       inviteeId: user.id,
-      socketEvent: 'invite private chat'
+      socketEvent: 'invite private chat'  // Send server event when user invites another user to a private chat
     }
+
     dispatch(setModal(modalData))
   }
 

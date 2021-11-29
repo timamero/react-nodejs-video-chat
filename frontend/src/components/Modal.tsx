@@ -14,7 +14,6 @@ const ActionModal: React.FC = () => {
   }
 
   const handleAcceptandCloseModal = () => {
-    // Send server event when user invites another user to a private chat
     socket.emit(modalData.socketEvent, modalData.inviteeId)
     dispatch(resetModal())
   }
