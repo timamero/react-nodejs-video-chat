@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
+import './styles/app.scss'
 import { SocketContext } from './context/socket';
 import TestRoom from './pages/TestRoom';
 import Home from './pages/Home';
@@ -65,6 +66,9 @@ const App: React.FC = () => {
 
       dispatch(setModal(modalData))
     }  
+  })
+  socket.on('enter chat room', roomId => {
+    console.log('enter room: ', roomId)
   })
  
   return (
