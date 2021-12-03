@@ -1,19 +1,32 @@
 import React, { useContext } from 'react';
 import { resetModal } from '../app/features/modalSlice';
-import { Modal } from '../app/features/types'
+// import { User } from '../app/features/types'
 import { useAppSelector, useAppDispatch } from '../app/hooks';
 import { SocketContext } from '../context/socket';
+import { setNotification } from '../app/features/notificationSlice';
 
 const ActionModal: React.FC = () => {
   const socket = useContext(SocketContext)
   const dispatch = useAppDispatch();
-  const modalData = useAppSelector<Modal>(state => state.modal);
+  const modalData = useAppSelector(state => state.modal);
+  const activeUsers = useAppSelector(state => state.activeUsers.users)
 
   const handleCloseModal = () => {
     dispatch(resetModal())
   }
 
   const handleAcceptandCloseModal = () => {
+    const peerUsername = modalData.peerId ? activeUsers.find(user => modalData.peerId === user.id)!.username : ''
+    if (modalData.socketEvent === 'invite private chat') {
+      const notificationData = {
+        notificationContent: `Wating for a response from ${peerUsername}`,
+        notificationType: 'is-warning',
+        isLoading: true,
+        isActive: true,
+      }
+      dispatch(setNotification(notificationData))
+    }
+
     // When user accepts/confirms, the corresponding socket event will be sent to server
     socket.emit(modalData.socketEvent, modalData.peerId)
     dispatch(resetModal())
