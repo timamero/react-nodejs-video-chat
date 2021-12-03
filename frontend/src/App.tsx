@@ -8,11 +8,12 @@ import './styles/app.scss'
 import { SocketContext } from './context/socket';
 import TestRoom from './pages/TestRoom';
 import Home from './pages/Home';
+import { User } from './app/features/types';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import { setNewUser, setId } from './app/features/userSlice';
 import { getAllActiveUsers } from './app/features/activeUsersSlice';
-import { User } from './app/features/types';
 import { setModal } from './app/features/modalSlice';
+import { resetNotification } from './app/features/notificationSlice';
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -69,6 +70,7 @@ const App: React.FC = () => {
   })
   socket.on('enter chat room', roomId => {
     console.log('enter room: ', roomId)
+    dispatch(resetNotification())
   })
  
   return (
