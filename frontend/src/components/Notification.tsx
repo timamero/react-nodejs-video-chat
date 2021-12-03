@@ -1,10 +1,13 @@
 import React from "react";
+import { useAppSelector } from '../app/hooks';
+
 
 const Notification = () => {
+  const notificationData = useAppSelector(state => state.notification)
   return (
-    <div className="notification is-warning is-flex is-flex-direction-row is-justify-content-center is-align-items-center">
-      Waiting for response from user
-      <span className="bulma-loader-mixin ml-2"></span>
+    <div className={`${notificationData.notificationType} notification is-flex is-flex-direction-row is-justify-content-center is-align-items-center`}>
+      {notificationData.notificationContent}
+      {notificationData.isLoading && <span className="bulma-loader-mixin ml-2"></span>}
     </div>
   )
 }
