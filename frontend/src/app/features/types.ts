@@ -3,6 +3,10 @@ export interface User {
   username: string;
 }
 
+export interface ActiveUsersState {
+  users: User[];
+}
+
 export interface Modal {
   modalContent: string;
   confirmBtnText: string;
