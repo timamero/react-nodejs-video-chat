@@ -8,9 +8,11 @@ import Notification from '../components/Notification';
 
 const Home = () => {
   const username = useAppSelector(state => state.user.username)
+  const notifiactionActive = useAppSelector(state => state.notification.isActive)
+
   return (
     <Layout>
-      <Notification/>
+      {notifiactionActive && <Notification/>}
       {!username 
        ? 
         <NewUserForm />
