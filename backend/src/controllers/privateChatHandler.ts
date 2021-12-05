@@ -20,9 +20,12 @@ const privateChatHandler = (socket: Socket, io: Server) => {
     io.to(privateRoom).emit('enter chat room', privateRoom)
   })
 
-  // socket.on('invite rejected', () => {
+  socket.on('decline invite', (inviterId) => {
+    console.log(`${socket.id} declined chat with ${inviterId}`)
 
-  // })
+    // Send inviter event that invite was declined
+    io.to(inviterId).emit('invite declined', socket.id)
+  })
 
   // socket.on('disconnect', () => {
 
