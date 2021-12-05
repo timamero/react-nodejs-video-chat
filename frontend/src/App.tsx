@@ -13,13 +13,14 @@ import { useAppDispatch, useAppSelector } from './app/hooks';
 import { setNewUser, setId } from './app/features/userSlice';
 import { getAllActiveUsers } from './app/features/activeUsersSlice';
 import { setModal } from './app/features/modalSlice';
-import { resetNotification } from './app/features/notificationSlice';
+import { setNotification, resetNotification } from './app/features/notificationSlice';
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
   const socket = useContext(SocketContext)
 
   const activeUsers = useAppSelector(state => state.activeUsers.users)
+  console.log('app - active user:', activeUsers)
 
   useEffect(() => {
     const usernameFromLocalStorage = window.localStorage.getItem('chat-username')
@@ -62,11 +63,25 @@ const App: React.FC = () => {
         declineBtnText: 'No, decline invite.',
         isActive: true,
         peerId: inviterId,
-        socketEvent: 'invite accepted'  // Send server event when user invites another user to a private chat
+        socketEvent: 'invite requested'
       }
 
       dispatch(setModal(modalData))
     }  
+  })
+  socket.on('invite declined', (inviteeId) => {
+    console.log('invitation to chat was declined by', inviteeId)
+    const peer = activeUsers.find((user: User) => user.id === inviteeId)
+    if (peer) {
+      const notificationData = {
+      notificationContent: `${peer.username} is not able to chat`,
+      notificationType: 'is-warning',
+      isLoading: false,
+      isActive: true,
+      }
+      dispatch(setNotification(notificationData))
+      setTimeout(() => dispatch(resetNotification()), 5000)
+    } 
   })
   socket.on('enter chat room', roomId => {
     console.log('enter room: ', roomId)
