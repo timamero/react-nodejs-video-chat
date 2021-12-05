@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { resetModal } from '../app/features/modalSlice';
-// import { User } from '../app/features/types'
+import { User } from '../app/features/types'
 import { useAppSelector, useAppDispatch } from '../app/hooks';
 import { SocketContext } from '../context/socket';
 import { setNotification } from '../app/features/notificationSlice';
@@ -11,12 +11,18 @@ const ActionModal: React.FC = () => {
   const modalData = useAppSelector(state => state.modal);
   const activeUsers = useAppSelector(state => state.activeUsers.users)
 
-  const handleCloseModal = () => {
+  const peerUsername = modalData.peerId ? activeUsers.find((user: User) => modalData.peerId === user.id)!.username : ''
+  
+  const handleDeclineandCloseModal = () => {
+    if (modalData.socketEvent === 'invite requested') {
+      // When user declines invite to chat, send server event that invite was declined
+      socket.emit('decline invite', modalData.peerId)
+    }
+
     dispatch(resetModal())
   }
 
   const handleAcceptandCloseModal = () => {
-    const peerUsername = modalData.peerId ? activeUsers.find(user => modalData.peerId === user.id)!.username : ''
     if (modalData.socketEvent === 'invite private chat') {
       const notificationData = {
         notificationContent: `Wating for a response from ${peerUsername}`,
@@ -25,10 +31,14 @@ const ActionModal: React.FC = () => {
         isActive: true,
       }
       dispatch(setNotification(notificationData))
+      socket.emit(modalData.socketEvent, modalData.peerId)
     }
 
-    // When user accepts/confirms, the corresponding socket event will be sent to server
-    socket.emit(modalData.socketEvent, modalData.peerId)
+    // When user accepts/confirms, the send server event that invite was accepted
+    if (modalData.socketEvent === 'invite requested') {
+      socket.emit('invite accepted', modalData.peerId)
+    }
+    
     dispatch(resetModal())
   }
 
@@ -39,10 +49,10 @@ const ActionModal: React.FC = () => {
         <p className="has-text-centered is-size-4 my-2">{modalData.modalContent}</p>
         <div className="is-flex is-flex-direction-row is-justify-content-space-around">
           <button onClick={handleAcceptandCloseModal} className="button is-primary">{modalData.confirmBtnText}</button>
-          <button onClick={handleCloseModal} className="button is-danger">{modalData.declineBtnText}</button>
+          <button onClick={handleDeclineandCloseModal} className="button is-danger">{modalData.declineBtnText}</button>
         </div>
       </div>
-      <button onClick={handleCloseModal} className="modal-close is-large" aria-label="close"></button>
+      <button onClick={handleDeclineandCloseModal} className="modal-close is-large" aria-label="close"></button>
     </div>
   )
 }
