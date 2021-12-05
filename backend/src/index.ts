@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 import chatHandlers from './controllers/chatHandler';
 import videoHandlers from './controllers/videoHandler';
 import userHandler from './controllers/usersHandler';
+import privateChatHandler from './controllers/privateChatHandler';
 
 const port = 3001;
 const server = http.createServer(app);
@@ -23,6 +24,7 @@ io.on('connection', (socket) => {
   console.log('a user connected');
 
   userHandler(socket, io);
+  privateChatHandler(socket, io);
   chatHandlers.chatMessage(socket, io);
   videoHandlers.streamPeers(socket, io); // test
 

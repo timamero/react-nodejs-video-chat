@@ -1,5 +1,6 @@
 import React from "react";
 import { useAppSelector } from "../app/hooks";
+import ActiveUserItem from "./ActiveUserItem";
 
 const ActiveUsers = () => {
   const activeUsers = useAppSelector(state => state.activeUsers.users)
@@ -15,9 +16,7 @@ const ActiveUsers = () => {
         activeUsers
           .filter(user => user.id !== appId)
           .map(user => (
-          <p key={user.id} className="panel-block is-active">
-            {user.username}
-          </p>
+            <ActiveUserItem key={user.id} user={user} />
         ))
         :
         <p className="panel-block is-active">

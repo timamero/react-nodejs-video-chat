@@ -1,0 +1,19 @@
+.bulma-overlay-mixin {
+  @include from(300px) {
+    @include overlay(2rem);
+  }
+
+  @include from(600px) {
+    @include overlay(5rem);
+  }
+  background-color: darkorange;
+  border-radius: 0.25em;
+  color: white;
+  opacity: 0.9;
+  padding: 1em;
+  z-index: 10;
+}
+
+.bulma-loader-mixin {
+  @include loader;
+}

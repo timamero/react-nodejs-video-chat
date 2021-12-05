@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux'
 import { SocketContext, socket } from './context/socket';
-import './index.css';
 import App from './App';
 import { store } from './app/store';
 
