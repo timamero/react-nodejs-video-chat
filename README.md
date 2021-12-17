@@ -1,6 +1,6 @@
 # 💬 Video Chat App
 
-A video chat app created with Socket.io, Typescript, React, Node.js, and Express.  
+A video chat app created with Socket.io, Typescript, React, Redux, Node.js, and Express.  
   
 *This project is still in development.*
 
