@@ -25,5 +25,5 @@ export interface Notification {
 
 export interface Room {
   roomId: string;
-  users: User[];
+  users: string[];
 }

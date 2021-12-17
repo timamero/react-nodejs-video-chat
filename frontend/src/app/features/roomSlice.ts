@@ -12,7 +12,7 @@ export const roomSlice = createSlice({
   reducers: {
     setRoom: (state, action: PayloadAction<Room>) => {
       state.roomId = action.payload.roomId
-      state.users = action.payload.users
+      state.users = state.users.concat(action.payload.users)
     },
     resetRoom: (state) => {
       state.roomId = ''
