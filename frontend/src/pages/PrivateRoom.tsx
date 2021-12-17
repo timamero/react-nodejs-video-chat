@@ -14,7 +14,7 @@ const PrivateRoom = () => {
     navigate('/')
   }
 
-  // if user leaves room and comes back, get room data again, use a useEffect
+  // if user leaves room and comes back, get room data and recheck if user has access, use a useEffect
 
   return (
     <Layout>
