@@ -22,3 +22,8 @@ export interface Notification {
   isLoading: boolean;
   isActive: boolean;
 }
+
+export interface Room {
+  roomId: string;
+  users: string[];
+}

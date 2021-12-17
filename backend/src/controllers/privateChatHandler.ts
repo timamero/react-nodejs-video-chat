@@ -10,14 +10,15 @@ const privateChatHandler = (socket: Socket, io: Server) => {
 
   socket.on('invite accepted', (inviterId) => {
     console.log(`${socket.id} accepted chat with ${inviterId}`)
-
+    const roomId = `${inviterId}-room`
+    const roomData = { roomId: roomId, users: [inviterId , socket.id] }
+    
     // Add invitee and inviter join a private room
-    const privateRoom = `${inviterId}-room`
-    io.in(socket.id).socketsJoin(privateRoom)
-    io.in(inviterId).socketsJoin(privateRoom)
+    io.in(socket.id).socketsJoin(roomId)
+    io.in(inviterId).socketsJoin(roomId)
 
     // Send invite request with inviter id to invitee
-    io.to(privateRoom).emit('enter chat room', privateRoom)
+    io.to(roomId).emit('enter chat room', roomData)
   })
 
   socket.on('decline invite', (inviterId) => {
