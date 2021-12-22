@@ -30,11 +30,8 @@ const PrivateRoom = () => {
 
   return (
     <Layout>
-      Private chat room
-      
       {userHasAccess 
-        ? 
-          <Chat /> 
+        ? <Chat /> 
         : <p>No access</p>}
     </Layout>
   )
