@@ -2,11 +2,10 @@ import React from 'react';
 import Layout from '../components/Layout';
 import { setNotification, resetNotification } from '../app/features/notificationSlice';
 import { useAppSelector, useAppDispatch } from '../app/hooks';
-import { useNavigate } from 'react-router-dom';
 import Chat from '../components/Chat';
+import { Navigate } from 'react-router-dom';
 
 const PrivateRoom = () => {
-  const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const room = useAppSelector(state => state.room)
   const userId = useAppSelector(state => state.user.id)
@@ -22,19 +21,17 @@ const PrivateRoom = () => {
       isActive: true,
       }
     dispatch(setNotification(notificationData))
-    navigate('/')
     setTimeout(() => dispatch(resetNotification()), 5000)
+    return <Navigate to="/" />
+  } else {
+    return (
+      <Layout>
+        Private chat room
+        
+        {userHasAccess ? <Chat /> : <p>No access</p>}
+      </Layout>
+    )
   }
-
-  // if user leaves room and comes back, get room data and recheck if user has access, use a useEffect
-
-  return (
-    <Layout>
-      {userHasAccess 
-        ? <Chat /> 
-        : <p>No access</p>}
-    </Layout>
-  )
 }
 
 export default PrivateRoom
