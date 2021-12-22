@@ -13,7 +13,6 @@ const PrivateRoom = () => {
   const userHasAccess = room.users.includes(userId)
 
   if (!userHasAccess) {
-    
     const notificationData = {
       notificationContent: 'You do not have access to this room.',
       notificationType: 'is-warning',
@@ -23,11 +22,10 @@ const PrivateRoom = () => {
     dispatch(setNotification(notificationData))
     setTimeout(() => dispatch(resetNotification()), 5000)
     return <Navigate to="/" />
+    
   } else {
     return (
       <Layout>
-        Private chat room
-        
         {userHasAccess ? <Chat /> : <p>No access</p>}
       </Layout>
     )
