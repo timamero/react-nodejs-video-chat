@@ -15,11 +15,13 @@ const MessagesDisplay: React.FC = () => {
     return Math.floor((Math.random() * 10000))
   }
 
-  socket.on('chat message', function(msg: string) {
+  socket.on('chat message', ( messageData ) => {
     const newMessage = {
-      content: msg,
+      content: messageData.msg,
+      userId: messageData.userId,
       id: generateRandomNum()
     }
+    console.log('new message data', newMessage)
     setMessages(messages.concat(newMessage))
   })
 
