@@ -3,6 +3,7 @@ import Layout from '../components/Layout';
 import { setNotification, resetNotification } from '../app/features/notificationSlice';
 import { useAppSelector, useAppDispatch } from '../app/hooks';
 import { useNavigate } from 'react-router-dom';
+import Chat from '../components/Chat';
 
 const PrivateRoom = () => {
   const navigate = useNavigate()
@@ -31,7 +32,10 @@ const PrivateRoom = () => {
     <Layout>
       Private chat room
       
-      {userHasAccess ? <p>User has access</p> : <p>No access</p>}
+      {userHasAccess 
+        ? 
+          <Chat /> 
+        : <p>No access</p>}
     </Layout>
   )
 }
