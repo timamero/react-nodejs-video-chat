@@ -1,9 +1,12 @@
 import React, { useContext } from "react";
 import { SocketContext } from "../context/socket";
+import { useAppSelector } from '../app/hooks';
 
 
 const MessageForm: React.FC = () => {
   const socket = useContext(SocketContext)
+
+  const roomId = useAppSelector(state => state.room.roomId)
 
   const handleMessageSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -11,10 +14,13 @@ const MessageForm: React.FC = () => {
       message: { value: string };
     };
 
-    const message = target.message.value
+    const messageData = {
+      msg: target.message.value,
+      roomId
+    }
 
-    if (message) {
-      socket.emit('chat message', message);
+    if (messageData.msg) {
+      socket.emit('send chat message', messageData);
       target.message.value = '';
     }
   }
