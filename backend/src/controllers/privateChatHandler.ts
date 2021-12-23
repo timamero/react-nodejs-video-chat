@@ -28,6 +28,16 @@ const privateChatHandler = (socket: Socket, io: Server) => {
     io.to(inviterId).emit('invite declined', socket.id)
   })
 
+  socket.on('send chat message', (sentMessageData) => {
+    const messageData = {
+      msg: sentMessageData.msg,
+      userId: socket.id
+    }
+    
+    io.to(sentMessageData.roomId).emit('receive chat message', messageData);
+    console.log('message: ' + messageData.msg);
+  })
+
   // socket.on('disconnect', () => {
 
   // })
