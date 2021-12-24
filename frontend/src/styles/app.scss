@@ -1,3 +1,7 @@
 @charset "utf-8";
 @import "~bulma/bulma.sass";
 @import 'helpers/mixins';
+
+body, html, #root .App {
+  height: 100vh;
+}
