@@ -2,6 +2,7 @@ import React from 'react';
 import Layout from '../components/Layout';
 import { setNotification, resetNotification } from '../app/features/notificationSlice';
 import { useAppSelector, useAppDispatch } from '../app/hooks';
+import Chat from '../components/Chat';
 import { Navigate } from 'react-router-dom';
 
 const PrivateRoom = () => {
@@ -12,7 +13,6 @@ const PrivateRoom = () => {
   const userHasAccess = room.users.includes(userId)
 
   if (!userHasAccess) {
-    
     const notificationData = {
       notificationContent: 'You do not have access to this room.',
       notificationType: 'is-warning',
@@ -22,12 +22,11 @@ const PrivateRoom = () => {
     dispatch(setNotification(notificationData))
     setTimeout(() => dispatch(resetNotification()), 5000)
     return <Navigate to="/" />
+    
   } else {
     return (
       <Layout>
-        Private chat room
-        
-        {userHasAccess ? <p>User has access</p> : <p>No access</p>}
+        {userHasAccess ? <Chat /> : <p>No access</p>}
       </Layout>
     )
   }

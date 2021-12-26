@@ -4,7 +4,7 @@ import Navbar from "./Navbar";
 
 const Layout: React.FC = ({children}) => {
   return (
-    <div>
+    <div className="is-flex is-flex-direction-column is-flex-grow-1">
       <Navbar />
       <Header />
       {children}

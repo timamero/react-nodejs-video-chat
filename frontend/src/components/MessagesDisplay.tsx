@@ -15,16 +15,18 @@ const MessagesDisplay: React.FC = () => {
     return Math.floor((Math.random() * 10000))
   }
 
-  socket.on('chat message', function(msg: string) {
+  socket.on('receive chat message', ( messageData ) => {
     const newMessage = {
-      content: msg,
+      content: messageData.msg,
+      userId: messageData.userId,
       id: generateRandomNum()
     }
+    console.log('new message data', newMessage)
     setMessages(messages.concat(newMessage))
   })
 
   return (
-    <div id="display" className="box is-flex-grow-5">
+    <div id="display" className="box is-fullheight">
       <div id="messageContainer" className="is-flex is-flex-direction-column is-justify-content-flex-end">
         {messages.map(message => <Message message={message.content} key={message.id}/>)}
       </div>  

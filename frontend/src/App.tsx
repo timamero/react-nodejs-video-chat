@@ -87,7 +87,7 @@ const App: React.FC = () => {
  
   return (
     <Router>
-      <div className="App">
+      <div className="App is-flex is-flex-direction-column">
         <Routes>
           <Route path='/' element={<Home />}/>
           <Route path='/p-room/:id' element={<PrivateRoom />} />

@@ -2,7 +2,12 @@ import { Server, Socket } from 'socket.io';
 
 const chatMessage = (socket: Socket, io: Server) => {
    socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
+    const messageData = {
+      msg,
+      userId: socket.id
+    }
+    
+    io.emit('chat message', messageData);
     console.log('message: ' + msg);
   })
 }
