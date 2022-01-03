@@ -1,16 +1,34 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import Layout from '../components/Layout';
 import { setNotification, resetNotification } from '../app/features/notificationSlice';
 import { useAppSelector, useAppDispatch } from '../app/hooks';
-import Chat from '../components/Chat';
+// import Chat from '../components/Chat';
 import { Navigate } from 'react-router-dom';
+import { selectRoom } from '../app/features/roomSlice';
+import { selectUserId } from '../app/features/userSlice';
+// import { store } from '../app/store';
+// import { selectRoom } from '../app/hooks';
+// import { createSelector, createDraftSafeSelector } from '@reduxjs/toolkit';
+// import { RootState } from '../app/store';
+import { SocketContext } from '../context/socket';
+
+
+
 
 const PrivateRoom = () => {
+  console.log('privateRoom rendered')
+  const socket = useContext(SocketContext)
   const dispatch = useAppDispatch()
-  const room = useAppSelector(state => state.room)
-  const userId = useAppSelector(state => state.user.id)
+  // const room = useAppSelector(state => state.room)
+  const room = useAppSelector(state  => selectRoom(state))
+  // const userId = useAppSelector(selectUserId)
+  const userId = useAppSelector(state => selectUserId(state))
 
+  useEffect(() => {
+    socket.removeAllListeners('enter chat room')
+  })
   const userHasAccess = room.users.includes(userId)
+  // const userHasAccess = true
 
   if (!userHasAccess) {
     const notificationData = {
@@ -26,7 +44,8 @@ const PrivateRoom = () => {
   } else {
     return (
       <Layout>
-        {userHasAccess ? <Chat /> : <p>No access</p>}
+        {userHasAccess ? <p>Has access</p> : <p>No access</p>}
+        {/* {userHasAccess ? <Chat /> : <p>No access</p>} */}
       </Layout>
     )
   }

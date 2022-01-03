@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createSelector } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 import { Room } from './types'
 
 const initialState: Room = {
@@ -24,3 +25,5 @@ export const roomSlice = createSlice({
 export const { setRoom, resetRoom } = roomSlice.actions
 
 export default roomSlice.reducer
+
+export const selectRoom = createSelector((state: RootState) => state.room, room => room)
