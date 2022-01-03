@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ActiveUsers from '../components/ActiveUsers';
 import Layout from '../components/Layout';
@@ -10,7 +10,13 @@ import Modal from '../components/Modal';
 import Notification from '../components/Notification';
 import { SocketContext } from '../context/socket';
 
+interface RoomData {
+  roomId: string;
+  users: [string];
+}
+
 const Home = () => {
+  console.log('home rendered')
   const navigate = useNavigate()
   const socket = useContext(SocketContext)
   const dispatch = useAppDispatch();
@@ -18,11 +24,19 @@ const Home = () => {
   const username = useAppSelector(state => state.user.username)
   const notifiactionActive = useAppSelector(state => state.notification.isActive)
 
-  // had to move this socket from App to Home because the navigate method had errors inside App
-  socket.on('enter chat room', roomData => {
-    dispatch(resetNotification())
-    dispatch(setRoom({ roomId: roomData.roomId, users: roomData.users}))
-    navigate(`/p-room/${roomData.roomId}`)
+  useEffect(() => {
+    // had to move this socket from App to Home because the navigate method had errors inside App
+    const callback = (roomData: RoomData) => {
+      console.log('recieved') // repeated 3-6 times
+      dispatch(resetNotification())
+      dispatch(setRoom({ roomId: roomData.roomId, users: roomData.users}))
+      navigate(`/p-room/${roomData.roomId}`)
+    }
+    socket.on('enter chat room', callback)
+
+    return () => {
+      socket.off('enter chat room', callback)
+    }
   })
 
   return (

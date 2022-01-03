@@ -12,23 +12,18 @@ import { selectUserId } from '../app/features/userSlice';
 // import { RootState } from '../app/store';
 import { SocketContext } from '../context/socket';
 
-
-
-
 const PrivateRoom = () => {
   console.log('privateRoom rendered')
   const socket = useContext(SocketContext)
   const dispatch = useAppDispatch()
-  // const room = useAppSelector(state => state.room)
   const room = useAppSelector(state  => selectRoom(state))
-  // const userId = useAppSelector(selectUserId)
   const userId = useAppSelector(state => selectUserId(state))
 
   useEffect(() => {
+    console.log('remove enter chat room listener')
     socket.removeAllListeners('enter chat room')
-  })
+  }, [socket])
   const userHasAccess = room.users.includes(userId)
-  // const userHasAccess = true
 
   if (!userHasAccess) {
     const notificationData = {
