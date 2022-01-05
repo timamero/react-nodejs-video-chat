@@ -43,7 +43,7 @@ const App: React.FC = () => {
     /*
     * Socket event listeners
     */
-    socket.on('connect', () => {
+    socket.once('connect', () => {
       console.log('Connected to server')
     })
     socket.on('get user list', users => {
