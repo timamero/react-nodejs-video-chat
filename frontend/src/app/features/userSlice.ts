@@ -23,5 +23,3 @@ export const userSlice = createSlice({
 export const { setNewUser, setId } = userSlice.actions
 
 export default userSlice.reducer
-
-export const selectUserId = createSelector((state: RootState) => state.user, user => user.id)

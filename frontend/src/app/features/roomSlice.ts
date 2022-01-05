@@ -25,5 +25,3 @@ export const roomSlice = createSlice({
 export const { setRoom, resetRoom } = roomSlice.actions
 
 export default roomSlice.reducer
-
-export const selectRoom = createSelector((state: RootState) => state.room, room => room)
