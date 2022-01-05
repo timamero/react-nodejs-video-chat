@@ -7,14 +7,12 @@ import { Navigate } from 'react-router-dom';
 import { SocketContext } from '../context/socket';
 
 const PrivateRoom = () => {
-  console.log('privateRoom rendered')
   const socket = useContext(SocketContext)
   const dispatch = useAppDispatch()
   const room = useAppSelector(state  => state.room)
   const userId = useAppSelector(state => state.user.id)
 
   useEffect(() => {
-    console.log('remove enter chat room listener')
     socket.removeAllListeners('enter chat room')
   }, [socket])
   const userHasAccess = room.users.includes(userId)

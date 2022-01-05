@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { SocketContext } from "../context/socket";
 import Message from './Message';
 
@@ -15,15 +15,16 @@ const MessagesDisplay: React.FC = () => {
     return Math.floor((Math.random() * 10000))
   }
 
-  socket.on('receive chat message', ( messageData ) => {
-    const newMessage = {
-      content: messageData.msg,
-      userId: messageData.userId,
-      id: generateRandomNum()
-    }
-    console.log('new message data', newMessage)
-    setMessages(messages.concat(newMessage))
-  })
+  useEffect(() => {
+    socket.once('receive chat message', ( messageData ) => {
+      const newMessage = {
+        content: messageData.msg,
+        userId: messageData.userId,
+        id: generateRandomNum()
+      }
+      setMessages(messages.concat(newMessage))
+    })
+  }, [socket, messages])
 
   return (
     <div id="display" className="box is-fullheight">
