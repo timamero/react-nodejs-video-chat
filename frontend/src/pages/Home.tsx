@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ActiveUsers from '../components/ActiveUsers';
 import Layout from '../components/Layout';
@@ -22,26 +22,26 @@ const Home = () => {
   const dispatch = useAppDispatch();
 
   const username = useAppSelector(state => state.user.username)
-  const notifiactionActive = useAppSelector(state => state.notification.isActive)
+  const notificationActive = useAppSelector(state => state.notification.isActive)
+
+  const handleEnterChat = useCallback((roomData: RoomData) => {
+    dispatch(resetNotification())
+    dispatch(setRoom({ roomId: roomData.roomId, users: roomData.users}))
+    navigate(`/p-room/${roomData.roomId}`)
+  }, [dispatch, navigate])
 
   useEffect(() => {
-    // had to move this socket from App to Home because the navigate method had errors inside App
-    const callback = (roomData: RoomData) => {
-      console.log('recieved') // repeated 3-6 times
-      dispatch(resetNotification())
-      dispatch(setRoom({ roomId: roomData.roomId, users: roomData.users}))
-      navigate(`/p-room/${roomData.roomId}`)
-    }
-    socket.on('enter chat room', callback)
+    // Moved 'enter chat room' socket listener from App to Home because the navigate method had errors inside App
+    socket.on('enter chat room', handleEnterChat)
 
     return () => {
-      socket.off('enter chat room', callback)
+      socket.off('enter chat room', handleEnterChat)
     }
-  })
+  }, [socket, handleEnterChat])
 
   return (
     <Layout>
-      {notifiactionActive && <Notification/>}
+      {notificationActive && <Notification/>}
       {!username 
        ? 
         <NewUserForm />
