@@ -1,11 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from "../app/hooks";
+import { SocketContext } from "../context/socket";
 
 const RoomOptions = () => {
+  const socket = useContext(SocketContext)
   const navigate = useNavigate()
+
+  const roomId = useAppSelector(state => state.room.roomId)
 
   const handleClick = () => {
     console.log('end chat')
+    socket.emit('end chat', roomId)
     navigate('/')
   }
 
