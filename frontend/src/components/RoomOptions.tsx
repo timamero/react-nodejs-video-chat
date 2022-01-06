@@ -1,8 +1,12 @@
 import React from "react";
+import { useNavigate } from 'react-router-dom';
 
 const RoomOptions = () => {
+  const navigate = useNavigate()
+
   const handleClick = () => {
     console.log('end chat')
+    navigate('/')
   }
 
   return (
