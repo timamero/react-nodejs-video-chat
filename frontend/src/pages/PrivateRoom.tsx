@@ -6,6 +6,7 @@ import Chat from '../components/Chat';
 import RoomOptions from '../components/RoomOptions';
 import { Navigate } from 'react-router-dom';
 import { SocketContext } from '../context/socket';
+import VideoDisplay from '../components/VideoDisplay';
 
 const PrivateRoom = () => {
   const socket = useContext(SocketContext)
@@ -36,6 +37,7 @@ const PrivateRoom = () => {
         ? 
           <div className="is-flex is-flex-direction-column is-flex-grow-1">
             <RoomOptions />
+            <VideoDisplay />
             <Chat />
           </div>
         : <p>No access</p>}
