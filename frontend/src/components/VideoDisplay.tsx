@@ -19,6 +19,74 @@ const VideoDisplay = () => {
     }
   }, [])
 
+  const handleNegotiationNeededEvent = useCallback(async () => {
+    if (myPeerConnectionRef.current) {
+      try {
+        const offer = await myPeerConnectionRef.current.createOffer({
+          offerToReceiveAudio: true, 
+          offerToReceiveVideo: true
+        });
+      
+        if (myPeerConnectionRef.current.signalingState !== 'stable') {
+          console.log('connection is not stable yet...')
+          return;
+        }
+
+        await myPeerConnectionRef.current.setLocalDescription(offer)
+
+        // send offer to remote peer
+        socket.emit('videoChatOffer', {sdp: myPeerConnectionRef.current.localDescription})
+      } catch (err) {
+        console.log('error in handleNegotiationNeededEvent: ', err)
+      }
+    } 
+  }, [socket])
+
+  const handleICECandidateEvent = useCallback((event: RTCPeerConnectionIceEvent) => {
+    if (event.candidate) {
+      socket.emit('candidate', {candidate: event.candidate})
+    }
+  }, [socket])
+
+  const handleNewICECandidate = useCallback(async (candidate: RTCIceCandidate) => {
+    if (myPeerConnectionRef.current) {
+      candidate = new RTCIceCandidate(candidate)
+      try {
+        await myPeerConnectionRef.current.addIceCandidate(candidate)
+      } catch (err) {
+        console.log('error in handleNewICECandidate', err)
+      } 
+    } 
+  }, [])
+
+  const handleICEGatheringStateChangeEvent = useCallback((event: any) => {
+    if (myPeerConnectionRef.current) {
+      console.log(`ice gathering state changed to: ${myPeerConnectionRef.current.iceGatheringState}`)
+    } 
+  }, [])
+
+  const handleICEConnectionStateChangeEvent = useCallback((event: any) => {
+    if (myPeerConnectionRef.current) {
+      switch(myPeerConnectionRef.current.iceConnectionState) {
+        case 'closed':
+        case 'failed':
+        case 'disconnected':
+          closeVideoCall();
+          break;
+      }
+    } 
+  }, [])
+
+  const handleSignalingStateChangeEvent = useCallback((event: any) => {
+    if (myPeerConnectionRef.current) {
+      switch (myPeerConnectionRef.current.signalingState) {
+        case 'closed':
+          closeVideoCall();
+          break;
+      }
+    }  
+  }, [])
+
   const createPeerConnection = useCallback( async () => {
     myPeerConnectionRef.current = new RTCPeerConnection() // For peers to connect from different networks, need to specify TURN or STUN servers
     
@@ -37,6 +105,81 @@ const VideoDisplay = () => {
     handleSignalingStateChangeEvent,
     handleNegotiationNeededEvent,
   ])
+
+  const handleVideoChatOffer = useCallback(async (sdp: RTCSessionDescription) => {
+    // If not already connect, create RTCPeerConncetion  
+    if (!myPeerConnectionRef.current) {
+      createPeerConnection()
+    } 
+
+    if (myPeerConnectionRef.current) {
+      // Set up remote description to the received SDP offer
+      const desc = new RTCSessionDescription(sdp)
+      try {
+        if (myPeerConnectionRef.current.signalingState !== 'stable') {
+          console.log('handle video chat offer not stable')
+          await Promise.all([
+            myPeerConnectionRef.current.setLocalDescription({type: 'rollback'}),
+            myPeerConnectionRef.current.setRemoteDescription(sdp)
+          ]);
+          return;
+        } else {
+          await myPeerConnectionRef.current.setRemoteDescription(desc)
+        }
+
+        // Get webcam stream
+        if (!webcamStreamRef.current) {
+          // Get access to webcam stream and display it in local stream
+          try {
+            webcamStreamRef.current = await navigator.mediaDevices.getUserMedia(mediaConstraints)
+            if (streamRef.current) {
+              streamRef.current.srcObject = webcamStreamRef.current;
+            }
+          } catch (err) {
+            console.log('error in handleVideoChatOffer - local webcam stream', err)
+          }
+
+          // Add tracks from stream to the RTCPeerConnection
+          if (webcamStreamRef.current) {
+            try {
+              webcamStreamRef.current.getTracks().forEach((track: MediaStreamTrack) => {
+                if (myPeerConnectionRef.current) {
+                  myPeerConnectionRef.current.addTrack(track, webcamStreamRef.current!)
+                }
+              })
+            } catch (err) {
+              console.log('error in handleVideoChatOffer - webcam stream add tracks', err)
+            }
+          }
+        }
+
+        // Send answer to caller
+        try {
+          const answer = await myPeerConnectionRef.current.createAnswer({
+            offerToReceiveVideo: true,
+            offerToReceiveAudio: true,
+          })
+          await myPeerConnectionRef.current.setLocalDescription(new RTCSessionDescription(answer))
+          socket.emit('videoChatAnswer', {sdp: myPeerConnectionRef.current.localDescription})
+        } catch (err) {
+          console.log('error in handleVideoChatOffer - sending answer', err)
+        }
+      } catch (err) {
+        console.log('error in handleVideoChatOffer')
+      }
+    } 
+  }, [createPeerConnection, mediaConstraints, socket])
+
+  const handleVideoChatAnswer = useCallback(async (sdp: RTCSessionDescription) => {
+    if (myPeerConnectionRef.current) {
+      try {
+        const desc = new RTCSessionDescription(sdp);
+        await myPeerConnectionRef.current.setRemoteDescription(desc)
+      } catch (err) {
+        console.log('error in handleVideoChatAnswer', err)
+      } 
+    }
+  }, [])
 
   const startVideoChat = useCallback( async () => {
     if (!myPeerConnectionRef.current) {
@@ -70,167 +213,19 @@ const VideoDisplay = () => {
       startVideoChat()
     })
 
-  }, [socket, startVideoChat, handleVideoChatOffer, handleVideoChatAnswer, handleNewICECandidate])
+    socket.on('getVideoChatOffer', (sdp: RTCSessionDescription) => {
+      handleVideoChatOffer(sdp);
+    })
+
+    socket.on('getVideoChatAnswer', (sdp: RTCSessionDescription) => {
+      handleVideoChatAnswer(sdp)
+    })
   
+    socket.on('getCandidate', (candidate: RTCIceCandidate) => {
+      handleNewICECandidate(candidate)
+    })
 
-  socket.on('getVideoChatOffer', (sdp: RTCSessionDescription) => {
-    handleVideoChatOffer(sdp);
-  })
-
-  socket.on('getVideoChatAnswer', (sdp: RTCSessionDescription) => {
-    handleVideoChatAnswer(sdp)
-  })
-
-  socket.on('getCandidate', (candidate: RTCIceCandidate) => {
-    handleNewICECandidate(candidate)
-  })
-
-  // async function createPeerConnection() {   
-  //   myPeerConnection = new RTCPeerConnection() // For peers to connect from different networks, need to specify TURN or STUN servers
-
-  //   // Set up event handlers for the ICE negotiation process.
-  //   myPeerConnection.onicecandidate = handleICECandidateEvent;
-  //   myPeerConnection.oniceconnectionstatechange = handleICEConnectionStateChangeEvent;
-  //   myPeerConnection.onicegatheringstatechange = handleICEGatheringStateChangeEvent;
-  //   myPeerConnection.onsignalingstatechange = handleSignalingStateChangeEvent;
-  //   myPeerConnection.onnegotiationneeded = handleNegotiationNeededEvent;
-  //   myPeerConnection.ontrack = handleTrackEvent;
-  // }
-
-  async function handleNegotiationNeededEvent() {
-    if (myPeerConnection) {
-      try {
-        const offer = await myPeerConnection.createOffer({
-          offerToReceiveAudio: true, 
-          offerToReceiveVideo: true
-        });
-      
-        if (myPeerConnection.signalingState !== 'stable') {
-          console.log('connection is not stable yet...')
-          return;
-        }
-
-        await myPeerConnection.setLocalDescription(offer)
-
-        // send offer to remote peer
-        socket.emit('videoChatOffer', {sdp: myPeerConnection.localDescription})
-      } catch (err) {
-        console.log('error in handleNegotiationNeededEvent: ', err)
-      }
-    } 
-  }
-
-  async function handleVideoChatOffer(sdp: RTCSessionDescription) {
-    // If not already connect, create RTCPeerConncetion  
-    if (!myPeerConnection) {
-      createPeerConnection()
-    } 
-
-    if (myPeerConnection) {
-      // Set up remote description to the received SDP offer
-      const desc = new RTCSessionDescription(sdp)
-      try {
-        if (myPeerConnection.signalingState !== 'stable') {
-          console.log('handle video chat offer not stable')
-          await Promise.all([
-            myPeerConnection.setLocalDescription({type: 'rollback'}),
-            myPeerConnection.setRemoteDescription(sdp)
-          ]);
-          return;
-        } else {
-          await myPeerConnection.setRemoteDescription(desc)
-        }
-
-        // Get webcam stream
-        if (!webcamStream) {
-          // Get access to webcam stream and display it in local stream
-          try {
-            webcamStream = await navigator.mediaDevices.getUserMedia(mediaConstraints)
-            if (streamRef.current) {
-              streamRef.current.srcObject = webcamStream;
-            }
-          } catch (err) {
-            console.log('error in handleVideoChatOffer - local webcam stream', err)
-          }
-
-          // Add tracks from stream to the RTCPeerConnection
-          if (webcamStream) {
-            try {
-              webcamStream.getTracks().forEach((track: MediaStreamTrack) => {
-                if (myPeerConnection) {
-                  myPeerConnection.addTrack(track, webcamStream)
-                }
-              })
-            } catch (err) {
-              console.log('error in handleVideoChatOffer - webcam stream add tracks', err)
-            }
-          }
-        }
-
-        // Send answer to caller
-        try {
-          const answer = await myPeerConnection.createAnswer({
-            offerToReceiveVideo: true,
-            offerToReceiveAudio: true,
-          })
-          await myPeerConnection.setLocalDescription(new RTCSessionDescription(answer))
-          socket.emit('videoChatAnswer', {sdp: myPeerConnection.localDescription})
-        } catch (err) {
-          console.log('error in handleVideoChatOffer - sending answer', err)
-        }
-      } catch (err) {
-        console.log('error in handleVideoChatOffer')
-      }
-    } 
-  }
-
-  async function handleVideoChatAnswer(sdp: RTCSessionDescription) {
-    if (myPeerConnection) {
-      try {
-        const desc = new RTCSessionDescription(sdp);
-        await myPeerConnection.setRemoteDescription(desc)
-      } catch (err) {
-        console.log('error in handleVideoChatAnswer', err)
-      } 
-    }
-     
-  }
-
-  function handleICECandidateEvent(event: RTCPeerConnectionIceEvent) {
-    if (event.candidate) {
-      socket.emit('candidate', {candidate: event.candidate})
-    }
-  }
-
-  async function handleNewICECandidate(candidate: RTCIceCandidate) {
-    if (myPeerConnection) {
-      candidate = new RTCIceCandidate(candidate)
-      try {
-        await myPeerConnection.addIceCandidate(candidate)
-      } catch (err) {
-        console.log('error in handleNewICECandidate', err)
-      } 
-    } 
-  }
-
-  function handleICEGatheringStateChangeEvent(event: any) {
-    if (myPeerConnection) {
-      console.log(`ice gathering state changed to: ${myPeerConnection.iceGatheringState}`)
-    } 
-  }
-
-  function handleICEConnectionStateChangeEvent(event: any) {
-    if (myPeerConnection) {
-      switch(myPeerConnection.iceConnectionState) {
-        case 'closed':
-        case 'failed':
-        case 'disconnected':
-          closeVideoCall();
-          break;
-      }
-    }
-    
-  }
+  }, [socket, startVideoChat, handleVideoChatOffer, handleVideoChatAnswer, handleNewICECandidate])
 
   function handleTrackEvent(event: RTCTrackEvent) {
     if (remoteStreamRef.current) {
@@ -241,30 +236,29 @@ const VideoDisplay = () => {
   function closeVideoCall() {
     console.log('closing peer connection') 
 
-    if (myPeerConnection) {
+    if (myPeerConnectionRef.current) {
       console.log('starting to cleear peer methods')
-      myPeerConnection.ontrack = null;
+      myPeerConnectionRef.current.ontrack = null;
       // myPeerConnection.onremovetrack = null;
       // myPeerConnection.onremovestream = null;
-      myPeerConnection.onicecandidate = null;
-      myPeerConnection.oniceconnectionstatechange = null;
-      myPeerConnection.onsignalingstatechange = null;
-      myPeerConnection.onicegatheringstatechange = null;
-      myPeerConnection.onnegotiationneeded = null;
+      myPeerConnectionRef.current.onicecandidate = null;
+      myPeerConnectionRef.current.oniceconnectionstatechange = null;
+      myPeerConnectionRef.current.onsignalingstatechange = null;
+      myPeerConnectionRef.current.onicegatheringstatechange = null;
+      myPeerConnectionRef.current.onnegotiationneeded = null;
 
       // myPeerConnection.getTransceivers().forEach(transceiver => {
       //   transceiver.stop();
       // });
 
-      myPeerConnection.close();
-      myPeerConnection = null;
+      myPeerConnectionRef.current.close();
+      myPeerConnectionRef.current = null;
       console.log('closed peer connection')
     }
     
-
-    if (webcamStream && streamRef.current) {
+    if (webcamStreamRef.current && streamRef.current) {
         streamRef.current.pause();
-        webcamStream.getTracks().forEach(track => {
+        webcamStreamRef.current.getTracks().forEach(track => {
           track.stop();
         })
         streamRef.current.srcObject = null
@@ -276,17 +270,7 @@ const VideoDisplay = () => {
     }
   }
 
-  function handleSignalingStateChangeEvent(event: any) {
-    if (myPeerConnection) {
-      switch (myPeerConnection.signalingState) {
-        case 'closed':
-          closeVideoCall();
-          break;
-      }
-    }
-    
-  }
-
+  // listen for end video call from server, then call end video chat function
   // function endVideoChat () {
   //   closeVideoCall();
   //   resetUsername();
