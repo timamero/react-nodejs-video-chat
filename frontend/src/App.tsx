@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useCallback } from 'react';
 import {
-  BrowserRouter as Router,
   Routes,
   Route,
 } from "react-router-dom";
@@ -13,6 +12,7 @@ import { User } from './app/features/types';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import { setNewUser, setId } from './app/features/userSlice';
 import { getAllActiveUsers } from './app/features/activeUsersSlice';
+import { resetRoom } from './app/features/roomSlice';
 import { setModal } from './app/features/modalSlice';
 import { setNotification, resetNotification } from './app/features/notificationSlice';
 import PrivateRoom from './pages/PrivateRoom';
@@ -73,7 +73,8 @@ const App: React.FC = () => {
   const handleCloseChatRoom = useCallback(() => {
     console.log('request to end chat for all')
     navigate('/')
-  }, [navigate])
+    dispatch(resetRoom())
+  }, [navigate, dispatch])
 
   useEffect(() => {
     console.log('local storage useEffect')
@@ -112,15 +113,13 @@ const App: React.FC = () => {
   }, [socket, handleAddUsers, handleSetId, handleInviteRequested, handleInviteDeclined, handleCloseChatRoom])
  
   return (
-    // <Router>
-      <div className="App is-flex is-flex-direction-column">
-        <Routes>
-          <Route path='/' element={<Home />}/>
-          <Route path='/p-room/:id' element={<PrivateRoom />} />
-          <Route path='/testroom' element={<TestRoom />} />
-        </Routes>
-      </div>
-    // </Router>
+    <div className="App is-flex is-flex-direction-column">
+      <Routes>
+        <Route path='/' element={<Home />}/>
+        <Route path='/p-room/:id' element={<PrivateRoom />} />
+        <Route path='/testroom' element={<TestRoom />} />
+      </Routes>
+    </div>
   );
 }
 
