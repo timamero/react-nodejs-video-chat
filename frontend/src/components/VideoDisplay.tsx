@@ -204,12 +204,12 @@ const VideoDisplay = () => {
 
   
   useEffect(() => {
-    socket.on('userWaiting', message => {
-      console.log('message', message)
-    })
+    // socket.on('userWaiting', message => {
+    //   console.log('message', message)
+    // })
 
-    socket.on('roomReady', readyMessage => {
-      console.log('message', readyMessage)
+    socket.on('video ready', () => {
+      console.log('starting video chat on client')
       startVideoChat()
     })
 
