@@ -25,7 +25,7 @@ const ActionModal: React.FC = () => {
   const handleAcceptandCloseModal = () => {
     if (modalData.socketEvent === 'invite private chat') {
       const notificationData = {
-        notificationContent: `Wating for a response from ${peerUsername}`,
+        notificationContent: `Waiting for a response from ${peerUsername}`,
         notificationType: 'is-warning',
         isLoading: true,
         isActive: true,
@@ -37,6 +37,10 @@ const ActionModal: React.FC = () => {
     // When user accepts/confirms, the send server event that invite was accepted
     if (modalData.socketEvent === 'invite requested') {
       socket.emit('invite accepted', modalData.peerId)
+    }
+
+    if (modalData.socketEvent === 'video request accepted') {
+      socket.emit(modalData.socketEvent, modalData.peerId)
     }
     
     dispatch(resetModal())

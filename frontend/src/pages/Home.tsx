@@ -3,7 +3,7 @@ import ActiveUsers from '../components/ActiveUsers';
 import Layout from '../components/Layout';
 import NewUserForm from '../components/NewUserForm';
 import { useAppSelector } from '../app/hooks';
-import Modal from '../components/Modal';
+// import Modal from '../components/Modal';
 import Notification from '../components/Notification';
 
 const Home = () => {
@@ -23,7 +23,7 @@ const Home = () => {
       :
         <ActiveUsers />
       } 
-      <Modal />
+      {/* <Modal /> */}
     </Layout>
   )
 }

@@ -1,11 +1,12 @@
 import React, { useContext } from "react";
-import { useAppSelector } from "../app/hooks";
+import { useAppSelector } from '../app/hooks';
 import { SocketContext } from "../context/socket";
 
 const RoomOptions = () => {
   const socket = useContext(SocketContext)
 
   const roomId = useAppSelector(state => state.room.roomId)
+  const users = useAppSelector(state => state.room.users)
 
   const handleEndClick = () => {
     console.log('end chat')
@@ -14,7 +15,7 @@ const RoomOptions = () => {
 
   const handleVideoClick = () => {
     console.log('start video')
-    socket.emit('start video request')
+    socket.emit('start video request', users)
   }
 
   return (

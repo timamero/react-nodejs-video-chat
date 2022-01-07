@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "./Header";
 import Navbar from "./Navbar";
+import Modal from "./Modal";
 
 const Layout: React.FC = ({children}) => {
   return (
@@ -8,6 +9,7 @@ const Layout: React.FC = ({children}) => {
       <Navbar />
       <Header />
       {children}
+      <Modal />
     </div>
   )
 }

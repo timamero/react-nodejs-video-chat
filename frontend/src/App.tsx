@@ -81,6 +81,19 @@ const App: React.FC = () => {
     navigate(`/p-room/${roomData.roomId}`)
   }, [dispatch, navigate])
 
+  const handleStartVideoInvite = useCallback(peerId => {
+    console.log('invitation received')
+    const modalData = {
+      modalContent: 'Start video chat?',
+      confirmBtnText: 'Accept',
+      declineBtnText: 'Decline',
+      isActive: true,
+      peerId: peerId,
+      socketEvent: 'video request accepted'
+    }
+    dispatch(setModal(modalData))
+  }, [dispatch])
+
   const handleCloseChatRoom = useCallback(() => {
     navigate('/')
     dispatch(resetRoom())
@@ -109,6 +122,7 @@ const App: React.FC = () => {
     socket.on('invite requested', handleInviteRequested)
     socket.on('invite declined', handleInviteDeclined)
     socket.on('enter chat room', handleEnterChat)
+    socket.on('start video invite', handleStartVideoInvite)
     socket.on('close chat room', handleCloseChatRoom)
 
     return () => {
@@ -117,6 +131,7 @@ const App: React.FC = () => {
       socket.off('invite requested', handleInviteRequested)
       socket.off('invite declined', handleInviteDeclined)
       socket.off('enter chat room', handleEnterChat)
+      socket.off('start video invite', handleStartVideoInvite)
       socket.off('closeChatRoom', handleCloseChatRoom)
     }
   }, 
@@ -126,6 +141,7 @@ const App: React.FC = () => {
   handleInviteRequested,
   handleInviteDeclined,
   handleEnterChat,
+  handleStartVideoInvite,
   handleCloseChatRoom])
  
   return (
