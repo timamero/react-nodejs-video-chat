@@ -5,6 +5,7 @@ import {
   Route,
 } from "react-router-dom";
 import './styles/app.scss'
+import { useNavigate } from 'react-router-dom';
 import { SocketContext } from './context/socket';
 import TestRoom from './pages/TestRoom';
 import Home from './pages/Home';
@@ -17,12 +18,11 @@ import { setNotification, resetNotification } from './app/features/notificationS
 import PrivateRoom from './pages/PrivateRoom';
 
 const App: React.FC = () => {
-  console.log('app rendered')
   const dispatch = useAppDispatch()
   const socket = useContext(SocketContext)
+  const navigate = useNavigate()
 
   const activeUsers = useAppSelector(state => state.activeUsers.users)
-  // console.log('app - active user:', activeUsers)
 
   const handleSetNewUser = useCallback((usernameFromLocalStorage) => {
     dispatch(setNewUser(usernameFromLocalStorage))
@@ -30,13 +30,11 @@ const App: React.FC = () => {
 
   const handleAddUsers = useCallback((users: User[]) => {
     // Get list of active users from server
-    console.log('receiving user list', users) // repeated three times
     dispatch(getAllActiveUsers(users))
   }, [dispatch])
 
   const handleSetId = useCallback(id => {
     // Setting the socket ID as the current user's ID
-    console.log('setting app user id')
     dispatch(setId(id))
   }, [dispatch])
 
@@ -72,6 +70,11 @@ const App: React.FC = () => {
     }
   }, [dispatch, activeUsers])
 
+  const handleCloseChatRoom = useCallback(() => {
+    console.log('request to end chat for all')
+    navigate('/')
+  }, [navigate])
+
   useEffect(() => {
     console.log('local storage useEffect')
     const usernameFromLocalStorage = window.localStorage.getItem('chat-username')
@@ -97,17 +100,19 @@ const App: React.FC = () => {
     socket.on('get socket id', handleSetId)
     socket.on('invite requested', handleInviteRequested)
     socket.on('invite declined', handleInviteDeclined)
+    socket.on('close chat room', handleCloseChatRoom)
 
     return () => {
       socket.off('get user list', handleAddUsers)
       socket.off('get socket id', handleSetId)
       socket.off('invite requested', handleInviteRequested)
       socket.off('invite declined', handleInviteDeclined)
+      socket.off('closeChatRoom', handleCloseChatRoom)
     }
-  }, [socket, handleAddUsers, handleSetId, handleInviteRequested, handleInviteDeclined])
+  }, [socket, handleAddUsers, handleSetId, handleInviteRequested, handleInviteDeclined, handleCloseChatRoom])
  
   return (
-    <Router>
+    // <Router>
       <div className="App is-flex is-flex-direction-column">
         <Routes>
           <Route path='/' element={<Home />}/>
@@ -115,7 +120,7 @@ const App: React.FC = () => {
           <Route path='/testroom' element={<TestRoom />} />
         </Routes>
       </div>
-    </Router>
+    // </Router>
   );
 }
 
