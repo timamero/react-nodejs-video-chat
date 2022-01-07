@@ -12,10 +12,15 @@ import { User } from './app/features/types';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import { setNewUser, setId } from './app/features/userSlice';
 import { getAllActiveUsers } from './app/features/activeUsersSlice';
-import { resetRoom } from './app/features/roomSlice';
+import { resetRoom, setRoom } from './app/features/roomSlice';
 import { setModal } from './app/features/modalSlice';
 import { setNotification, resetNotification } from './app/features/notificationSlice';
 import PrivateRoom from './pages/PrivateRoom';
+
+interface RoomData {
+  roomId: string;
+  users: [string];
+}
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -70,18 +75,20 @@ const App: React.FC = () => {
     }
   }, [dispatch, activeUsers])
 
+  const handleEnterChat = useCallback((roomData: RoomData) => {
+    dispatch(resetNotification())
+    dispatch(setRoom({ roomId: roomData.roomId, users: roomData.users}))
+    navigate(`/p-room/${roomData.roomId}`)
+  }, [dispatch, navigate])
+
   const handleCloseChatRoom = useCallback(() => {
-    console.log('request to end chat for all')
     navigate('/')
     dispatch(resetRoom())
   }, [navigate, dispatch])
 
   useEffect(() => {
-    console.log('local storage useEffect')
     const usernameFromLocalStorage = window.localStorage.getItem('chat-username')
 
-    // If username is found in localStorage, 
-    // set the current user's username to the one found in localStorage
     if (usernameFromLocalStorage) {
       console.log('getting user from local storage')
       socket.emit('user entered', usernameFromLocalStorage)
@@ -101,6 +108,7 @@ const App: React.FC = () => {
     socket.on('get socket id', handleSetId)
     socket.on('invite requested', handleInviteRequested)
     socket.on('invite declined', handleInviteDeclined)
+    socket.on('enter chat room', handleEnterChat)
     socket.on('close chat room', handleCloseChatRoom)
 
     return () => {
@@ -108,9 +116,17 @@ const App: React.FC = () => {
       socket.off('get socket id', handleSetId)
       socket.off('invite requested', handleInviteRequested)
       socket.off('invite declined', handleInviteDeclined)
+      socket.off('enter chat room', handleEnterChat)
       socket.off('closeChatRoom', handleCloseChatRoom)
     }
-  }, [socket, handleAddUsers, handleSetId, handleInviteRequested, handleInviteDeclined, handleCloseChatRoom])
+  }, 
+  [socket, 
+  handleAddUsers,
+  handleSetId,
+  handleInviteRequested,
+  handleInviteDeclined,
+  handleEnterChat,
+  handleCloseChatRoom])
  
   return (
     <div className="App is-flex is-flex-direction-column">
