@@ -1,7 +1,6 @@
 import app from './app';
 import http from 'http';
 import { Server } from 'socket.io';
-import chatHandlers from './controllers/chatHandler';
 import videoHandlers from './controllers/videoHandler';
 import userHandler from './controllers/usersHandler';
 import privateChatHandler from './controllers/privateChatHandler';
@@ -25,7 +24,6 @@ io.on('connection', (socket) => {
 
   userHandler(socket, io);
   privateChatHandler(socket, io);
-  chatHandlers.chatMessage(socket, io);
   videoHandlers.streamPeers(socket, io); // test
 
   socket.on('disconnect', () => {
