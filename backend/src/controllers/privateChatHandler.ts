@@ -13,18 +13,15 @@ const privateChatHandler = (socket: Socket, io: Server) => {
     const roomId = `${inviterId}-room`
     const roomData = { roomId: roomId, users: [inviterId , socket.id] }
     
-    // Add invitee and inviter join a private room
     io.in(socket.id).socketsJoin(roomId)
     io.in(inviterId).socketsJoin(roomId)
 
-    // Send invite request with inviter id to invitee
     io.to(roomId).emit('enter chat room', roomData)
   })
 
   socket.on('decline invite', (inviterId) => {
     console.log(`${socket.id} declined chat with ${inviterId}`)
 
-    // Send inviter event that invite was declined
     io.to(inviterId).emit('invite declined', socket.id)
   })
 
@@ -42,10 +39,6 @@ const privateChatHandler = (socket: Socket, io: Server) => {
     console.log(`end chat for room ${roomId}`)
     io.to(roomId).emit('close chat room')
   })
-
-  // socket.on('disconnect', () => {
-
-  // })
 }
 
 export default privateChatHandler;
