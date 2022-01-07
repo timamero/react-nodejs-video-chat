@@ -38,6 +38,11 @@ const privateChatHandler = (socket: Socket, io: Server) => {
     console.log('message: ' + messageData.msg);
   })
 
+  socket.on('end chat', (roomId) => {
+    console.log(`end chat for room ${roomId}`)
+    io.to(roomId).emit('close chat room')
+  })
+
   // socket.on('disconnect', () => {
 
   // })

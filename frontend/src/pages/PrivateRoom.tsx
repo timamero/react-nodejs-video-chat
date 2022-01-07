@@ -3,6 +3,7 @@ import Layout from '../components/Layout';
 import { setNotification, resetNotification } from '../app/features/notificationSlice';
 import { useAppSelector, useAppDispatch } from '../app/hooks';
 import Chat from '../components/Chat';
+import RoomOptions from '../components/RoomOptions';
 import { Navigate } from 'react-router-dom';
 import { SocketContext } from '../context/socket';
 
@@ -31,7 +32,13 @@ const PrivateRoom = () => {
   } else {
     return (
       <Layout>
-        {userHasAccess ? <Chat /> : <p>No access</p>}
+        {userHasAccess 
+        ? 
+          <div className="is-flex is-flex-direction-column is-flex-grow-1">
+            <RoomOptions />
+            <Chat />
+          </div>
+        : <p>No access</p>}
       </Layout>
     )
   }
