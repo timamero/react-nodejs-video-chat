@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from "react";
+import React, { useEffect, useContext, useRef } from "react";
 import { SocketContext } from "../context/socket";
 
 const VideoDisplay = () => {
@@ -15,26 +15,29 @@ const VideoDisplay = () => {
     video: { width: 300, height: 150 }
   }
 
-  socket.on('userWaiting', message => {
-    console.log('message', message)
-  })
+  useEffect(() => {
+    socket.on('userWaiting', message => {
+      console.log('message', message)
+    })
 
-  socket.on('roomReady', readyMessage => {
-    console.log('message', readyMessage)
-    startVideoChat();
-  })
+    socket.on('roomReady', readyMessage => {
+      console.log('message', readyMessage)
+      startVideoChat();
+    })
 
-  socket.on('getVideoChatOffer', (sdp: RTCSessionDescription) => {
-    handleVideoChatOffer(sdp);
-  })
+    socket.on('getVideoChatOffer', (sdp: RTCSessionDescription) => {
+      handleVideoChatOffer(sdp);
+    })
 
-  socket.on('getVideoChatAnswer', (sdp: RTCSessionDescription) => {
-    handleVideoChatAnswer(sdp)
-  })
+    socket.on('getVideoChatAnswer', (sdp: RTCSessionDescription) => {
+      handleVideoChatAnswer(sdp)
+    })
 
-  socket.on('getCandidate', (candidate: RTCIceCandidate) => {
-    handleNewICECandidate(candidate)
-  })
+    socket.on('getCandidate', (candidate: RTCIceCandidate) => {
+      handleNewICECandidate(candidate)
+    })
+  }, [socket, startVideoChat, handleVideoChatOffer, handleVideoChatAnswer, handleNewICECandidate])
+  
 
   async function createPeerConnection() {   
     myPeerConnection = new RTCPeerConnection() // For peers to connect from different networks, need to specify TURN or STUN servers
