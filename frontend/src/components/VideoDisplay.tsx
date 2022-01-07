@@ -1,19 +1,43 @@
-import React, { useEffect, useContext, useRef } from "react";
+import React, { useEffect, useContext, useRef, useCallback, useState, useMemo } from "react";
 import { SocketContext } from "../context/socket";
 
 const VideoDisplay = () => {
   const socket = useContext(SocketContext);
 
+  const [webcamStream, setWebcamStream] = useState<MediaStream|null>(null)
+
   const streamRef = useRef<HTMLVideoElement|null>(null);
   const remoteStreamRef = useRef<HTMLVideoElement|null>(null);
 
   let myPeerConnection: RTCPeerConnection | null = null;    // RTCPeerConnection
-  let webcamStream: MediaStream;        // MediaStream from webcam
 
-  const mediaConstraints = {
-    audio: true,
+  const mediaConstraints = useMemo(() => {
+    return {audio: true,
     video: { width: 300, height: 150 }
-  }
+    }
+  }, [])
+
+  const startVideoChat = useCallback( async () => {
+    if (!myPeerConnection) {
+      createPeerConnection();
+    }
+
+    // Get access to webcam stream and display it in local stream
+    try {
+      const localWebcamStream = await navigator.mediaDevices.getUserMedia(mediaConstraints)
+      setWebcamStream(localWebcamStream)
+      webcamStream?.getTracks().forEach((track: MediaStreamTrack) => {
+        if (myPeerConnection) {
+          myPeerConnection.addTrack(track, webcamStream)
+        }
+      })
+      if (streamRef.current) {
+        streamRef.current.srcObject = webcamStream;
+      }
+    } catch (err) {
+      console.log('error in enterVideoChat - local webcam stream', err)
+    }
+  }, [createPeerConnection, mediaConstraints, myPeerConnection, webcamStream])
 
   useEffect(() => {
     socket.on('userWaiting', message => {
@@ -22,7 +46,7 @@ const VideoDisplay = () => {
 
     socket.on('roomReady', readyMessage => {
       console.log('message', readyMessage)
-      startVideoChat();
+      startVideoChat()
     })
 
     socket.on('getVideoChatOffer', (sdp: RTCSessionDescription) => {
@@ -72,27 +96,6 @@ const VideoDisplay = () => {
         console.log('error in handleNegotiationNeededEvent: ', err)
       }
     } 
-  }
-
-  async function startVideoChat() {
-    if (!myPeerConnection) {
-      createPeerConnection();
-    }
-
-    // Get access to webcam stream and display it in local stream
-    try {
-      webcamStream = await navigator.mediaDevices.getUserMedia(mediaConstraints)
-      webcamStream.getTracks().forEach((track: MediaStreamTrack) => {
-        if (myPeerConnection) {
-          myPeerConnection.addTrack(track, webcamStream)
-        }
-      })
-      if (streamRef.current) {
-        streamRef.current.srcObject = webcamStream;
-      }
-    } catch (err) {
-      console.log('error in enterVideoChat - local webcam stream', err)
-    }
   }
 
   async function handleVideoChatOffer(sdp: RTCSessionDescription) {
