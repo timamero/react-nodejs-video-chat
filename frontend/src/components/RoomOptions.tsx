@@ -7,14 +7,20 @@ const RoomOptions = () => {
 
   const roomId = useAppSelector(state => state.room.roomId)
 
-  const handleClick = () => {
+  const handleEndClick = () => {
     console.log('end chat')
     socket.emit('end chat', roomId)
   }
 
+  const handleVideoClick = () => {
+    console.log('start video')
+    socket.emit('start video request')
+  }
+
   return (
     <div className="mt-4 is-flex is-flex-direction-row is-justify-content-center">
-      <button className="button is-danger" onClick={handleClick}>End Chat</button>
+      <button className="button is-danger mr-1" onClick={handleEndClick}>End Chat</button>
+      <button className="button is-link ml-1" onClick={handleVideoClick}>Start Video</button>
     </div>
   )
 }
