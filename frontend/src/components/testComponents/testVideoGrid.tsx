@@ -20,27 +20,31 @@ const TestVideoGrid: React.FC<TestVideoGridProps> = memo(({resetUsername}) => {
   }
 
   socket.on('userWaiting', message => {
-    console.log('message', message)
+    console.log('userWaiting - message', message)
   })
 
   socket.on('roomReady', readyMessage => {
-    console.log('message', readyMessage)
+    console.log('roomReady - message', readyMessage)
     startVideoChat();
   })
 
   socket.on('getVideoChatOffer', (sdp: RTCSessionDescription) => {
+    console.log('getVideoChatOffer')
     handleVideoChatOffer(sdp);
   })
 
   socket.on('getVideoChatAnswer', (sdp: RTCSessionDescription) => {
+    console.log('getVideoChatAnswer')
     handleVideoChatAnswer(sdp)
   })
 
   socket.on('getCandidate', (candidate: RTCIceCandidate) => {
+    console.log('getCandidate')
     handleNewICECandidate(candidate)
   })
 
   async function createPeerConnection() {   
+    console.log('createPeerConnection')
     myPeerConnection = new RTCPeerConnection() // For peers to connect from different networks, need to specify TURN or STUN servers
 
     // Set up event handlers for the ICE negotiation process.
@@ -53,6 +57,7 @@ const TestVideoGrid: React.FC<TestVideoGridProps> = memo(({resetUsername}) => {
   }
 
   async function handleNegotiationNeededEvent() {
+    console.log('handleNegotiationNeededEvent')
     if (myPeerConnection) {
       try {
         const offer = await myPeerConnection.createOffer({
@@ -77,6 +82,8 @@ const TestVideoGrid: React.FC<TestVideoGridProps> = memo(({resetUsername}) => {
   }
 
   async function startVideoChat() {
+    console.log('startVideoChat')
+
     if (!myPeerConnection) {
       createPeerConnection();
     }
@@ -98,6 +105,8 @@ const TestVideoGrid: React.FC<TestVideoGridProps> = memo(({resetUsername}) => {
   }
 
   async function handleVideoChatOffer(sdp: RTCSessionDescription) {
+    console.log('handleVideoChatOffer')
+    
     // If not already connect, create RTCPeerConncetion  
     if (!myPeerConnection) {
       createPeerConnection()
@@ -162,6 +171,8 @@ const TestVideoGrid: React.FC<TestVideoGridProps> = memo(({resetUsername}) => {
   }
 
   async function handleVideoChatAnswer(sdp: RTCSessionDescription) {
+    console.log('handleVideoChatAnswer')
+    
     if (myPeerConnection) {
       try {
         const desc = new RTCSessionDescription(sdp);
@@ -174,12 +185,16 @@ const TestVideoGrid: React.FC<TestVideoGridProps> = memo(({resetUsername}) => {
   }
 
   function handleICECandidateEvent(event: RTCPeerConnectionIceEvent) {
+    console.log('handleICECandidateEvent')
+    
     if (event.candidate) {
       socket.emit('candidate', {candidate: event.candidate})
     }
   }
 
   async function handleNewICECandidate(candidate: RTCIceCandidate) {
+    console.log('handleNewICECandidate')
+    
     if (myPeerConnection) {
       candidate = new RTCIceCandidate(candidate)
       try {
@@ -191,12 +206,16 @@ const TestVideoGrid: React.FC<TestVideoGridProps> = memo(({resetUsername}) => {
   }
 
   function handleICEGatheringStateChangeEvent(event: any) {
+    console.log('handleICEGatheringStateChangeEvent')
+    
     if (myPeerConnection) {
       console.log(`ice gathering state changed to: ${myPeerConnection.iceGatheringState}`)
     } 
   }
 
   function handleICEConnectionStateChangeEvent(event: any) {
+    console.log('handleICEConnectionStateChangeEvent')
+    
     if (myPeerConnection) {
       switch(myPeerConnection.iceConnectionState) {
         case 'closed':
@@ -210,6 +229,8 @@ const TestVideoGrid: React.FC<TestVideoGridProps> = memo(({resetUsername}) => {
   }
 
   function handleTrackEvent(event: RTCTrackEvent) {
+    console.log('handleTrackEvent')
+    
     if (remoteStreamRef.current) {
       remoteStreamRef.current.srcObject = event.streams[0];
     }
