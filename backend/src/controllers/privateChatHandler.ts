@@ -81,6 +81,8 @@ const privateChatHandler = (socket: Socket, io: Server) => {
 
   socket.on('end chat', (roomId) => {
     console.log(`end chat for room ${roomId}`)
+    io.to(peer1).emit('end video request')
+    io.to(peer2).emit('end video request')
     io.to(roomId).emit('close chat room')
   })
 }
