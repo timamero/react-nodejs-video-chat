@@ -4,6 +4,7 @@ import { Room } from './types'
 const initialState: Room = {
   roomId: '',
   users: [],
+  isVideoOn: false
 }
 
 export const roomSlice = createSlice({
@@ -14,13 +15,17 @@ export const roomSlice = createSlice({
       state.roomId = action.payload.roomId
       state.users = state.users.concat(action.payload.users)
     },
+    setVideoState: (state, action: PayloadAction<boolean>) => {
+      state.isVideoOn = action.payload
+    },
     resetRoom: (state) => {
       state.roomId = ''
       state.users = []
+      state.isVideoOn = false
     }
   }
 })
 
-export const { setRoom, resetRoom } = roomSlice.actions
+export const { setRoom, resetRoom, setVideoState } = roomSlice.actions
 
 export default roomSlice.reducer
