@@ -18,6 +18,7 @@ let clientCaller: user = {
 const streamPeers = (socket: Socket, io: Server) => {
   
   socket.on('userEnterRoom', username => {
+    console.log('userEnterRoom')
     if (clientCaller.username === null) {
       clientCaller = {username, socketID: socket.id}
       console.log('set clientCaller', clientCaller, socket.id)
@@ -38,7 +39,7 @@ const streamPeers = (socket: Socket, io: Server) => {
   })
 
   socket.on('videoChatOffer', ({sdp}) => {
-    console.log('offer::', socket.id)
+    console.log('videoChatOffer::', socket.id)
     console.log(`offer - sending getVideoChatOffer to ${clientCallee.username}`)
     
     if (socket.id === clientCaller.socketID) {
@@ -47,7 +48,7 @@ const streamPeers = (socket: Socket, io: Server) => {
   })
 
   socket.on('videoChatAnswer', ({sdp}) => {
-    console.log('answer::', socket.id)
+    console.log('videoChatAnswer::', socket.id)
     console.log(`answer - sending getVideoChatanswer to ${clientCaller.username}`)
     
     io.to(clientCaller.socketID!).emit('getVideoChatAnswer', sdp)
@@ -55,6 +56,7 @@ const streamPeers = (socket: Socket, io: Server) => {
 
 
   socket.on('candidate', ({candidate}) => {
+    console.log('candidate')
     console.log(`ice candidate from ${socket.id}`)
     
     if (socket.id === clientCaller.socketID) {
