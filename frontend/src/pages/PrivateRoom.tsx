@@ -37,7 +37,7 @@ const PrivateRoom = () => {
         ? 
           <div className="is-flex is-flex-direction-column is-flex-grow-1">
             <RoomOptions />
-            <VideoDisplay />
+            {room.isVideoOn && <VideoDisplay />}    
             <Chat />
           </div>
         : <p>No access</p>}
