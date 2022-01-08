@@ -1,8 +1,11 @@
 import React, { useEffect, useContext, useRef, useCallback, useMemo } from "react";
 import { SocketContext } from "../context/socket";
+import { useAppDispatch } from '../app/hooks';
+import { setVideoState } from "../app/features/roomSlice";
 
 const VideoDisplay = () => {
   const socket = useContext(SocketContext);
+  const dispatch = useAppDispatch();
 
   const webcamStreamRef = useRef<MediaStream|null>(null)
   const myPeerConnectionRef = useRef<RTCPeerConnection|null>(null)
@@ -68,7 +71,7 @@ const VideoDisplay = () => {
         case 'closed':
         case 'failed':
         case 'disconnected':
-          closeVideoCall();
+          closeVideoConnection();
           break;
       }
     } 
@@ -78,7 +81,7 @@ const VideoDisplay = () => {
     if (myPeerConnectionRef.current) {
       switch (myPeerConnectionRef.current.signalingState) {
         case 'closed':
-          closeVideoCall();
+          closeVideoConnection();
           break;
       }
     }  
@@ -206,6 +209,7 @@ const VideoDisplay = () => {
     })
 
     socket.on('get video offer', (sdp: RTCSessionDescription) => {
+      dispatch(setVideoState(true))
       handleVideoChatOffer(sdp);
     })
 
@@ -217,7 +221,13 @@ const VideoDisplay = () => {
       handleNewICECandidate(candidate)
     })
 
-  }, [socket, startVideoChat, handleVideoChatOffer, handleVideoChatAnswer, handleNewICECandidate])
+    socket.on('end video request', () => {
+      console.log('received end video request')
+      closeVideoConnection()
+      dispatch(setVideoState(false))
+    })
+
+  }, [socket, dispatch, startVideoChat, handleVideoChatOffer, handleVideoChatAnswer, handleNewICECandidate])
 
   function handleTrackEvent(event: RTCTrackEvent) {
     if (remoteStreamRef.current) {
@@ -225,7 +235,7 @@ const VideoDisplay = () => {
     }
   }
 
-  function closeVideoCall() {
+  function closeVideoConnection() {
     console.log('closing peer connection') 
 
     if (myPeerConnectionRef.current) {
