@@ -10,9 +10,6 @@ const VideoDisplay = () => {
   const streamRef = useRef<HTMLVideoElement|null>(null);
   const remoteStreamRef = useRef<HTMLVideoElement|null>(null);
 
-  // let myPeerConnection: RTCPeerConnection | null = null   // RTCPeerConnection
-  // let myPeerConnection: RTCPeerConnection | null   // RTCPeerConnection
-
   const mediaConstraints = useMemo(() => {
     return {audio: true,
     video: { width: 300, height: 150 }
@@ -35,7 +32,7 @@ const VideoDisplay = () => {
         await myPeerConnectionRef.current.setLocalDescription(offer)
 
         // send offer to remote peer
-        socket.emit('videoChatOffer', {sdp: myPeerConnectionRef.current.localDescription})
+        socket.emit('video offer', {sdp: myPeerConnectionRef.current.localDescription})
       } catch (err) {
         console.log('error in handleNegotiationNeededEvent: ', err)
       }
@@ -160,7 +157,7 @@ const VideoDisplay = () => {
             offerToReceiveAudio: true,
           })
           await myPeerConnectionRef.current.setLocalDescription(new RTCSessionDescription(answer))
-          socket.emit('videoChatAnswer', {sdp: myPeerConnectionRef.current.localDescription})
+          socket.emit('video answer', {sdp: myPeerConnectionRef.current.localDescription})
         } catch (err) {
           console.log('error in handleVideoChatOffer - sending answer', err)
         }
@@ -204,24 +201,19 @@ const VideoDisplay = () => {
 
   
   useEffect(() => {
-    // socket.on('userWaiting', message => {
-    //   console.log('message', message)
-    // })
-
     socket.on('video ready', () => {
-      console.log('starting video chat on client')
       startVideoChat()
     })
 
-    socket.on('getVideoChatOffer', (sdp: RTCSessionDescription) => {
+    socket.on('get video offer', (sdp: RTCSessionDescription) => {
       handleVideoChatOffer(sdp);
     })
 
-    socket.on('getVideoChatAnswer', (sdp: RTCSessionDescription) => {
+    socket.on('get video answer', (sdp: RTCSessionDescription) => {
       handleVideoChatAnswer(sdp)
     })
   
-    socket.on('getCandidate', (candidate: RTCIceCandidate) => {
+    socket.on('get candidate', (candidate: RTCIceCandidate) => {
       handleNewICECandidate(candidate)
     })
 
@@ -237,7 +229,7 @@ const VideoDisplay = () => {
     console.log('closing peer connection') 
 
     if (myPeerConnectionRef.current) {
-      console.log('starting to cleear peer methods')
+      console.log('starting to clear peer methods')
       myPeerConnectionRef.current.ontrack = null;
       // myPeerConnection.onremovetrack = null;
       // myPeerConnection.onremovestream = null;

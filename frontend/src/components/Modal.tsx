@@ -40,7 +40,8 @@ const ActionModal: React.FC = () => {
     }
 
     if (modalData.socketEvent === 'video request accepted') {
-      socket.emit(modalData.socketEvent, modalData.peerId)
+      console.log('send invite request accepted')
+      socket.emit(modalData.socketEvent)
     }
     
     dispatch(resetModal())

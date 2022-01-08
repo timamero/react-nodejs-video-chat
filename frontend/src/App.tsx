@@ -81,14 +81,14 @@ const App: React.FC = () => {
     navigate(`/p-room/${roomData.roomId}`)
   }, [dispatch, navigate])
 
-  const handleStartVideoInvite = useCallback(peerId => {
+  const handleStartVideoInvite = useCallback(() => {
     console.log('invitation received')
     const modalData = {
       modalContent: 'Start video chat?',
       confirmBtnText: 'Accept',
       declineBtnText: 'Decline',
       isActive: true,
-      peerId: peerId,
+      peerId: null,
       socketEvent: 'video request accepted'
     }
     dispatch(setModal(modalData))
