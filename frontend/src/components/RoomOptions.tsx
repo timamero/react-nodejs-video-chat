@@ -8,8 +8,6 @@ const RoomOptions = () => {
   const dispatch = useAppDispatch()
 
   const room = useAppSelector(state => state.room)
-  // const roomId = useAppSelector(state => state.room.roomId)
-  // const users = useAppSelector(state => state.room.users)
 
   const handleEndClick = () => {
     console.log('end chat')
