@@ -49,6 +49,7 @@ const App: React.FC = () => {
 
     if (inviter) {
         const modalData = {
+        modalName: 'private chat request',
         modalContent: `${inviter.username} has invited you to a private chat?`,
         confirmBtnText: 'Yes, accept invite.',
         declineBtnText: 'No, decline invite.',
@@ -84,6 +85,7 @@ const App: React.FC = () => {
   const handleStartVideoInvite = useCallback(() => {
     console.log('invitation received')
     const modalData = {
+      modalName: 'start video chat',
       modalContent: 'Start video chat?',
       confirmBtnText: 'Accept',
       declineBtnText: 'Decline',
