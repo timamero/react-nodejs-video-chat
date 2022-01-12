@@ -10,7 +10,7 @@ const VideoDisplay = () => {
   const webcamStreamRef = useRef<MediaStream|null>(null)
   const myPeerConnectionRef = useRef<RTCPeerConnection|null>(null)
 
-  const streamRef = useRef<HTMLVideoElement|null>(null);
+  const localStreamRef = useRef<HTMLVideoElement|null>(null);
   const remoteStreamRef = useRef<HTMLVideoElement|null>(null);
 
   const mediaConstraints = useMemo(() => {
@@ -132,8 +132,8 @@ const VideoDisplay = () => {
           // Get access to webcam stream and display it in local stream
           try {
             webcamStreamRef.current = await navigator.mediaDevices.getUserMedia(mediaConstraints)
-            if (streamRef.current) {
-              streamRef.current.srcObject = webcamStreamRef.current;
+            if (localStreamRef.current) {
+              localStreamRef.current.srcObject = webcamStreamRef.current;
             }
           } catch (err) {
             console.log('error in handleVideoChatOffer - local webcam stream', err)
@@ -168,7 +168,7 @@ const VideoDisplay = () => {
         console.log('error in handleVideoChatOffer')
       }
     } 
-  }, [createPeerConnection, mediaConstraints, socket])
+  }, [createPeerConnection, socket, mediaConstraints])
 
   const handleVideoChatAnswer = useCallback(async (sdp: RTCSessionDescription) => {
     if (myPeerConnectionRef.current) {
@@ -189,13 +189,13 @@ const VideoDisplay = () => {
     // Get access to webcam stream and display it in local stream
     try {
       webcamStreamRef.current = await navigator.mediaDevices.getUserMedia(mediaConstraints)
-      webcamStreamRef.current?.getTracks().forEach((track: MediaStreamTrack) => {
+      webcamStreamRef.current.getTracks().forEach((track: MediaStreamTrack) => {
         if (myPeerConnectionRef.current) {
           myPeerConnectionRef.current.addTrack(track, webcamStreamRef.current!)
         }
       })
-      if (streamRef.current) {
-        streamRef.current.srcObject = webcamStreamRef.current;
+      if (localStreamRef.current) {
+        localStreamRef.current.srcObject = webcamStreamRef.current;
       }
     } catch (err) {
       console.log('error in enterVideoChat - local webcam stream', err)
@@ -209,8 +209,8 @@ const VideoDisplay = () => {
     })
 
     socket.on('get video offer', (sdp: RTCSessionDescription) => {
-      dispatch(setVideoState(true))
       handleVideoChatOffer(sdp);
+      dispatch(setVideoState(true))
     })
 
     socket.on('get video answer', (sdp: RTCSessionDescription) => {
@@ -241,29 +241,24 @@ const VideoDisplay = () => {
     if (myPeerConnectionRef.current) {
       console.log('starting to clear peer methods')
       myPeerConnectionRef.current.ontrack = null;
-      // myPeerConnection.onremovetrack = null;
-      // myPeerConnection.onremovestream = null;
       myPeerConnectionRef.current.onicecandidate = null;
       myPeerConnectionRef.current.oniceconnectionstatechange = null;
       myPeerConnectionRef.current.onsignalingstatechange = null;
       myPeerConnectionRef.current.onicegatheringstatechange = null;
       myPeerConnectionRef.current.onnegotiationneeded = null;
 
-      // myPeerConnection.getTransceivers().forEach(transceiver => {
-      //   transceiver.stop();
-      // });
-
       myPeerConnectionRef.current.close();
       myPeerConnectionRef.current = null;
       console.log('closed peer connection')
     }
     
-    if (webcamStreamRef.current && streamRef.current) {
-        streamRef.current.pause();
+    if (webcamStreamRef.current && localStreamRef.current) {
+        localStreamRef.current.pause();
         webcamStreamRef.current.getTracks().forEach(track => {
           track.stop();
         })
-        streamRef.current.srcObject = null
+        webcamStreamRef.current = null
+        localStreamRef.current.srcObject = null
       }
 
     if (remoteStreamRef.current) {
@@ -272,15 +267,9 @@ const VideoDisplay = () => {
     }
   }
 
-  // listen for end video call from server, then call end video chat function
-  // function endVideoChat () {
-  //   closeVideoCall();
-  //   resetUsername();
-  // }
-
   return (
     <div className="is-flex is-flex-direction-row">
-      <video ref={el => { streamRef.current = el}} id="videoStream" autoPlay>There is a problem playing the video.</video>
+      <video ref={el => { localStreamRef.current = el}} id="videoStream" autoPlay>There is a problem playing the video.</video>
       <video ref={el => { remoteStreamRef.current = el}} id="remoteVideoStream" autoPlay>There is a problem playing the video.</video>
     </div>
   )
