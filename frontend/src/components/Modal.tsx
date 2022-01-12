@@ -5,6 +5,7 @@ import { useAppSelector, useAppDispatch } from '../app/hooks';
 import { SocketContext } from '../context/socket';
 import { setNotification } from '../app/features/notificationSlice';
 import { setVideoState } from '../app/features/roomSlice';
+import { handleDeclineInvite } from '../services/publishers';
 
 const ActionModal: React.FC = () => {
   const socket = useContext(SocketContext)
@@ -15,9 +16,8 @@ const ActionModal: React.FC = () => {
   const peerUsername = modalData.peerId ? activeUsers.find((user: User) => modalData.peerId === user.id)!.username : ''
   
   const handleDeclineandCloseModal = () => {
-    if (modalData.socketEvent === 'invite requested') {
-      // When user declines invite to chat, send server event that invite was declined
-      socket.emit('decline invite', modalData.peerId)
+    if (modalData.modalName === 'private chat request') {
+      handleDeclineInvite(modalData.peerId!)
     }
     dispatch(resetModal())
   }
