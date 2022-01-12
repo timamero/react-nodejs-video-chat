@@ -12,6 +12,7 @@ const ActiveUserItem: React.FC<ActiveUserItemProps> = ({ user }) => {
 
   const handleInviteToChatClick = () => {
     const modalData = {
+      modalName: 'send chat invite',
       modalContent: `Would you like to invite ${user.username} to private chat?`,
       confirmBtnText: 'Yes, send invite.',
       declineBtnText: 'No, cancel invite.',
