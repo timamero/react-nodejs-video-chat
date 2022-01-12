@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Modal } from './types'
 
 const initialState: Modal = {
+  modalName: '',
   modalContent: '',
   confirmBtnText: '',
   declineBtnText: '',
@@ -15,6 +16,7 @@ export const modalSlice = createSlice({
   initialState,
   reducers: {
     setModal: (state, action: PayloadAction<Modal>) => {
+      state.modalName = action.payload.modalName;
       state.modalContent = action.payload.modalContent;
       state.confirmBtnText = action.payload.confirmBtnText;
       state.declineBtnText = action.payload.declineBtnText;
@@ -23,6 +25,7 @@ export const modalSlice = createSlice({
       state.socketEvent = action.payload.socketEvent;
     },
     resetModal: (state) => {
+      state.modalName = '';
       state.modalContent = '';
       state.confirmBtnText = '';
       state.declineBtnText = '';

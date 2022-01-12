@@ -8,6 +8,7 @@ export interface ActiveUsersState {
 }
 
 export interface Modal {
+  modalName: string;
   modalContent: string;
   confirmBtnText: string;
   declineBtnText: string;
