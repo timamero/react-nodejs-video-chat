@@ -3,9 +3,8 @@ import { resetModal } from '../app/features/modalSlice';
 import { User } from '../app/features/types'
 import { useAppSelector, useAppDispatch } from '../app/hooks';
 import { SocketContext } from '../context/socket';
-import { setNotification } from '../app/features/notificationSlice';
 import { setVideoState } from '../app/features/roomSlice';
-import { handleDeclineInvite } from '../services/publishers';
+import { handleAcceptInvite, handleDeclineInvite } from '../services/publishers';
 
 const ActionModal: React.FC = () => {
   const socket = useContext(SocketContext)
@@ -23,15 +22,8 @@ const ActionModal: React.FC = () => {
   }
 
   const handleAcceptandCloseModal = () => {
-    if (modalData.socketEvent === 'invite private chat') {
-      const notificationData = {
-        notificationContent: `Waiting for a response from ${peerUsername}`,
-        notificationType: 'is-warning',
-        isLoading: true,
-        isActive: true,
-      }
-      dispatch(setNotification(notificationData))
-      socket.emit(modalData.socketEvent, modalData.peerId)
+    if (modalData.modalName === 'send chat invite') {
+      handleAcceptInvite(modalData.peerId!, peerUsername)
     }
 
     // When user accepts/confirms, the send server event that invite was accepted
