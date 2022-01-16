@@ -4,7 +4,7 @@ import { User } from '../app/features/types'
 import { useAppSelector, useAppDispatch } from '../app/hooks';
 import { SocketContext } from '../context/socket';
 import { setVideoState } from '../app/features/roomSlice';
-import { handleAcceptInvite, handleDeclineInvite } from '../services/publishers';
+import { handleSendInvite, handleInviteAccepted, handleDeclineInvite } from '../services/publishers';
 
 const ActionModal: React.FC = () => {
   const socket = useContext(SocketContext)
@@ -23,12 +23,11 @@ const ActionModal: React.FC = () => {
 
   const handleAcceptandCloseModal = () => {
     if (modalData.modalName === 'send chat invite') {
-      handleAcceptInvite(modalData.peerId!, peerUsername)
+      handleSendInvite(modalData.peerId!, peerUsername)
     }
 
-    // When user accepts/confirms, the send server event that invite was accepted
-    if (modalData.socketEvent === 'invite requested') {
-      socket.emit('invite accepted', modalData.peerId)
+    if (modalData.modalName === 'private chat request') {
+      handleInviteAccepted(modalData.peerId!)
     }
 
     if (modalData.socketEvent === 'video request accepted') {
