@@ -1,6 +1,7 @@
 import { socket } from "../context/socket"
 import { setNotification } from "../app/features/notificationSlice"
 import { setModal } from "../app/features/modalSlice";
+import { setVideoState } from "../app/features/roomSlice";
 import { store } from "../app/store";
 
 export const handleInviteToChatClick = (peerId: string, peerUsername: string) => {
@@ -34,4 +35,9 @@ export const handleInviteAccepted = (peerId: string) => {
 
 export const handleDeclineInvite = (peerId: string) => {
   socket.emit('decline invite', peerId)
+}
+
+export const handleSendVideoInvite = () => {
+  store.dispatch(setVideoState(true))
+  socket.emit('video request accepted')
 }

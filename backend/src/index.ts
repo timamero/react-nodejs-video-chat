@@ -21,7 +21,7 @@ const io: Server = new Server(server, options);
 
 io.on('connection', (socket) => {
   console.log('a user connected');
-
+  
   userHandler(socket, io);
   privateChatHandler(socket, io);
   videoHandlers.streamPeers(socket, io); // test

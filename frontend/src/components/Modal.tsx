@@ -1,13 +1,13 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { resetModal } from '../app/features/modalSlice';
 import { User } from '../app/features/types'
 import { useAppSelector, useAppDispatch } from '../app/hooks';
-import { SocketContext } from '../context/socket';
-import { setVideoState } from '../app/features/roomSlice';
-import { handleSendInvite, handleInviteAccepted, handleDeclineInvite } from '../services/publishers';
+// import { SocketContext } from '../context/socket';
+// import { setVideoState } from '../app/features/roomSlice';
+import { handleSendInvite, handleInviteAccepted, handleDeclineInvite, handleSendVideoInvite } from '../services/publishers';
 
 const ActionModal: React.FC = () => {
-  const socket = useContext(SocketContext)
+  // const socket = useContext(SocketContext)
   const dispatch = useAppDispatch();
   const modalData = useAppSelector(state => state.modal);
   const activeUsers = useAppSelector(state => state.activeUsers.users)
@@ -30,10 +30,8 @@ const ActionModal: React.FC = () => {
       handleInviteAccepted(modalData.peerId!)
     }
 
-    if (modalData.socketEvent === 'video request accepted') {
-      console.log('send invite request accepted')
-      dispatch(setVideoState(true))
-      socket.emit(modalData.socketEvent)
+    if (modalData.modalName === 'start video chat') {
+      handleSendVideoInvite()
     }
     
     dispatch(resetModal())
