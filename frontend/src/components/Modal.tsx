@@ -2,16 +2,12 @@ import React from 'react';
 import { resetModal } from '../app/features/modalSlice';
 import { User } from '../app/features/types'
 import { useAppSelector, useAppDispatch } from '../app/hooks';
-// import { SocketContext } from '../context/socket';
-// import { setVideoState } from '../app/features/roomSlice';
 import { handleSendInvite, handleInviteAccepted, handleDeclineInvite, handleSendVideoInvite } from '../services/publishers';
 
 const ActionModal: React.FC = () => {
-  // const socket = useContext(SocketContext)
   const dispatch = useAppDispatch();
   const modalData = useAppSelector(state => state.modal);
   const activeUsers = useAppSelector(state => state.activeUsers.users)
-
   const peerUsername = modalData.peerId ? activeUsers.find((user: User) => modalData.peerId === user.id)!.username : ''
   
   const handleDeclineandCloseModal = () => {
