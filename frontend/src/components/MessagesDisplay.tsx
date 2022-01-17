@@ -27,7 +27,7 @@ const MessagesDisplay: React.FC = () => {
   }, [socket, messages])
 
   return (
-    <div id="display" className="box is-fullheight">
+    <div id="display" className="box is-flex-grow-1">
       <div id="messageContainer" className="is-flex is-flex-direction-column is-justify-content-flex-end">
         {messages.map(message => <Message message={message.content} key={message.id}/>)}
       </div>  
