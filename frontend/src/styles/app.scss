@@ -2,10 +2,10 @@
 @import "~bulma/bulma.sass";
 @import 'helpers/mixins';
 
-body, html, #root .App {
+body, html, #root, .App, .Layout {
   height: 100vh;
 }
 
-// #messageContainer {
-//   height: 100%;
-// }
+#messageDisplay {
+  overflow-y: scroll;
+}

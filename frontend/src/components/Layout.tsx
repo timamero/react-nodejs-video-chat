@@ -5,7 +5,7 @@ import Modal from "./Modal";
 
 const Layout: React.FC = ({children}) => {
   return (
-    <div className="is-flex is-flex-direction-column is-flex-grow-1">
+    <div className="Layout is-flex is-flex-direction-column">
       <Navbar />
       <Header />
       {children}
