@@ -5,10 +5,12 @@ import Message from './Message';
 export interface message {
   content: string;
   id: number;
+  className: string;
 }
 
 const MessagesDisplay: React.FC = () => {
   const socket = useContext(SocketContext)
+  // const userId = 
   const [messages, setMessages] = useState<message[]>([])
 
   const generateRandomNum = () => {
@@ -17,9 +19,11 @@ const MessagesDisplay: React.FC = () => {
 
   useEffect(() => {
     socket.once('receive chat message', ( messageData ) => {
+      const firstMessageClassName = messages.length === 0 ? 'mt-auto' : ''
       const newMessage = {
         content: messageData.msg,
         userId: messageData.userId,
+        className: `${firstMessageClassName}`,
         id: generateRandomNum()
       }
       setMessages(messages.concat(newMessage))
@@ -27,8 +31,8 @@ const MessagesDisplay: React.FC = () => {
   }, [socket, messages])
 
   return (
-    <div id="messageDisplay" className="is-flex-grow-1 box is-flex is-flex-direction-column is-justify-content-end">
-      {messages.map(message => <Message message={message.content} key={message.id}/>)}
+    <div id="messageDisplay" className="is-flex-grow-1 box is-flex is-flex-direction-column">
+      {messages.map(message => <Message message={message.content} key={message.id} className={message.className}/>)}
     </div>
   )
 }
