@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { SocketContext } from "../context/socket";
 import Message from './Message';
+import { useAppSelector } from '../app/hooks';
 
 export interface message {
   content: string;
@@ -10,7 +11,7 @@ export interface message {
 
 const MessagesDisplay: React.FC = () => {
   const socket = useContext(SocketContext)
-  // const userId = 
+  const userId = useAppSelector(state => state.user.id)
   const [messages, setMessages] = useState<message[]>([])
 
   const messageEndRef = useRef<null | HTMLDivElement>(null)
@@ -26,15 +27,16 @@ const MessagesDisplay: React.FC = () => {
   useEffect(() => {
     socket.once('receive chat message', ( messageData ) => {
       const firstMessageClassName = messages.length === 0 ? 'mt-auto' : ''
+      const userClassName = messageData.userId === userId ? 'peer1-message' : 'peer2-message'
       const newMessage = {
         content: messageData.msg,
         userId: messageData.userId,
-        className: `${firstMessageClassName}`,
+        className: `${firstMessageClassName} ${userClassName}`,
         id: generateRandomNum()
       }
       setMessages(messages.concat(newMessage))
     })
-  }, [socket, messages])
+  }, [socket, messages, userId])
 
   useEffect(() => {
     scrollToBottom()

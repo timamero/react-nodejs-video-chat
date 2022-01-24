@@ -9,3 +9,15 @@ body, html, #root, .App, .Layout {
 #messageDisplay {
   overflow-y: scroll;
 }
+
+.Message {
+  width: 300px;
+}
+
+.peer1-message {
+  align-self: end;
+}
+
+.peer2-message {
+  background-color: #F1F4FF;
+}
