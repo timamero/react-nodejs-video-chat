@@ -26,7 +26,7 @@ const MessageForm: React.FC = () => {
   }
   
   return (
-    <form id="form" onSubmit={handleMessageSubmit} className="is-flex is-flex-direction-row mb-2">
+    <form id="form" onSubmit={handleMessageSubmit} className="is-flex is-flex-direction-row mb-2 is-align-self-center">
       <input 
         type="text" 
         name="message" 

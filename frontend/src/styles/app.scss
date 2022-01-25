@@ -8,7 +8,12 @@ body, html, #root, .App, .Layout {
 }
 
 #messageDisplay {
-  overflow-y: scroll;
+  overflow-y: auto;
+}
+
+#form, #messageDisplay {
+  width: 90%;
+  max-width: 500px;
 }
 
 .Message {

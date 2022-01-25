@@ -43,7 +43,7 @@ const MessagesDisplay: React.FC = () => {
   }, [messages])
 
   return (
-    <div id="messageDisplay" className="is-flex-grow-1 box is-flex is-flex-direction-column">
+    <div id="messageDisplay" className="is-flex-grow-1 box is-flex is-flex-direction-column is-align-self-center">
       {messages.map(message => <Message message={message.content} key={message.id} className={message.className}/>)}
       <div ref={messageEndRef} />
     </div>
