@@ -4,6 +4,7 @@
 
 body, html, #root, .App, .Layout {
   height: 100vh;
+  overflow-y: hidden; /* Hide vertical scrollbar */
 }
 
 #messageDisplay {
