@@ -7,8 +7,12 @@ body, html, #root, .App, .Layout {
   overflow-y: hidden; /* Hide vertical scrollbar */
 }
 
+.section {
+  height: 90vh;
+}
+
 #messageDisplay {
-  overflow-y: auto;
+  overflow-y: scroll;
 }
 
 .Message {
