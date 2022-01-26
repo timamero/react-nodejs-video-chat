@@ -11,6 +11,10 @@ body, html, #root, .App, .Layout {
   overflow-y: auto;
 }
 
+.Message {
+  width: 300px;
+}
+
 .peer1-message {
   align-self: end;
 }
