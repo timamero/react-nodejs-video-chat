@@ -8,7 +8,8 @@ const Layout: React.FC = ({children}) => {
     <div className="Layout is-flex is-flex-direction-column">
       <Navbar />
       <Header />
-      {children}
+      <div className="section is-flex-grow-1 is-flex is-flex-direction-column">{children}</div>
+      {/* {children} */}
       <Modal />
     </div>
   )

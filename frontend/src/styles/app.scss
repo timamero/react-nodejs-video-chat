@@ -11,15 +11,6 @@ body, html, #root, .App, .Layout {
   overflow-y: auto;
 }
 
-#form, #messageDisplay {
-  width: 90%;
-  max-width: 500px;
-}
-
-.Message {
-  width: 300px;
-}
-
 .peer1-message {
   align-self: end;
 }
