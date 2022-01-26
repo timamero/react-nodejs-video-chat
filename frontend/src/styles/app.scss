@@ -8,15 +8,16 @@ body, html, #root, .App, .Layout {
 }
 
 .section {
-  height: 90vh;
+  height: 92vh;
 }
 
 #messageDisplay {
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .Message {
-  width: 300px;
+  width: 75%;
+  max-width: 300px;
 }
 
 .peer1-message {
