@@ -15,7 +15,9 @@ const VideoDisplay = () => {
 
   const mediaConstraints = useMemo(() => {
     return {audio: true,
-    video: { width: 300, height: 150 }
+    // video: { width: 300, height: 150 }
+    video: { width: 250 }
+    // video: true
     }
   }, [])
 
@@ -268,9 +270,13 @@ const VideoDisplay = () => {
   }
 
   return (
-    <div className="is-flex is-flex-direction-row">
-      <video ref={el => { localStreamRef.current = el}} id="videoStream" autoPlay>There is a problem playing the video.</video>
-      <video ref={el => { remoteStreamRef.current = el}} id="remoteVideoStream" autoPlay>There is a problem playing the video.</video>
+    <div className="is-flex is-flex-direction-row is-justify-content-space-evenly">
+      <div className="m-1">
+        <video ref={el => { localStreamRef.current = el}} id="videoStream" autoPlay>There is a problem playing the video.</video>
+      </div>
+      <div className="m-1">
+        <video ref={el => { remoteStreamRef.current = el}} id="remoteVideoStream" autoPlay>There is a problem playing the video.</video>
+      </div>
     </div>
   )
 }
