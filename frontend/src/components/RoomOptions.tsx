@@ -21,10 +21,9 @@ const RoomOptions = () => {
   }
 
   return (
-    <div className="mt-4 is-flex is-flex-direction-row is-justify-content-center">
+    <div className="mt-4 mb-4 is-flex is-flex-direction-row is-justify-content-center">
       <button className="button is-danger mr-1" onClick={handleEndClick}>End Chat</button>
       {!room.isVideoOn && <button className="button is-link ml-1" onClick={handleStartVideoClick}>Start Video</button>}
-      
     </div>
   )
 }

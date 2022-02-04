@@ -2,7 +2,8 @@ import React, { useEffect, useContext } from 'react';
 import Layout from '../components/Layout';
 import { setNotification, resetNotification } from '../app/features/notificationSlice';
 import { useAppSelector, useAppDispatch } from '../app/hooks';
-import Chat from '../components/Chat';
+import MessageForm from '../components/MessageForm';
+import MessagesDisplay from '../components/MessagesDisplay';
 import RoomOptions from '../components/RoomOptions';
 import { Navigate } from 'react-router-dom';
 import { SocketContext } from '../context/socket';
@@ -35,11 +36,12 @@ const PrivateRoom = () => {
       <Layout>
         {userHasAccess 
         ? 
-          <div className="is-flex is-flex-direction-column is-flex-grow-1">
+          <>
             <RoomOptions />
             {room.isVideoOn && <VideoDisplay />}    
-            <Chat />
-          </div>
+            <MessagesDisplay />
+            <MessageForm />
+          </>
         : <p>No access</p>}
       </Layout>
     )
