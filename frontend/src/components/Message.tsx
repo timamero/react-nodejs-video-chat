@@ -7,7 +7,7 @@ interface MessageProps {
 
 const Message: React.FC<MessageProps> = memo(({ message, className }) => {
   return (
-    <div className={`Message box ${className}`}>
+    <div className={`Message box ${className} py-1 my-2`}>
       {message}
     </div>
   )
