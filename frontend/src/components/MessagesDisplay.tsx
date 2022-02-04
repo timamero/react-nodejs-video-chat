@@ -27,7 +27,7 @@ const MessagesDisplay: React.FC = () => {
   useEffect(() => {
     socket.once('receive chat message', ( messageData ) => {
       const firstMessageClassName = messages.length === 0 ? 'mt-auto' : ''
-      const userClassName = messageData.userId === userId ? 'peer1-message' : 'peer2-message'
+      const userClassName = messageData.userId === userId ? 'peer1Message' : 'peer2Message'
       const newMessage = {
         content: messageData.msg,
         userId: messageData.userId,
@@ -43,8 +43,6 @@ const MessagesDisplay: React.FC = () => {
   }, [messages])
 
   return (
-    // <div className="section is-flex-grow-1">
-    // <div id="messageDisplay" className="container is-widescreen is-flex-grow-1 box is-flex is-flex-direction-column">
     <div id="messageDisplay" className="is-flex-grow-1 box is-flex is-flex-direction-column">
       {messages.map(message => <Message message={message.content} key={message.id} className={message.className}/>)}
       <div ref={messageEndRef} />
