@@ -14,10 +14,9 @@ const VideoDisplay = () => {
   const remoteStreamRef = useRef<HTMLVideoElement|null>(null);
 
   const mediaConstraints = useMemo(() => {
-    return {audio: true,
-    // video: { width: 300, height: 150 }
-    video: { width: 250 }
-    // video: true
+    return {
+      audio: true,
+      video: { width: 250 }
     }
   }, [])
 
