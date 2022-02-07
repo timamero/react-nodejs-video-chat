@@ -7,7 +7,7 @@ import videoHandlers from './controllers/videoHandler';
 import userHandler from './controllers/usersHandler';
 import privateChatHandler from './controllers/privateChatHandler';
 import { listDatabases } from './demo';
-import { createUser } from './controllers/users';
+import { createUser, getUserByUsername } from './controllers/users';
 // https://www.youtube.com/watch?v=fbYExfeFsI0&list=PL4RCxklHWZ9tRqdFK5YqoX3ju-Hk23Btu
 //7:53
 /*
@@ -27,9 +27,13 @@ const main = async () => {
     await client.connect()
     console.log('connected to MongoDB')
 
-    await createUser(client, {
-      username: 'grogu'
-    })
+    // await createUser(client, {
+    //   username: 'grogu'
+    // })
+
+    await getUserByUsername(client, 'grogu')
+
+    await getUserByUsername(client, 'din')
 
   } catch(e) {
     console.log(e)
