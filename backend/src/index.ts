@@ -6,7 +6,9 @@ import { Server } from 'socket.io';
 import videoHandlers from './controllers/videoHandler';
 import userHandler from './controllers/usersHandler';
 import privateChatHandler from './controllers/privateChatHandler';
-
+import { listDatabases } from './demo';
+// https://www.youtube.com/watch?v=fbYExfeFsI0&list=PL4RCxklHWZ9tRqdFK5YqoX3ju-Hk23Btu
+//7:53
 /*
  * Access variables in the .env file via process.env
 */
@@ -23,6 +25,8 @@ const main = async () => {
   try {
     await client.connect()
     console.log('connected to MongoDB')
+
+    await listDatabases(client)
   } catch(e) {
     console.log(e)
   } finally {
