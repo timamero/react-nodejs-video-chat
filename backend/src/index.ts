@@ -3,9 +3,9 @@ import http from 'http';
 import dotenv from 'dotenv';
 import { MongoClient } from 'mongodb';
 import { Server } from 'socket.io';
-import videoHandlers from './controllers/videoHandler';
-import userHandler from './controllers/usersHandler';
-import privateChatHandler from './controllers/privateChatHandler';
+import videoHandlers from './pubsub/video';
+import userHandler from './pubsub/users';
+import privateChatHandler from './pubsub/privateChatHandler';
 import { listDatabases } from './demo';
 import { createUser, getUserByUsername } from './controllers/users';
 // https://www.youtube.com/watch?v=fbYExfeFsI0&list=PL4RCxklHWZ9tRqdFK5YqoX3ju-Hk23Btu
