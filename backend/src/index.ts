@@ -3,26 +3,27 @@ import http from 'http';
 import dotenv from 'dotenv';
 import { MongoClient } from 'mongodb';
 import { Server } from 'socket.io';
-import videoHandlers from './pubsub/video';
-import userHandler from './pubsub/users';
-import privateChatHandler from './pubsub/privateChat';
+import video from './pubsub/video';
+import user from './pubsub/users';
+import privateChat from './pubsub/privateChat';
 import { listDatabases } from './demo';
 import { createUser, deleteUser, getAllUsers, getUserByUsername } from './controllers/users';
-// https://www.youtube.com/watch?v=fbYExfeFsI0&list=PL4RCxklHWZ9tRqdFK5YqoX3ju-Hk23Btu
-//7:53
+
+const port = 3001;
+
+
 /*
  * Access variables in the .env file via process.env
 */
 dotenv.config();
 
-const port = 3001;
-const server = http.createServer(app);
 
+/*
+ * Connect to MongoDB database
+*/
+const uri = process.env.MONGODB_URI
+export const client = new MongoClient(uri)
 const main = async () => {
-  const uri = process.env.MONGODB_URI
-
-  const client = new MongoClient(uri)
-
   try {
     await client.connect()
     console.log('connected to MongoDB')
@@ -50,6 +51,16 @@ const main = async () => {
 
 main().catch(console.error)
 
+
+/*
+ * Create HTTP server
+*/
+const server = http.createServer(app);
+
+
+/*
+ * Create socket.io server
+*/
 const options = {
   path: '/',
   serveClient: false,
@@ -64,9 +75,9 @@ const io: Server = new Server(server, options);
 io.on('connection', (socket) => {
   console.log('a user connected');
   
-  userHandler(socket, io);
-  privateChatHandler(socket, io);
-  videoHandlers.streamPeers(socket, io); // test
+  user(socket, io);
+  privateChat(socket, io);
+  video.streamPeers(socket, io); // test
 
   socket.on('disconnect', () => {
     console.log('user disconnected');
