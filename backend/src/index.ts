@@ -7,7 +7,7 @@ import videoHandlers from './pubsub/video';
 import userHandler from './pubsub/users';
 import privateChatHandler from './pubsub/privateChat';
 import { listDatabases } from './demo';
-import { createUser, getAllUsers, getUserByUsername } from './controllers/users';
+import { createUser, deleteUser, getAllUsers, getUserByUsername } from './controllers/users';
 // https://www.youtube.com/watch?v=fbYExfeFsI0&list=PL4RCxklHWZ9tRqdFK5YqoX3ju-Hk23Btu
 //7:53
 /*
@@ -36,6 +36,8 @@ const main = async () => {
     // await getUserByUsername(client, 'din')
 
     // await getUserByUsername(client, 'fennec')
+
+    // await deleteUser(client, 'fennec')
 
     await getAllUsers(client)
 
