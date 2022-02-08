@@ -16,3 +16,9 @@ export async function getUserByUsername(client: MongoClient, username: string) {
     console.log(`No user found with the name ${username}`)
   }
 }
+
+export async function getAllUsers(client: MongoClient) {
+  const result = await client.db('chat').collection('users').find().toArray()
+
+  console.log('result', result)
+}
