@@ -12,6 +12,10 @@ describe('Connection', () => {
     db = await connection.db();
   });
 
+  beforeEach(async () => {
+    await db.collection('users').deleteMany({});
+  });
+
   afterAll(async () => {
     await connection.close();
     // await db.close();
