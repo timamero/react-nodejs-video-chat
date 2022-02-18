@@ -1,9 +1,10 @@
 import { Document, MongoClient } from 'mongodb';
 
 export async function createUser(client: MongoClient, newUser: Document) {
-  const result = await client.db('chat').collection('users').insertOne(newUser)
+  const dbName = process.env.NODE_ENV === 'test' ? 'test' : 'chat'
+  const result = await client.db(dbName).collection('users').insertOne(newUser)
 
-  // console.log(`New user created with the following id: ${result.insertedId}`)
+  console.log(`New user created with the following id: ${result.insertedId}`)
 }
 
 export async function deleteUser(client: MongoClient, username: string) {
