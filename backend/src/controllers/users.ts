@@ -28,7 +28,7 @@ export async function getUserByUsername(client: MongoClient, username: string) {
   }
 }
 
-export async function getAllUsers(client: MongoClient) {
+export async function getAllUsers(client: MongoClient,) {
   const result = await client.db('chat').collection('users').find().toArray()
 
   console.log('result', result)
