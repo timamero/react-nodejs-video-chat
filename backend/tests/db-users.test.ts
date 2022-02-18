@@ -13,6 +13,10 @@ describe('Connection', () => {
     db = await connection.db();
   });
 
+  beforeEach(async () => {
+    await db.collection('users').deleteMany({});
+  });
+
   afterAll(async () => {
     await connection.close();
   });
@@ -20,8 +24,9 @@ describe('Connection', () => {
   it('createUser function should insert a doc into collection', async () => {
     const users = db.collection('users');
     const id = new ObjectId('some-user-id')
+    const username = 'Jane'
     
-    const mockUser = { _id: id, name: 'Jane'};
+    const mockUser = { _id: id, username};
     await createUser(connection, mockUser);
 
     const insertedUser = await users.findOne({ _id: id});
