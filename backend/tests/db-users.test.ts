@@ -1,5 +1,5 @@
 import { MongoClient, Db, ObjectId } from 'mongodb';
-import { createUser, deleteUser } from '../src/controllers/users'
+import { createUser, deleteUser, getUserByUsername } from '../src/controllers/users'
 
 describe('Connection', () => {
   let connection: MongoClient;
@@ -61,6 +61,31 @@ describe('Connection', () => {
     await users.insertOne(mockUser);
 
     const result = await deleteUser(connection, usernameNotInCollection);
+    expect(result).toEqual(null)
+  });
+
+  it.only('getUserByUsername function should get correct user from collection', async () => {
+    const users = db.collection('users');
+    const id = new ObjectId('some-user-03')
+    const username = 'Jane03'
+    
+    const mockUser = { _id: id, username};
+    await users.insertOne(mockUser);
+
+    const result = await getUserByUsername(connection, username)
+    expect(result).toEqual(mockUser)
+  });
+
+  it.only('getUserByUsername function should return null if username is not found in collection', async () => {
+    const users = db.collection('users');
+    const id = new ObjectId('some-user-03')
+    const username = 'Jane03'
+    const usernameNotInCollection = 'Nora'
+    
+    const mockUser = { _id: id, username};
+    await users.insertOne(mockUser);
+
+    const result = await getUserByUsername(connection, usernameNotInCollection)
     expect(result).toEqual(null)
   });
 });
