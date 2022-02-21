@@ -1,5 +1,5 @@
 import { MongoClient, Db, ObjectId } from 'mongodb';
-import { createUser, deleteUser, getAllUsers, getUserByUsername } from '../src/controllers/users'
+import { createUser, deleteUser, getAllUsers, getUserByUsername } from '../../src/controllers/users'
 
 describe('Connection', () => {
   let connection: MongoClient;
