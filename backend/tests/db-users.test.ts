@@ -1,5 +1,5 @@
 import { MongoClient, Db, ObjectId } from 'mongodb';
-import { createUser, deleteUser, getUserByUsername } from '../src/controllers/users'
+import { createUser, deleteUser, getAllUsers, getUserByUsername } from '../src/controllers/users'
 
 describe('Connection', () => {
   let connection: MongoClient;
@@ -64,7 +64,7 @@ describe('Connection', () => {
     expect(result).toEqual(null)
   });
 
-  it.only('getUserByUsername function should get correct user from collection', async () => {
+  it('getUserByUsername function should get correct user from collection', async () => {
     const users = db.collection('users');
     const id = new ObjectId('some-user-03')
     const username = 'Jane03'
@@ -76,7 +76,7 @@ describe('Connection', () => {
     expect(result).toEqual(mockUser)
   });
 
-  it.only('getUserByUsername function should return null if username is not found in collection', async () => {
+  it('getUserByUsername function should return null if username is not found in collection', async () => {
     const users = db.collection('users');
     const id = new ObjectId('some-user-03')
     const username = 'Jane03'
@@ -87,5 +87,32 @@ describe('Connection', () => {
 
     const result = await getUserByUsername(connection, usernameNotInCollection)
     expect(result).toEqual(null)
+  });
+
+  it('getAllUsers function should return list of all users from collection', async () => {
+    const users = db.collection('users');
+
+    const userObjects = [
+      {
+        _id: new ObjectId('some-user-01'),
+        username: 'Jane01'
+      },
+      {
+        _id: new ObjectId('some-user-02'),
+        username: 'Jane02'
+      },
+      {
+        _id: new ObjectId('some-user-03'),
+        username: 'Jane03'
+      },
+    ]
+    
+    userObjects.forEach(async (user) => {
+      await users.insertOne(user);
+    })
+    
+
+    const result = await getAllUsers(connection)
+    expect(result).toEqual(userObjects)
   });
 });
