@@ -1,13 +1,22 @@
 import app from './app';
 import http from 'http';
 import { Server } from 'socket.io';
-import videoHandlers from './controllers/videoHandler';
-import userHandler from './controllers/usersHandler';
-import privateChatHandler from './controllers/privateChatHandler';
+import video from './pubsub/video';
+import user from './pubsub/users';
+import privateChat from './pubsub/privateChat';
 
 const port = 3001;
+
+
+/*
+ * Create HTTP server
+*/
 const server = http.createServer(app);
 
+
+/*
+ * Create socket.io server
+*/
 const options = {
   path: '/',
   serveClient: false,
@@ -22,9 +31,9 @@ const io: Server = new Server(server, options);
 io.on('connection', (socket) => {
   console.log('a user connected');
   
-  userHandler(socket, io);
-  privateChatHandler(socket, io);
-  videoHandlers.streamPeers(socket, io); // test
+  user(socket, io);
+  privateChat(socket, io);
+  video.streamPeers(socket, io); // test
 
   socket.on('disconnect', () => {
     console.log('user disconnected');

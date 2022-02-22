@@ -67,8 +67,8 @@ const streamPeers = (socket: Socket, io: Server) => {
   })
 }
 
-const videoHandlers = {
+const video = {
   streamPeers
 }
 
-export default videoHandlers;
+export default video;

@@ -3,7 +3,7 @@ import { Server, Socket } from 'socket.io';
 let peer1: string;
 let peer2: string;
 
-const privateChatHandler = (socket: Socket, io: Server) => {
+const privateChat = (socket: Socket, io: Server) => {
   socket.on('invite private chat', (inviteeId) => {
     console.log(`${socket.id} invited ${inviteeId} to a chat`)
 
@@ -87,4 +87,4 @@ const privateChatHandler = (socket: Socket, io: Server) => {
   })
 }
 
-export default privateChatHandler;
+export default privateChat;

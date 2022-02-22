@@ -1,4 +1,5 @@
 import { Server, Socket } from 'socket.io';
+import { getAllUsers } from '../controllers/users';
 
 // Will implement user authentication later, for now will save active users in users list
 interface User {
@@ -8,9 +9,11 @@ interface User {
 
 let users: User[] = []
 
-const userHandler = (socket: Socket, io: Server) => {
+const user = (socket: Socket, io: Server) => {
   socket.on('user entered', async (username) => {
     console.log(`${username} has entered`);
+
+    // const users = await getAllUsers()
 
     if (!users.map(user => user.id).includes(socket.id)) {
       users.push({id: socket.id, username: username});
@@ -29,4 +32,4 @@ const userHandler = (socket: Socket, io: Server) => {
   })
 }
 
-export default userHandler;
+export default user;
