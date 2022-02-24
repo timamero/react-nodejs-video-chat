@@ -1,12 +1,15 @@
 import { Server, Socket } from 'socket.io';
 import { io as clientIo, Socket as ClientSocket} from 'socket.io-client';
 import { createServer } from 'http';
+import { MongoClient, Db, ObjectId } from 'mongodb';
 import user from '../../src/pubsub/users';
 
 describe("my awesome project", () => {
   let io: Server, serverSocket: Socket, clientSocket: ClientSocket;
 
-  beforeAll((done) => {
+  let connection: MongoClient, db: Db;
+
+  beforeAll( async() => {
     const httpServer = createServer();
     io = new Server(httpServer);
     const port = 9000
@@ -16,13 +19,21 @@ describe("my awesome project", () => {
         serverSocket = socket;
         user(socket, io);
       });
-      clientSocket.on("connect", done);
+      clientSocket.on("connect", () => null);
     });
+
+    let globalURI = global as typeof globalThis & {
+      __MONGO_URI__: string;
+    }
+    connection = await MongoClient.connect(globalURI.__MONGO_URI__);
+    db = await connection.db();
   });
 
-  afterAll(() => {
+  afterAll(async () => {
     io.close();
     clientSocket.close();
+
+    await connection.close();
   });
 
   it.only("when client sends message `user entered`, server sends list of users", (done) => {
