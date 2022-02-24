@@ -59,7 +59,13 @@ describe("my awesome project", () => {
     await connection.close();
   });
 
-  it.only("when client sends message `user entered`, server sends list of users", (done) => {
-    console.log('setting up first test')
+  it.only("when client sends message `user entered`, the new username is added to the database", async () => {
+    const newUsername = 'Nora'
+    const users = db.collection('users');
+
+    clientSocket.emit('user entered', newUsername);
+
+    const insertedUser = await users.findOne({ username: newUsername});
+    expect(insertedUser).not.toBeNull()
   });
 })
