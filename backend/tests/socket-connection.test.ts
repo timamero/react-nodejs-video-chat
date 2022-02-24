@@ -2,7 +2,7 @@ import { Server, Socket } from 'socket.io';
 import { io as clientIo, Socket as ClientSocket} from 'socket.io-client';
 import { createServer } from 'http';
 
-describe("my awesome project", () => {
+describe("Socket Connection", () => {
   let io: Server, serverSocket: Socket, clientSocket: ClientSocket;
 
   beforeAll((done) => {
