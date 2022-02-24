@@ -29,6 +29,29 @@ describe("my awesome project", () => {
     db = await connection.db();
   });
 
+  beforeEach(async () => {
+    const users = db.collection('users');
+
+    const userObjects = [
+      {
+        _id: new ObjectId('some-user-01'),
+        username: 'Jane01'
+      },
+      {
+        _id: new ObjectId('some-user-02'),
+        username: 'Jane02'
+      },
+      {
+        _id: new ObjectId('some-user-03'),
+        username: 'Jane03'
+      },
+    ]
+    
+    userObjects.forEach(async (user) => {
+      await users.insertOne(user);
+    })
+  })
+
   afterAll(async () => {
     io.close();
     clientSocket.close();
