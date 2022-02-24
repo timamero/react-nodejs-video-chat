@@ -1,16 +1,13 @@
-import { MongoClient, Db, ObjectId } from 'mongodb';
+import { Db, ObjectId } from 'mongodb';
+import { client } from '../../src/database';
 import { createUser, deleteUser, getAllUsers, getUserByUsername } from '../../src/controllers/users'
 
 describe('Connection', () => {
-  let connection: MongoClient;
   let db: Db;
 
   beforeAll(async () => {
-    let globalURI = global as typeof globalThis & {
-      __MONGO_URI__: string;
-    }
-    connection = await MongoClient.connect(globalURI.__MONGO_URI__);
-    db = await connection.db();
+    await client.connect()
+    db = await client.db();
   });
 
   beforeEach(async () => {
@@ -18,7 +15,7 @@ describe('Connection', () => {
   });
 
   afterAll(async () => {
-    await connection.close();
+    await client.close();
   });
 
   it('createUser function should insert a doc into collection', async () => {
@@ -27,7 +24,7 @@ describe('Connection', () => {
     const username = 'Jane01'
     
     const mockUser = { _id: id, username};
-    await createUser(connection, mockUser);
+    await createUser(mockUser);
 
     const insertedUser = await users.findOne({ _id: id});
     expect(insertedUser).toEqual(mockUser);
@@ -44,7 +41,7 @@ describe('Connection', () => {
     let insertedUser = await users.findOne({ _id: id});
     expect(insertedUser).toEqual(mockUser);
 
-    const result = await deleteUser(connection, username);
+    const result = await deleteUser(username);
     expect(result).toEqual(mockUser)
 
     insertedUser = await users.findOne({ _id: id});
@@ -60,7 +57,7 @@ describe('Connection', () => {
     const mockUser = { _id: id, username};
     await users.insertOne(mockUser);
 
-    const result = await deleteUser(connection, usernameNotInCollection);
+    const result = await deleteUser(usernameNotInCollection);
     expect(result).toEqual(null)
   });
 
@@ -72,7 +69,7 @@ describe('Connection', () => {
     const mockUser = { _id: id, username};
     await users.insertOne(mockUser);
 
-    const result = await getUserByUsername(connection, username)
+    const result = await getUserByUsername(username)
     expect(result).toEqual(mockUser)
   });
 
@@ -85,7 +82,7 @@ describe('Connection', () => {
     const mockUser = { _id: id, username};
     await users.insertOne(mockUser);
 
-    const result = await getUserByUsername(connection, usernameNotInCollection)
+    const result = await getUserByUsername(usernameNotInCollection)
     expect(result).toEqual(null)
   });
 
@@ -112,7 +109,7 @@ describe('Connection', () => {
     })
     
 
-    const result = await getAllUsers(connection)
+    const result = await getAllUsers()
     expect(result).toEqual(userObjects)
   });
 });
