@@ -23,13 +23,19 @@ describe("my awesome project", () => {
     clientSocket.close();
   });
 
-  it.only("client should receive message from server", (done) => {
+  it("client should receive message from server", (done) => {
     clientSocket.on("hello", (arg) => {
-      console.log('arg', arg)
       expect(arg).toBe("world");
       done();
     });
     serverSocket.emit("hello", "world");
   });
   
+  it.only("server should receive message from client", (done) => {
+    serverSocket.on("hello", (arg) => {
+      expect(arg).toBe("world");
+      done();
+    });
+    clientSocket.emit("hello", "world");
+  });
 })
