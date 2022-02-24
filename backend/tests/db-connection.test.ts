@@ -1,15 +1,12 @@
-import { MongoClient, Db, ObjectId } from 'mongodb';
+import { Db, ObjectId } from 'mongodb';
+import { client } from '../src/database';
 
 describe('Connection', () => {
-  let connection: MongoClient;
   let db: Db;
 
   beforeAll(async () => {
-    let globalURI = global as typeof globalThis & {
-      __MONGO_URI__: string;
-    }
-    connection = await MongoClient.connect(globalURI.__MONGO_URI__);
-    db = await connection.db();
+    await client.connect()
+    db = await client.db();
   });
 
   beforeEach(async () => {
@@ -17,8 +14,7 @@ describe('Connection', () => {
   });
 
   afterAll(async () => {
-    await connection.close();
-    // await db.close();
+    await client.close();
   });
 
   it('should insert a doc into collection', async () => {
