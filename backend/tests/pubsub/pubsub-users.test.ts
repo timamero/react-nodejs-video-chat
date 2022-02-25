@@ -22,22 +22,19 @@ describe("my awesome project", () => {
     }
     io = new Server(httpServer, options);
     const port = 9000
+
     httpServer.listen(port, () => {
       clientSocket = clientIo(`http://localhost:${port}`);
       io.on("connection", (socket) => {
         serverSocket = socket;
         user(serverSocket, io);
       });
-      // clientSocket.connect()
-      // clientSocket.on("connect", done);
       clientSocket.on("connect", () => {
-        // client.connect()
+        client.connect()
+        db = client.db()
         done()
       });
-
     });
-
-    // db = await client.db();
   });
 
   beforeEach(async () => {
@@ -64,8 +61,8 @@ describe("my awesome project", () => {
     // })
   })
 
-  afterAll(() => {
-    // await client.close();
+  afterAll(async () => {
+    await client.close();
     io.close();
     clientSocket.close();
   });
