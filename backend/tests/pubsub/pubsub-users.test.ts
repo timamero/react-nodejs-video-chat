@@ -10,24 +10,39 @@ describe("my awesome project", () => {
 
   let db: Db;
 
-  beforeAll( async() => {
+  beforeAll((done) => {
     const httpServer = createServer();
-    io = new Server(httpServer);
+    const options = {
+      path: '/',
+      serveClient: false,
+      cors: {
+        origin: '*',
+        methods: ['GET', 'POST']
+      },
+    }
+    io = new Server(httpServer, options);
     const port = 9000
     httpServer.listen(port, () => {
       clientSocket = clientIo(`http://localhost:${port}`);
       io.on("connection", (socket) => {
         serverSocket = socket;
-        user(socket, io);
+        user(serverSocket, io);
       });
-      clientSocket.on("connect", () => null);
+      // clientSocket.connect()
+      // clientSocket.on("connect", done);
+      clientSocket.on("connect", () => {
+        // client.connect()
+        done()
+      });
+
     });
 
-    db = await client.db();
+    // db = await client.db();
   });
 
   beforeEach(async () => {
-    const users = db.collection('users');
+    // user(serverSocket, io);
+    // const users = db.collection('users');
 
     const userObjects = [
       {
@@ -49,19 +64,23 @@ describe("my awesome project", () => {
     // })
   })
 
-  afterAll(async () => {
-    await client.close();
+  afterAll(() => {
+    // await client.close();
     io.close();
     clientSocket.close();
   });
 
-  it.only("when client sends message `user entered`, the new username is added to the database", async () => {
+  it("when client sends message `user entered`, the new username is added to the database", (done) => {
     const newUsername = 'Nora'
-    const users = db.collection('users');
+    // const users = db.collection('users');
 
+    serverSocket.on('user entered', (arg) => {
+      console.log('yes')
+      done()
+    })
     clientSocket.emit('user entered', newUsername);
 
-    const insertedUser = await users.findOne({ username: newUsername});
-    expect(insertedUser).not.toBeNull()
+    // const insertedUser = await users.findOne({ username: newUsername});
+    // expect(insertedUser).not.toBeNull()
   });
 })
