@@ -1,13 +1,14 @@
 import { Server, Socket } from 'socket.io';
 import { io as clientIo, Socket as ClientSocket} from 'socket.io-client';
 import { createServer } from 'http';
-import { MongoClient, Db, ObjectId } from 'mongodb';
+import { Db, ObjectId } from 'mongodb';
+import { client } from '../../src/database';
 import user from '../../src/pubsub/users';
 
 describe("my awesome project", () => {
   let io: Server, serverSocket: Socket, clientSocket: ClientSocket;
 
-  let connection: MongoClient, db: Db;
+  let db: Db;
 
   beforeAll( async() => {
     const httpServer = createServer();
@@ -22,11 +23,7 @@ describe("my awesome project", () => {
       clientSocket.on("connect", () => null);
     });
 
-    let globalURI = global as typeof globalThis & {
-      __MONGO_URI__: string;
-    }
-    connection = await MongoClient.connect(globalURI.__MONGO_URI__);
-    db = await connection.db();
+    db = await client.db();
   });
 
   beforeEach(async () => {
@@ -47,16 +44,15 @@ describe("my awesome project", () => {
       },
     ]
     
-    userObjects.forEach(async (user) => {
-      await users.insertOne(user);
-    })
+    // userObjects.forEach(async (user) => {
+    //   await users.insertOne(user);
+    // })
   })
 
   afterAll(async () => {
+    await client.close();
     io.close();
     clientSocket.close();
-
-    await connection.close();
   });
 
   it.only("when client sends message `user entered`, the new username is added to the database", async () => {
