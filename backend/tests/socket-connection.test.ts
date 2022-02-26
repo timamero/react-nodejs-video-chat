@@ -31,7 +31,7 @@ describe("Socket Connection", () => {
     serverSocket.emit("hello", "world");
   });
   
-  it.only("server should receive message from client", (done) => {
+  it("server should receive message from client", (done) => {
     serverSocket.on("hello", (arg) => {
       expect(arg).toBe("world");
       done();
