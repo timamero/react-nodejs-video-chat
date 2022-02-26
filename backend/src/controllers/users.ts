@@ -4,12 +4,12 @@ import { client } from '../database';
 const dbName = process.env.NODE_ENV === 'test' ? 'test' : 'chat'
 
 export async function createUser(newUser: Document) {
-  const checkForExistingSocketId = await client.db(dbName).collection('users').findOne({socketId: newUser.socketId})
-  if (checkForExistingSocketId) {
+  console.log('create user')
+  try {
+    await client.db(dbName).collection('users').insertOne(newUser)
+  } catch (error) {
     return null
   }
-
-  await client.db(dbName).collection('users').insertOne(newUser)
 }
 
 export async function deleteUser(username: string) {
