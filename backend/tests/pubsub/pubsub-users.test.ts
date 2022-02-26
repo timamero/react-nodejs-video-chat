@@ -28,10 +28,10 @@ describe("Pubsub - users", () => {
       io.on("connection", (socket) => {
         serverSocket = socket;
         user(serverSocket, io);
-      });
-      clientSocket.on("connect", () => {
         client.connect()
         db = client.db()
+      });
+      clientSocket.on("connect", () => {     
         done()
       });
     });
