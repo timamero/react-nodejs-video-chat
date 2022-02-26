@@ -1,7 +1,5 @@
 import { Server, Socket } from 'socket.io';
-// import { ObjectId } from 'mongodb';
-// import { client } from '../database';
-import { getAllUsers, createUser } from '../controllers/users';
+import { getAllUsers, createUser, deleteUser } from '../controllers/users';
 
 interface User {
   id: string;
@@ -10,7 +8,7 @@ interface User {
 
 let users: User[] = []
 
-const user = (socket: Socket, io: Server) => {
+const user = async (socket: Socket, io: Server) => {
   socket.on('user entered', async (username) => {
     try {
       await createUser({_id: socket.id, username: username});
@@ -23,9 +21,10 @@ const user = (socket: Socket, io: Server) => {
     }
   })
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', async () => {
     console.log(`${socket.id} has been removed from list`);
-    users = users.filter(user => user.id !== socket.id);
+    // users = users.filter(user => user.id !== socket.id);
+    // create deleteUserById
 
     io.emit('get user list', users);
   })
