@@ -63,10 +63,10 @@ describe("Pubsub - users", () => {
 
   afterEach((done) => {
     /* Disconnect client socket after each test */
-    if (clientSocket.connected) {
+    if (clientSocket.connected ) {
       clientSocket.disconnect()
-      done()
     }
+    done()
   })
 
   afterAll(async () => {
@@ -127,4 +127,29 @@ describe("Pubsub - users", () => {
         })
     })
   });
+
+  it("after client disconnects, the client data is removed from the database", (done) => {
+    /* Connect user and check that user data is in database */
+    const newUsername = 'Nora'
+    const users = db.collection('users');
+    
+    clientSocket.emit('user entered', newUsername);  
+
+    serverSocket.on('user entered', async (arg) => {
+      const insertedUser = await users.findOne({ username: newUsername});
+      expect(insertedUser).not.toBeNull()
+      expect(insertedUser?.username).toEqual(newUsername)
+      
+      /* Disconnect client */
+      clientSocket.disconnect()
+    })
+
+    /* Check that diconnected user is not in database */
+    serverSocket.on('disconnect', async () => {
+      console.log('test - user disconnected')
+      const insertedUser = await users.findOne({ username: newUsername});
+      expect(insertedUser).toBeNull()
+      done()
+    })
+  })
 })
