@@ -13,8 +13,12 @@ describe("Pubsub - users", () => {
 
   let db: Db;
 
+  const port = 9000
+
   beforeAll((done) => {
-    const port = 9000
+    /* Connect to MongoDB test database */
+    client.connect()
+    db = client.db()
 
     /* Create HTTP server */
     const httpServer = createServer();
@@ -30,33 +34,40 @@ describe("Pubsub - users", () => {
     /* Create server socket */
     io = new Server(httpServer, options);
 
-    /* Create client socket */
-    clientSocket = clientIo(`http://localhost:${port}`);
-
     /* Create server and socket listener events */
     io.on("connection", (socket) => {
       serverSocket = socket;
       
       /* Initialize users socket event publishers and subscribers */
       user(serverSocket, io);
-      
-      /* Connect to MongoDB test database */
-      client.connect()
-      db = client.db()
-    });
-
-    clientSocket.on("connect", () => {     
-      done()
     });
 
     /* Create server listener */
     httpServer.listen(port);
+    done()
+  });
+
+  beforeEach((done) => {
+    /* Clear database before each test */
+    db.collection('users').deleteMany({})
+      .then(() => {
+        /* Create client socket before each test */
+        clientSocket = clientIo(`http://localhost:${port}`);
+
+        clientSocket.on("connect", () => {     
+          done()
+        });
+      })
 
   });
 
-  beforeEach(async () => {
-    await db.collection('users').deleteMany({});
-  });
+  afterEach((done) => {
+    /* Disconnect client socket after each test */
+    if (clientSocket.connected) {
+      clientSocket.disconnect()
+      done()
+    }
+  })
 
   afterAll(async () => {
     /* Close connection to MongoDB test database */
@@ -85,20 +96,19 @@ describe("Pubsub - users", () => {
     const newUsername = 'Nora'
     const users = db.collection('users');
 
-    clientSocket.emit('user entered', newUsername);  
+    clientSocket.emit('user entered', newUsername);    
 
-    clientSocket.on('get socket id', (arg) => {
-      clientSocket.on('get user list', (arg) => {
-        expect(arg).not.toBeNull()
-        expect(arg).toHaveLength(1)
+    clientSocket.on('get user list', (arg) => {
+      expect(arg).not.toBeNull()
+      expect(arg).toHaveLength(1)
 
-        users.findOne({ username: newUsername})
-          .then(user => {
-            expect(arg).toContainEqual(user)
-            done()
-          })
-      })
-    })   
+      users.findOne({ username: newUsername})
+        .then(user => {
+          console.log('found user', user)
+          expect(arg).toContainEqual(user)
+          done()
+        })
+    })  
   });
 
   it("after server receives `user entered` event, server sends `get socket id` event and socketId to client that just connected", (done) => {
@@ -107,16 +117,14 @@ describe("Pubsub - users", () => {
     
     clientSocket.emit('user entered', newUsername);  
 
-    clientSocket.on('get user list', (arg) => {
-      clientSocket.on('get socket id', (arg) => {
-        expect(arg).not.toBeNull()
+    clientSocket.on('get socket id', (arg) => {
+      expect(arg).not.toBeNull()
 
-        users.findOne({ username: newUsername})
-          .then(user => {
-            expect(user?._id).toEqual(arg)
-            done()
-          })
-      })
-    })  
+      users.findOne({ username: newUsername})
+        .then(user => {
+          expect(user?._id).toEqual(arg)
+          done()
+        })
+    })
   });
 })
