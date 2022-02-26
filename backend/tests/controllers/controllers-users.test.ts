@@ -1,6 +1,6 @@
 import { Db, ObjectId } from 'mongodb';
 import { client } from '../../src/database';
-import { createUser, deleteUser, getAllUsers, getUserByUsername } from '../../src/controllers/users'
+import { createUser, deleteUserById, getAllUsers, getUserByUsername } from '../../src/controllers/users'
 
 /**
  * Test user controller methods
@@ -62,7 +62,7 @@ describe('Controllers - users', () => {
     let insertedUser = await users.findOne({ _id: id});
     expect(insertedUser).toEqual(mockUser);
 
-    const result = await deleteUser(username);
+    const result = await deleteUserById(id.toString());
     expect(result).toEqual(mockUser)
 
     insertedUser = await users.findOne({ _id: id});
