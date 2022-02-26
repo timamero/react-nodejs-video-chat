@@ -73,12 +73,12 @@ describe('Controllers - users', () => {
     const users = db.collection('users');
     const id = new ObjectId('some-user-02')
     const username = 'Jane02'
-    const usernameNotInCollection = 'Nora'
+    const userIdNotInCollection = new ObjectId('some-user-03')
     
     const mockUser = { _id: id, username};
     await users.insertOne(mockUser);
 
-    const result = await deleteUser(usernameNotInCollection);
+    const result = await deleteUserById(userIdNotInCollection.toString());
     expect(result).toEqual(null)
   });
 

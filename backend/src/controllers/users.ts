@@ -1,10 +1,9 @@
-import { Document, MongoClient } from 'mongodb';
+import { Document, ObjectId } from 'mongodb';
 import { client } from '../database';
 
 const dbName = process.env.NODE_ENV === 'test' ? 'test' : 'chat'
 
 export async function createUser(newUser: Document) {
-  console.log('create user')
   try {
     await client.db(dbName).collection('users').insertOne(newUser)
   } catch (error) {
@@ -12,9 +11,9 @@ export async function createUser(newUser: Document) {
   }
 }
 
-export async function deleteUser(username: string) {
-  const result = await client.db(dbName).collection('users').findOneAndDelete({username})
-  
+export async function deleteUserById(id: string) {
+  const result = await client.db(dbName).collection('users').findOneAndDelete({_id: new ObjectId(id)})
+
   // Return user object that was deleted
   return result.value
 }
