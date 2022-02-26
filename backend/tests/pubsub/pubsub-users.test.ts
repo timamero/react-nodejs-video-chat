@@ -1,11 +1,11 @@
 import { Server, Socket } from 'socket.io';
 import { io as clientIo, Socket as ClientSocket} from 'socket.io-client';
 import { createServer } from 'http';
-import { Db, ObjectId } from 'mongodb';
+import { Db } from 'mongodb';
 import { client } from '../../src/database';
 import user from '../../src/pubsub/users';
 
-describe("my awesome project", () => {
+describe("Pubsub - users", () => {
   let io: Server, serverSocket: Socket, clientSocket: ClientSocket;
 
   let db: Db;
@@ -37,30 +37,6 @@ describe("my awesome project", () => {
     });
   });
 
-  beforeEach(async () => {
-    // user(serverSocket, io);
-    // const users = db.collection('users');
-
-    const userObjects = [
-      {
-        _id: new ObjectId('some-user-01'),
-        username: 'Jane01'
-      },
-      {
-        _id: new ObjectId('some-user-02'),
-        username: 'Jane02'
-      },
-      {
-        _id: new ObjectId('some-user-03'),
-        username: 'Jane03'
-      },
-    ]
-    
-    // userObjects.forEach(async (user) => {
-    //   await users.insertOne(user);
-    // })
-  })
-
   afterAll(async () => {
     await client.close();
     io.close();
@@ -69,15 +45,13 @@ describe("my awesome project", () => {
 
   it("when client sends message `user entered`, the new username is added to the database", (done) => {
     const newUsername = 'Nora'
-    // const users = db.collection('users');
+    const users = db.collection('users');
 
-    serverSocket.on('user entered', (arg) => {
-      console.log('yes')
+    serverSocket.on('user entered', async (arg) => {
+      const insertedUser = await users.findOne({ username: newUsername});
+      expect(insertedUser).not.toBeNull()
       done()
     })
-    clientSocket.emit('user entered', newUsername);
-
-    // const insertedUser = await users.findOne({ username: newUsername});
-    // expect(insertedUser).not.toBeNull()
+    clientSocket.emit('user entered', newUsername);  
   });
 })
