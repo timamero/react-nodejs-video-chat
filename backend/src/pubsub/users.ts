@@ -1,4 +1,5 @@
 import { Server, Socket } from 'socket.io';
+// import { ObjectId } from 'mongodb';
 // import { client } from '../database';
 import { getAllUsers, createUser } from '../controllers/users';
 
@@ -11,10 +12,13 @@ let users: User[] = []
 
 const user = (socket: Socket, io: Server) => {
   socket.on('user entered', async (username) => {
-    console.log(`${username} has entered`);
-
-    await createUser({socketId: socket.id, username: username});
-
+    try {
+      await createUser({_id: socket.id, username: username});
+    } catch (error) {
+      console.error(error)
+    }
+    
+    console.log('user created')
     // if (!users.map(user => user.id).includes(socket.id)) {
     //   users.push({id: socket.id, username: username});
       
