@@ -4,9 +4,12 @@ import { client } from '../database';
 const dbName = process.env.NODE_ENV === 'test' ? 'test' : 'chat'
 
 export async function createUser(newUser: Document) {
-  const result = await client.db(dbName).collection('users').insertOne(newUser)
+  const checkForExistingSocketId = await client.db(dbName).collection('users').findOne({socketId: newUser.socketId})
+  if (checkForExistingSocketId) {
+    return null
+  }
 
-  // console.log(`New user created with the following id: ${result.insertedId}`)
+  await client.db(dbName).collection('users').insertOne(newUser)
 }
 
 export async function deleteUser(username: string) {

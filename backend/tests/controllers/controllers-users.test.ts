@@ -30,6 +30,25 @@ describe('Connection', () => {
     expect(insertedUser).toEqual(mockUser);
   });
 
+  it('if socketId already exists in database, createUser function should return null', async () => {
+    const users = db.collection('users');
+    let id = new ObjectId('some-user-01')
+    const socketId = 'some-socket-id-number'
+    let username = 'Jane01'
+    
+    const mockUser = { _id: id, socketId, username};
+    await createUser(mockUser);
+
+    const insertedUser = await users.findOne({ _id: id});
+    expect(insertedUser).toEqual(mockUser);
+
+    id = new ObjectId('some-user-02')
+    username = 'Jane02'
+    const mockUserWithSameSocketId = { _id: id, socketId, username};
+    const result = await createUser(mockUserWithSameSocketId)
+    expect(result).toBeNull()
+  });
+
   it('deleteUser function should delete a doc from collection', async () => {
     const users = db.collection('users');
     const id = new ObjectId('some-user-02')
