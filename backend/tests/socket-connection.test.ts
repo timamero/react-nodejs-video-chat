@@ -2,6 +2,9 @@ import { Server, Socket } from 'socket.io';
 import { io as clientIo, Socket as ClientSocket} from 'socket.io-client';
 import { createServer } from 'http';
 
+/**
+ * Test connection between server and client socket
+ */
 describe("Socket Connection", () => {
   let io: Server, serverSocket: Socket, clientSocket: ClientSocket;
 

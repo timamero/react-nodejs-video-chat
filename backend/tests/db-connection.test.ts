@@ -1,6 +1,9 @@
 import { Db, ObjectId } from 'mongodb';
 import { client } from '../src/database';
 
+/**
+ * Test connection to test database
+ */
 describe('Connection', () => {
   let db: Db;
 

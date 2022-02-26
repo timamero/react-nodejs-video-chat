@@ -2,7 +2,10 @@ import { Db, ObjectId } from 'mongodb';
 import { client } from '../../src/database';
 import { createUser, deleteUser, getAllUsers, getUserByUsername } from '../../src/controllers/users'
 
-describe('Connection', () => {
+/**
+ * Test user controller methods
+ */
+describe('Controllers - users', () => {
   let db: Db;
 
   beforeAll(async () => {
