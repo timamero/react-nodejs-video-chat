@@ -37,6 +37,10 @@ describe("Pubsub - users", () => {
     });
   });
 
+  beforeEach(async () => {
+    await db.collection('users').deleteMany({});
+  });
+
   afterAll(async () => {
     await client.close();
     io.close();
@@ -50,6 +54,28 @@ describe("Pubsub - users", () => {
     serverSocket.on('user entered', async (arg) => {
       const insertedUser = await users.findOne({ username: newUsername});
       expect(insertedUser).not.toBeNull()
+      done()
+    })
+    clientSocket.emit('user entered', newUsername);  
+  });
+
+  it("after client sends message `user entered`, socket sends message `get user list` and users list to all clients", (done) => {
+    const newUsername = 'Nora'
+
+    clientSocket.on('get user list', (arg) => {
+      console.log('arg', arg)
+      expect(arg).not.toBeNull()
+      expect(arg).toHaveLength(1)
+      done()
+    })
+    clientSocket.emit('user entered', newUsername);  
+  });
+
+  it.only("after client sends message `user entered`, socket sends message `get socket id` and socketId list to client that just connected", (done) => {
+    const newUsername = 'Nora'
+
+    clientSocket.on('get socket id', (arg) => {
+      expect(arg).not.toBeNull()
       done()
     })
     clientSocket.emit('user entered', newUsername);  

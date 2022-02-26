@@ -14,18 +14,13 @@ const user = (socket: Socket, io: Server) => {
   socket.on('user entered', async (username) => {
     try {
       await createUser({_id: socket.id, username: username});
+
+      let usersList = await getAllUsers()
+      io.emit('get user list', usersList);
+      io.to(socket.id).emit('get socket id', socket.id);
     } catch (error) {
       console.error(error)
     }
-    
-    console.log('user created')
-    // if (!users.map(user => user.id).includes(socket.id)) {
-    //   users.push({id: socket.id, username: username});
-      
-    //   console.log('sending users', users);
-    //   io.emit('get user list', users);
-    //   io.to(socket.id).emit('get socket id', socket.id);
-    // }
   })
 
   socket.on('disconnect', () => {
