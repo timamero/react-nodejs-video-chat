@@ -155,7 +155,7 @@ describe("Pubsub - users", () => {
     })
   })
 
-  it.only("after client disconnects and client data is removed from database, server sends `get user list` event and updated users list to all clients", (done) => {
+  it("after client disconnects and client data is removed from database, server sends `get user list` event and updated users list to all clients", (done) => {
     /* Connect a second client */
     const clientSocket2 = clientIo(`http://localhost:${port}`);
 
@@ -167,7 +167,6 @@ describe("Pubsub - users", () => {
     clientSocket.emit('user entered', newUsername);  
 
     serverSocket.on('user entered', async (arg) => {
-      console.log('serverSocket on user entered')
       const insertedUser = await users.findOne({ username: newUsername});
       expect(insertedUser).not.toBeNull()
       expect(insertedUser?.username).toEqual(newUsername)
