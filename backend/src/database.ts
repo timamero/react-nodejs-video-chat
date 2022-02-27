@@ -16,12 +16,9 @@ const main = async () => {
   try {
     await client.connect()
     console.log('Connected to MongoDB')
-
   } catch(e) {
     console.log(e)
-  } finally {
-    await client.close()
-  }
+  } 
 }
 
 export default main
