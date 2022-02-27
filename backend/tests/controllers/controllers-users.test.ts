@@ -1,6 +1,6 @@
-import { Db, ObjectId } from 'mongodb';
+import { Db } from 'mongodb';
 import { client } from '../../src/database';
-import { createUser, deleteUserById, getAllUsers, getUserByUsername } from '../../src/controllers/users'
+import { createUser, deleteUserBySocketId, getAllUsers, getUserByUsername } from '../../src/controllers/users'
 
 /**
  * Test user controller methods
@@ -23,71 +23,53 @@ describe('Controllers - users', () => {
 
   it('createUser function should insert a doc into collection', async () => {
     const users = db.collection('users');
-    const id = new ObjectId('some-user-01')
+    const socketId = 'a1_UnFDfzUoU3yUeAAAB'
     const username = 'Jane01'
     
-    const mockUser = { _id: id, username};
+    const mockUser = { socketId, username};
     await createUser(mockUser);
 
-    const insertedUser = await users.findOne({ _id: id});
+    const insertedUser = await users.findOne({ socketId });
     expect(insertedUser).toEqual(mockUser);
   });
 
-  it('if socketId already exists in database, createUser function should return null', async () => {
+  it('deleteUserBySocketId function should delete a doc from collection', async () => {
     const users = db.collection('users');
-    let id = new ObjectId('some-user-01')
-    let username = 'Jane01'
-    
-    const mockUser = { _id: id, username};
-    await createUser(mockUser);
-
-    const insertedUser = await users.findOne({ _id: id});
-    expect(insertedUser).toEqual(mockUser);
-
-    id = new ObjectId('some-user-01')
-    username = 'Jane02'
-    const mockUserWithSameId = { _id: id, username};
-    const result = await createUser(mockUserWithSameId)
-    expect(result).toBeNull()
-  });
-
-  it('deleteUser function should delete a doc from collection', async () => {
-    const users = db.collection('users');
-    const id = new ObjectId('some-user-02')
+    const socketId = 'b1_UnFDfzUoU3yUeAAAB'
     const username = 'Jane02'
     
-    const mockUser = { _id: id, username};
+    const mockUser = { socketId, username};
     await users.insertOne(mockUser);
 
-    let insertedUser = await users.findOne({ _id: id});
+    let insertedUser = await users.findOne({ socketId });
     expect(insertedUser).toEqual(mockUser);
 
-    const result = await deleteUserById(id.toString());
+    const result = await deleteUserBySocketId(socketId);
     expect(result).toEqual(mockUser)
 
-    insertedUser = await users.findOne({ _id: id});
+    insertedUser = await users.findOne({ socketId });
     expect(insertedUser).toEqual(null);
   });
 
-  it('deleteUser function should return null if username not found in collection', async () => {
+  it('deleteUserBySocketId function should return null if socketId not found in collection', async () => {
     const users = db.collection('users');
-    const id = new ObjectId('some-user-02')
-    const username = 'Jane02'
-    const userIdNotInCollection = new ObjectId('some-user-03')
+    const socketId = 'c1_UnFDfzUoU3yUeAAAB'
+    const username = 'Jane03'
+    const socketIdNotInCollection = 'd1_UnFDfzUoU3yUeAAAB'
     
-    const mockUser = { _id: id, username};
+    const mockUser = { socketId, username};
     await users.insertOne(mockUser);
 
-    const result = await deleteUserById(userIdNotInCollection.toString());
+    const result = await deleteUserBySocketId(socketIdNotInCollection);
     expect(result).toEqual(null)
   });
 
   it('getUserByUsername function should get correct user from collection', async () => {
     const users = db.collection('users');
-    const id = new ObjectId('some-user-03')
-    const username = 'Jane03'
+    const socketId = 'e1_UnFDfzUoU3yUeAAAB'
+    const username = 'Jane04'
     
-    const mockUser = { _id: id, username};
+    const mockUser = { socketId, username};
     await users.insertOne(mockUser);
 
     const result = await getUserByUsername(username)
@@ -96,11 +78,11 @@ describe('Controllers - users', () => {
 
   it('getUserByUsername function should return null if username is not found in collection', async () => {
     const users = db.collection('users');
-    const id = new ObjectId('some-user-03')
-    const username = 'Jane03'
+    const socketId = 'f1_UnFDfzUoU3yUeAAAB'
+    const username = 'Jane05'
     const usernameNotInCollection = 'Nora'
     
-    const mockUser = { _id: id, username};
+    const mockUser = { socketId, username};
     await users.insertOne(mockUser);
 
     const result = await getUserByUsername(usernameNotInCollection)
@@ -112,15 +94,15 @@ describe('Controllers - users', () => {
 
     const userObjects = [
       {
-        _id: new ObjectId('some-user-01'),
+        socketId: 'g1_UnFDfzUoU3yUeAAAB',
         username: 'Jane01'
       },
       {
-        _id: new ObjectId('some-user-02'),
+        socketId: 'h1_UnFDfzUoU3yUeAAAB',
         username: 'Jane02'
       },
       {
-        _id: new ObjectId('some-user-03'),
+        socketId: 'i1_UnFDfzUoU3yUeAAAB',
         username: 'Jane03'
       },
     ]
