@@ -1,4 +1,4 @@
-import { Document, ObjectId } from 'mongodb';
+import { Document } from 'mongodb';
 import { client } from '../database';
 
 const dbName = process.env.NODE_ENV === 'test' ? 'test' : 'chat'
