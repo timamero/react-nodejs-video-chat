@@ -2,10 +2,10 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/src/index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "build:watch": "tsc --watch",
-    "server": "nodemon dist/src/index.js",
+    "build:watch": "npx tsc --watch",
+    "server": "nodemon dist/index.js",
     "dev": "concurrently \"npm run build:watch\" \"npm run server\"",
     "test": "jest"
   },
