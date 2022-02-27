@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2021"],
+    "module": "CommonJS",
+    "target": "ES2021",
+    "rootDirs": ["./src"],
+    "outDir": "./dist", 
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+  },
+  "compileOnSave": false
+}
