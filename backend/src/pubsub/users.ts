@@ -1,17 +1,10 @@
 import { Server, Socket } from 'socket.io';
-import { getAllUsers, createUser, deleteUser } from '../controllers/users';
-
-interface User {
-  id: string;
-  username: string;
-}
-
-let users: User[] = []
+import { getAllUsers, createUser, deleteUserBySocketId } from '../controllers/users';
 
 const user = async (socket: Socket, io: Server) => {
   socket.on('user entered', async (username) => {
     try {
-      await createUser({_id: socket.id, username: username});
+      await createUser({socketId: socket.id, username: username});
 
       let usersList = await getAllUsers()
       io.emit('get user list', usersList);
@@ -22,11 +15,14 @@ const user = async (socket: Socket, io: Server) => {
   })
 
   socket.on('disconnect', async () => {
-    console.log(`${socket.id} has been removed from list`);
-    // users = users.filter(user => user.id !== socket.id);
-    // create deleteUserById
+    try {
+      await deleteUserBySocketId(socket.id)
 
-    io.emit('get user list', users);
+      let usersList = await getAllUsers()
+      io.emit('get user list', usersList);
+    } catch (error) {
+      console.error(error)
+    }
   })
 }
 

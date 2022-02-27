@@ -104,8 +104,8 @@ describe("Pubsub - users", () => {
 
       users.findOne({ username: newUsername})
         .then(user => {
-          console.log('found user', user)
-          expect(arg).toContainEqual(user)
+          expect(arg[0].socketId).toEqual(user?.socketId)
+          expect(arg[0].username).toEqual(user?.username)
           done()
         })
     })  
@@ -122,14 +122,14 @@ describe("Pubsub - users", () => {
 
       users.findOne({ username: newUsername})
         .then(user => {
-          expect(user?._id).toEqual(arg)
+          expect(user?.socketId).toEqual(arg)
           done()
         })
     })
   });
 
   it("after client disconnects, the client data is removed from the database", (done) => {
-    /* Connect user and check that user data is in database */
+    /* After client sends `user entered` event, check that user data is in database */
     const newUsername = 'Nora'
     const users = db.collection('users');
     
@@ -144,12 +144,70 @@ describe("Pubsub - users", () => {
       clientSocket.disconnect()
     })
 
-    /* Check that diconnected user is not in database */
+    /* Check that the data of the disconnected user is not in database */
     serverSocket.on('disconnect', async () => {
-      console.log('test - user disconnected')
       const insertedUser = await users.findOne({ username: newUsername});
+      const usersList = await users.find({}).toArray()
+
       expect(insertedUser).toBeNull()
+      expect(usersList).toHaveLength(0)
       done()
+    })
+  })
+
+  it.only("after client disconnects and client data is removed from database, server sends `get user list` event and updated users list to all clients", (done) => {
+    /* Connect a second client */
+    const clientSocket2 = clientIo(`http://localhost:${port}`);
+
+    const newUsername = 'Nora'
+    const newUsername2 = 'Fennec'
+    const users = db.collection('users');
+    
+    /* First client sends `user entered` event */
+    clientSocket.emit('user entered', newUsername);  
+
+    serverSocket.on('user entered', async (arg) => {
+      console.log('serverSocket on user entered')
+      const insertedUser = await users.findOne({ username: newUsername});
+      expect(insertedUser).not.toBeNull()
+      expect(insertedUser?.username).toEqual(newUsername)
+
+      /* Second client sends `user entered` event */
+      clientSocket.emit('user entered', newUsername2)
+      
+      /* Disconnect first client */
+      if (arg === newUsername2) {
+        clientSocket.disconnect()
+      }
+    })
+
+    /* Check that the updated list is sent to remaining connected client */
+    serverSocket.on('disconnect', async () => {
+      const insertedUser = await users.findOne({ username: newUsername});
+      const usersList = await users.find({}).toArray()
+
+      expect(insertedUser).toBeNull()
+      expect(usersList).toHaveLength(1)
+    })
+
+    /* Check that the second client received the updated list which should not contain the first client */
+    let numberOfTimesListReceived = 0
+    clientSocket2.on('get user list', (arg) => {
+      /* 
+        clientSocket2 will recieve `get user list` event two times
+        compare the results after the second time
+      */
+      if (numberOfTimesListReceived === 0) {
+        numberOfTimesListReceived++
+      } else {
+        expect(arg).not.toBeNull()
+        expect(arg).toHaveLength(1)
+        expect(arg[0].username).toEqual(newUsername2)
+
+        clientSocket2.disconnect()
+        clientSocket2.close()
+        done()
+      }   
     })
   })
 })
