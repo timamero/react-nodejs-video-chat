@@ -11,7 +11,7 @@ export interface message {
 
 const MessagesDisplay: React.FC = () => {
   const socket = useContext(SocketContext)
-  const userId = useAppSelector(state => state.user.id)
+  const userId = useAppSelector(state => state.user.socketId)
   const [messages, setMessages] = useState<message[]>([])
 
   const messageEndRef = useRef<null | HTMLDivElement>(null)

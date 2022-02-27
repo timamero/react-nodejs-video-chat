@@ -11,7 +11,7 @@ const ActiveUserItem: React.FC<ActiveUserItemProps> = ({ user }) => {
   return (
     <div className="panel-block is-active is-flex is-flex-direction-row is-justify-content-center">
       <p className="mx-4">{user.username}</p>
-      <button onClick={() => handleInviteToChatClick(user.id, user.username)} className="button is-link is-light">Invite to Chat</button>
+      <button onClick={() => handleInviteToChatClick(user.socketId, user.username)} className="button is-link is-light">Invite to Chat</button>
     </div>
   )
 }

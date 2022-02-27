@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from './types'
 
 const initialState: User = {
-  id: '',
+  socketId: '',
   username: '',
 }
 
@@ -14,7 +14,7 @@ export const userSlice = createSlice({
       state.username = action.payload
     },
     setId: (state, action: PayloadAction<string>) => {
-      state.id = action.payload
+      state.socketId = action.payload
     }
   }
 })
