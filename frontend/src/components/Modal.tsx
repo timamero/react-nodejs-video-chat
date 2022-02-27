@@ -8,7 +8,7 @@ const ActionModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const modalData = useAppSelector(state => state.modal);
   const activeUsers = useAppSelector(state => state.activeUsers.users)
-  const peerUsername = modalData.peerId ? activeUsers.find((user: User) => modalData.peerId === user.id)!.username : ''
+  const peerUsername = modalData.peerId ? activeUsers.find((user: User) => modalData.peerId === user.socketId)!.username : ''
   
   const handleDeclineandCloseModal = () => {
     if (modalData.modalName === 'private chat request') {

@@ -45,7 +45,7 @@ const App: React.FC = () => {
 
   const handleInviteRequested = useCallback(inviterId => {
     console.log('invite from ', inviterId)
-    const inviter = activeUsers.find((user: User) => user.id === inviterId)
+    const inviter = activeUsers.find((user: User) => user.socketId === inviterId)
 
     if (inviter) {
         const modalData = {
@@ -63,7 +63,7 @@ const App: React.FC = () => {
 
   const handleInviteDeclined = useCallback(inviteeId => {
     console.log('invitation to chat was declined by', inviteeId)
-    const peer = activeUsers.find((user: User) => user.id === inviteeId)
+    const peer = activeUsers.find((user: User) => user.socketId === inviteeId)
     if (peer) {
       const notificationData = {
       notificationContent: `${peer.username} is not able to chat`,

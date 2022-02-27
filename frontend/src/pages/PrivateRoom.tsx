@@ -13,7 +13,7 @@ const PrivateRoom = () => {
   const socket = useContext(SocketContext)
   const dispatch = useAppDispatch()
   const room = useAppSelector(state  => state.room)
-  const userId = useAppSelector(state => state.user.id)
+  const userId = useAppSelector(state => state.user.socketId)
 
   useEffect(() => {
     socket.removeAllListeners('enter chat room')

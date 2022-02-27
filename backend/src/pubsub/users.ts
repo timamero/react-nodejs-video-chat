@@ -1,34 +1,28 @@
 import { Server, Socket } from 'socket.io';
-import { getAllUsers } from '../controllers/users';
+import { getAllUsers, createUser, deleteUserBySocketId } from '../controllers/users';
 
-// Will implement user authentication later, for now will save active users in users list
-interface User {
-  id: string;
-  username: string;
-}
-
-let users: User[] = []
-
-const user = (socket: Socket, io: Server) => {
+const user = async (socket: Socket, io: Server) => {
   socket.on('user entered', async (username) => {
-    console.log(`${username} has entered`);
+    try {
+      await createUser({socketId: socket.id, username: username});
 
-    // const users = await getAllUsers()
-
-    if (!users.map(user => user.id).includes(socket.id)) {
-      users.push({id: socket.id, username: username});
-      
-      console.log('sending users', users);
-      io.emit('get user list', users);
+      let usersList = await getAllUsers()
+      io.emit('get user list', usersList);
       io.to(socket.id).emit('get socket id', socket.id);
+    } catch (error) {
+      console.error(error)
     }
   })
 
-  socket.on('disconnect', () => {
-    console.log(`${socket.id} has been removed from list`);
-    users = users.filter(user => user.id !== socket.id);
+  socket.on('disconnect', async () => {
+    try {
+      await deleteUserBySocketId(socket.id)
 
-    io.emit('get user list', users);
+      let usersList = await getAllUsers()
+      io.emit('get user list', usersList);
+    } catch (error) {
+      console.error(error)
+    }
   })
 }
 

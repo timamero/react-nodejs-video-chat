@@ -1,34 +1,44 @@
-import { io } from "socket.io-client";
-import { createServer } from "http";
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
+import { io as clientIo, Socket as ClientSocket} from 'socket.io-client';
+import { createServer } from 'http';
 
-describe('Socket Connection', () => {
-  // const port = 3000
-  // let httpServer
-  let ioServer: Server
-  let serverSocket
-  let clientSocket
+/**
+ * Test connection between server and client socket
+ */
+describe("Socket Connection", () => {
+  let io: Server, serverSocket: Socket, clientSocket: ClientSocket;
 
-  beforeAll(() => {
-    console.log('socket connection test')
-    const httpServer = createServer()
-
-    ioServer = new Server(httpServer)
-    httpServer.listen(() => {
-      const port = httpServer.address()
-
-      clientSocket = io(`http://localhost:${port}`)
-
-      clientSocket.on('connection', () => console.log('client - connected'))
-    })
-  })
+  beforeAll((done) => {
+    const httpServer = createServer();
+    io = new Server(httpServer);
+    const port = 9000
+    httpServer.listen(port, () => {
+      clientSocket = clientIo(`http://localhost:${port}`);
+      io.on("connection", (socket) => {
+        serverSocket = socket;
+      });
+      clientSocket.on("connect", done);
+    });
+  });
 
   afterAll(() => {
-    ioServer.close()
-  })
+    io.close();
+    clientSocket.close();
+  });
 
-  it.only('Server should receive a message when the client connects', () => {
-    ioServer.on("connection", () => console.log('server - connected'))
-  })
+  it("client should receive message from server", (done) => {
+    clientSocket.on("hello", (arg) => {
+      expect(arg).toBe("world");
+      done();
+    });
+    serverSocket.emit("hello", "world");
+  });
   
+  it("server should receive message from client", (done) => {
+    serverSocket.on("hello", (arg) => {
+      expect(arg).toBe("world");
+      done();
+    });
+    clientSocket.emit("hello", "world");
+  });
 })
