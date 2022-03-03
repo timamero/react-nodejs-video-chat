@@ -1,5 +1,5 @@
 import React from "react";
-import { useAppSelector } from "../app/hooks";
+import { useAppSelector } from "../../app/hooks";
 import ActiveUserItem from "./ActiveUserItem";
 
 const ActiveUsers = () => {
