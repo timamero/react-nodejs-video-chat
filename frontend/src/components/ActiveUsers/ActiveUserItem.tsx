@@ -1,6 +1,6 @@
 import React from "react";
-import { User } from "../app/features/types";
-import { handleInviteToChatClick } from '../services/publishers';
+import { User } from "../../app/features/types";
+import { handleInviteToChatClick } from '../../services/publishers';
 
 interface ActiveUserItemProps {
   user: User;

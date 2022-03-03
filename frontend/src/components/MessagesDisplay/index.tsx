@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
-import { SocketContext } from "../context/socket";
+import { SocketContext } from "../../context/socket";
 import Message from './Message';
-import { useAppSelector } from '../app/hooks';
+import { useAppSelector } from '../../app/hooks';
 
 export interface message {
   content: string;
