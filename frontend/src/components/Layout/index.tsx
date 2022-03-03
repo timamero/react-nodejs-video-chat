@@ -1,9 +1,9 @@
 import React from "react";
-import { useAppSelector } from '../app/hooks';
+import { useAppSelector } from '../../app/hooks';
 import Header from "./Header";
 import Navbar from "./Navbar";
 import Modal from "./Modal";
-import Notification from '../components/Notification';
+import Notification from './Notification';
 
 const Layout: React.FC = ({children}) => {
   const notificationActive = useAppSelector(state => state.notification.isActive)
