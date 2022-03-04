@@ -80,7 +80,7 @@ const App: React.FC = () => {
 
   const handleEnterChat = useCallback((roomData: RoomData) => {
     dispatch(resetNotification())
-    dispatch(setRoom({ roomId: roomData.roomId, users: roomData.users }))
+    dispatch(setRoom({ roomId: roomData.roomId, users: roomData.users, isChatVisible: false }))
     navigate(`/p-room/${roomData.roomId}`)
     if (roomData.users[0] === currentUser) {
       // Start RTC Peer Connection

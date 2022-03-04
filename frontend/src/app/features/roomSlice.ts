@@ -3,7 +3,8 @@ import { Room } from './types'
 
 const initialState: Room = {
   roomId: '',
-  users: []
+  users: [],
+  isChatVisible: false
 }
 
 export const roomSlice = createSlice({
@@ -14,6 +15,9 @@ export const roomSlice = createSlice({
       state.roomId = action.payload.roomId
       state.users = state.users.concat(action.payload.users)
     },
+    setChatVisbility: (state, action: PayloadAction<boolean>) => {
+      state.isChatVisible = action.payload
+    },
     resetRoom: (state) => {
       state.roomId = ''
       state.users = []
@@ -21,6 +25,6 @@ export const roomSlice = createSlice({
   }
 })
 
-export const { setRoom, resetRoom } = roomSlice.actions
+export const { setRoom, resetRoom, setChatVisbility } = roomSlice.actions
 
 export default roomSlice.reducer
