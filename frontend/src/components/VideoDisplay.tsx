@@ -266,11 +266,11 @@ const VideoDisplay = () => {
   }
 
   return (
-    <div className="is-flex is-flex-direction-row is-justify-content-space-evenly">
-      <div className="videoWrapper m-1">
+    <div className="is-flex is-flex-direction-column is-justify-content-space-evenly is-align-items-center">
+      <div className="videoWrapper local m-1">
         <video ref={el => { localStreamRef.current = el}} id="videoStream" autoPlay>There is a problem playing the video.</video>
       </div>
-      <div className="videoWrapper m-1">
+      <div className="videoWrapper remote m-1">
         <video ref={el => { remoteStreamRef.current = el}} id="remoteVideoStream" autoPlay>There is a problem playing the video.</video>
       </div>
     </div>
