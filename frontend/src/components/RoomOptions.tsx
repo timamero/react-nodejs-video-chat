@@ -13,15 +13,14 @@ const RoomOptions = () => {
     socket.emit('end chat', room.roomId)
   }
 
-  // const handleStartVideoClick = () => {
-  //   console.log('start video')
-  //   dispatch(setVideoState(true))
-  //   socket.emit('start video request', room.users)
-  // }
+  const handleToggleChat = () => {
+    console.log('toggle chat')
+  }
 
   return (
     <div className="mt-4 mb-4 is-flex is-flex-direction-row is-justify-content-center">
       <button className="button is-danger mr-1" onClick={handleEndClick}>End Chat</button>
+      <button className="button is-primary mr-1" onClick={handleToggleChat}>Show Chat</button>
     </div>
   )
 }
