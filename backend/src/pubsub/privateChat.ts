@@ -38,6 +38,8 @@ const privateChat = (socket: Socket, io: Server) => {
     console.log('message: ' + messageData.msg);
   })
 
+  // delete the following event
+  // assign peer1 and peer2 in 'invite accepted' event
   socket.on('start video request', (users: string[]) => {
     peer1 = socket.id
     peer2 = users.find(user => user !== socket.id)!
