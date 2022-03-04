@@ -26,9 +26,9 @@ const ActionModal: React.FC = () => {
       handleInviteAccepted(modalData.peerId!)
     }
 
-    if (modalData.modalName === 'start video chat') {
-      handleSendVideoInvite()
-    }
+    // if (modalData.modalName === 'start video chat') {
+    //   handleSendVideoInvite()
+    // }
     
     dispatch(resetModal())
   }

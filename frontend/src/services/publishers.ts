@@ -36,6 +36,8 @@ export const handleDeclineInvite = (peerId: string) => {
   socket.emit('decline invite', peerId)
 }
 
+// this event starts the RTC peer connection sequence
 export const handleSendVideoInvite = () => {
+  console.log('starting RTC peer connection sequence')
   socket.emit('video request accepted')
 }
