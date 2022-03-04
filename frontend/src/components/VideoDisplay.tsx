@@ -1,7 +1,6 @@
 import React, { useEffect, useContext, useRef, useCallback, useMemo } from "react";
 import { SocketContext } from "../context/socket";
 import { useAppDispatch } from '../app/hooks';
-import { setVideoState } from "../app/features/roomSlice";
 
 const VideoDisplay = () => {
   const socket = useContext(SocketContext);
@@ -211,7 +210,6 @@ const VideoDisplay = () => {
 
     socket.on('get video offer', (sdp: RTCSessionDescription) => {
       handleVideoChatOffer(sdp);
-      dispatch(setVideoState(true))
     })
 
     socket.on('get video answer', (sdp: RTCSessionDescription) => {
@@ -225,7 +223,6 @@ const VideoDisplay = () => {
     socket.on('end video request', () => {
       console.log('received end video request')
       closeVideoConnection()
-      dispatch(setVideoState(false))
     })
 
   }, [socket, dispatch, startVideoChat, handleVideoChatOffer, handleVideoChatAnswer, handleNewICECandidate])

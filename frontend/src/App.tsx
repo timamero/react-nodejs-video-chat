@@ -78,7 +78,7 @@ const App: React.FC = () => {
 
   const handleEnterChat = useCallback((roomData: RoomData) => {
     dispatch(resetNotification())
-    dispatch(setRoom({ roomId: roomData.roomId, users: roomData.users, isVideoOn: false}))
+    dispatch(setRoom({ roomId: roomData.roomId, users: roomData.users }))
     navigate(`/p-room/${roomData.roomId}`)
   }, [dispatch, navigate])
 

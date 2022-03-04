@@ -2,8 +2,8 @@ import React, { useEffect, useContext } from 'react';
 import Layout from '../components/Layout';
 import { setNotification, resetNotification } from '../app/features/notificationSlice';
 import { useAppSelector, useAppDispatch } from '../app/hooks';
-import MessageForm from '../components/MessageForm';
-import MessagesDisplay from '../components/MessagesDisplay';
+// import MessageForm from '../components/MessageForm';
+// import MessagesDisplay from '../components/MessagesDisplay';
 import RoomOptions from '../components/RoomOptions';
 import { Navigate } from 'react-router-dom';
 import { SocketContext } from '../context/socket';
@@ -38,9 +38,9 @@ const PrivateRoom = () => {
         ? 
           <>
             <RoomOptions />
-            {room.isVideoOn && <VideoDisplay />}    
-            <MessagesDisplay />
-            <MessageForm />
+            <VideoDisplay />
+            {/* <MessagesDisplay />
+            <MessageForm /> */}
           </>
         : <p>No access</p>}
       </Layout>

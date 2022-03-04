@@ -27,5 +27,4 @@ export interface Notification {
 export interface Room {
   roomId: string;
   users: string[];
-  isVideoOn: boolean;
 }
