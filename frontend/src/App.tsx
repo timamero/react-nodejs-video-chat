@@ -29,6 +29,7 @@ const App: React.FC = () => {
   const navigate = useNavigate()
 
   const activeUsers = useAppSelector(state => state.activeUsers.users)
+  const currentUser = useAppSelector(state => state.user.socketId)
 
   const handleSetNewUser = useCallback((usernameFromLocalStorage) => {
     dispatch(setNewUser(usernameFromLocalStorage))
@@ -81,23 +82,11 @@ const App: React.FC = () => {
     dispatch(resetNotification())
     dispatch(setRoom({ roomId: roomData.roomId, users: roomData.users }))
     navigate(`/p-room/${roomData.roomId}`)
-    // need to make sure that only one user calls handleSendVideoInvite
-    handleSendVideoInvite()
-  }, [dispatch, navigate])
-
-  // const handleStartVideoInvite = useCallback(() => {
-  //   console.log('invitation received')
-  //   const modalData = {
-  //     modalName: 'start video chat',
-  //     modalContent: 'Start video chat?',
-  //     confirmBtnText: 'Accept',
-  //     declineBtnText: 'Decline',
-  //     isActive: true,
-  //     peerId: null,
-  //     socketEvent: 'video request accepted'
-  //   }
-  //   dispatch(setModal(modalData))
-  // }, [dispatch])
+    if (roomData.users[0] === currentUser) {
+      // Start RTC Peer Connection
+      handleSendVideoInvite()
+    }
+  }, [dispatch, navigate, currentUser])
 
   const handleCloseChatRoom = useCallback(() => {
     navigate('/')
@@ -127,7 +116,6 @@ const App: React.FC = () => {
     socket.on('invite requested', handleInviteRequested)
     socket.on('invite declined', handleInviteDeclined)
     socket.on('enter chat room', handleEnterChat)
-    // socket.on('start video invite', handleStartVideoInvite)
     socket.on('close chat room', handleCloseChatRoom)
 
     return () => {
@@ -136,7 +124,6 @@ const App: React.FC = () => {
       socket.off('invite requested', handleInviteRequested)
       socket.off('invite declined', handleInviteDeclined)
       socket.off('enter chat room', handleEnterChat)
-      // socket.off('start video invite', handleStartVideoInvite)
       socket.off('closeChatRoom', handleCloseChatRoom)
     }
   }, 
@@ -146,7 +133,6 @@ const App: React.FC = () => {
   handleInviteRequested,
   handleInviteDeclined,
   handleEnterChat,
-  // handleStartVideoInvite,
   handleCloseChatRoom])
  
   return (
