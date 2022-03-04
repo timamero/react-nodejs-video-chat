@@ -2,7 +2,7 @@ import React from 'react';
 import { resetModal } from '../../app/features/modalSlice';
 import { User } from '../../app/features/types'
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { handleSendInvite, handleInviteAccepted, handleDeclineInvite, handleSendVideoInvite } from '../../services/publishers';
+import { handleSendInvite, handleInviteAccepted, handleDeclineInvite } from '../../services/publishers';
 
 const ActionModal: React.FC = () => {
   const dispatch = useAppDispatch();
