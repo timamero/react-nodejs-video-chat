@@ -13,11 +13,14 @@ const privateChat = (socket: Socket, io: Server) => {
 
   socket.on('invite accepted', (inviterId) => {
     console.log(`${socket.id} accepted chat with ${inviterId}`)
-    const roomId = `${inviterId}-room`
-    const roomData = { roomId: roomId, users: [inviterId , socket.id] }
+    peer1 = inviterId
+    peer2 = socket.id
+    const roomId = `${peer1}-room`
+    const roomData = { roomId: roomId, users: [peer1 , peer2] }
     
-    io.in(socket.id).socketsJoin(roomId)
-    io.in(inviterId).socketsJoin(roomId)
+    
+    io.in(peer2).socketsJoin(roomId)
+    io.in(peer1).socketsJoin(roomId)
 
     io.to(roomId).emit('enter chat room', roomData)
   })
@@ -36,19 +39,6 @@ const privateChat = (socket: Socket, io: Server) => {
     
     io.to(sentMessageData.roomId).emit('receive chat message', messageData);
     console.log('message: ' + messageData.msg);
-  })
-
-  // delete the following event
-  // assign peer1 and peer2 in 'invite accepted' event
-  socket.on('start video request', (users: string[]) => {
-    peer1 = socket.id
-    peer2 = users.find(user => user !== socket.id)!
-    
-    console.log('start video request')
-
-    if (peer2) {
-      io.to(peer2).emit('start video invite')
-    }
   })
 
   socket.on('video request accepted', () => {
