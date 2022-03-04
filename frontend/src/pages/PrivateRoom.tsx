@@ -2,8 +2,8 @@ import React, { useEffect, useContext } from 'react';
 import Layout from '../components/Layout';
 import { setNotification, resetNotification } from '../app/features/notificationSlice';
 import { useAppSelector, useAppDispatch } from '../app/hooks';
-// import MessageForm from '../components/MessageForm';
-// import MessagesDisplay from '../components/MessagesDisplay';
+import MessageForm from '../components/MessageForm';
+import MessagesDisplay from '../components/MessagesDisplay';
 import RoomOptions from '../components/RoomOptions';
 import { Navigate } from 'react-router-dom';
 import { SocketContext } from '../context/socket';
@@ -14,6 +14,7 @@ const PrivateRoom = () => {
   const dispatch = useAppDispatch()
   const room = useAppSelector(state  => state.room)
   const userId = useAppSelector(state => state.user.socketId)
+  const isChatVisible = useAppSelector(state => state.room.isChatVisible)
 
   useEffect(() => {
     socket.removeAllListeners('enter chat room')
@@ -39,8 +40,13 @@ const PrivateRoom = () => {
           <>
             <RoomOptions />
             <VideoDisplay />
-            {/* <MessagesDisplay />
-            <MessageForm /> */}
+            {
+              isChatVisible &&
+              <div>
+                <MessagesDisplay />
+                <MessageForm />
+              </div>
+            }
           </>
         : <p>No access</p>}
       </Layout>
