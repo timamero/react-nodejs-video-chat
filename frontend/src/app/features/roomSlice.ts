@@ -25,6 +25,7 @@ export const roomSlice = createSlice({
     resetRoom: (state) => {
       state.roomId = ''
       state.users = []
+      state.isChatVisible = false
       state.messages = []
     }
   }
