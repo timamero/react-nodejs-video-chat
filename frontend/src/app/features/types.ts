@@ -28,4 +28,11 @@ export interface Room {
   roomId: string;
   users: string[];
   isChatVisible: boolean;
+  messages: Message[];
+}
+
+export interface Message {
+  content: string;
+  id: number;
+  className: string;
 }

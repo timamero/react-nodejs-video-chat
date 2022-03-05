@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Room } from './types'
+import { Room, Message } from './types'
 
 const initialState: Room = {
   roomId: '',
   users: [],
-  isChatVisible: false
+  isChatVisible: false,
+  messages: [],
 }
 
 export const roomSlice = createSlice({
@@ -18,13 +19,17 @@ export const roomSlice = createSlice({
     setChatVisbility: (state, action: PayloadAction<boolean>) => {
       state.isChatVisible = action.payload
     },
+    addMessage: (state, action: PayloadAction<Message>) => {
+      state.messages = state.messages.concat(action.payload)
+    },
     resetRoom: (state) => {
       state.roomId = ''
       state.users = []
+      state.messages = []
     }
   }
 })
 
-export const { setRoom, resetRoom, setChatVisbility } = roomSlice.actions
+export const { setRoom, resetRoom, setChatVisbility, addMessage } = roomSlice.actions
 
 export default roomSlice.reducer

@@ -1,18 +1,22 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useCallback, useRef } from "react";
 import { SocketContext } from "../../context/socket";
 import Message from './Message';
-import { useAppSelector } from '../../app/hooks';
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { addMessage } from "../../app/features/roomSlice";
 
-export interface message {
-  content: string;
-  id: number;
-  className: string;
-}
+// export interface message {
+//   content: string;
+//   id: number;
+//   className: string;
+// }
 
 const MessagesDisplay: React.FC = () => {
+  const dispatch = useAppDispatch()
+
   const socket = useContext(SocketContext)
   const userId = useAppSelector(state => state.user.socketId)
-  const [messages, setMessages] = useState<message[]>([])
+  const messages = useAppSelector(state => state.room.messages)
+  // const [messages, setMessages] = useState<message[]>([])
 
   const messageEndRef = useRef<null | HTMLDivElement>(null)
 
@@ -24,8 +28,13 @@ const MessagesDisplay: React.FC = () => {
     messageEndRef.current!.scrollIntoView({ behavior: 'smooth'})
   }
 
+  const updateMessages = useCallback((message) => {
+    dispatch(addMessage(message))
+  }, [dispatch])
+
   useEffect(() => {
     socket.once('receive chat message', ( messageData ) => {
+      console.log('received message')
       const firstMessageClassName = messages.length === 0 ? 'mt-auto' : ''
       const userClassName = messageData.userId === userId ? 'peer1Message' : 'peer2Message'
       const newMessage = {
@@ -34,9 +43,11 @@ const MessagesDisplay: React.FC = () => {
         className: `${firstMessageClassName} ${userClassName}`,
         id: generateRandomNum()
       }
-      setMessages(messages.concat(newMessage))
+      updateMessages(newMessage)
+      // dispatch(addMessage(newMessage))
+      // setMessages(messages.concat(newMessage))
     })
-  }, [socket, messages, userId])
+  }, [socket, messages, userId, updateMessages])
 
   useEffect(() => {
     scrollToBottom()
