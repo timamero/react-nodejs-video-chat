@@ -4,19 +4,12 @@ import Message from './Message';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { addMessage } from "../../app/features/roomSlice";
 
-// export interface message {
-//   content: string;
-//   id: number;
-//   className: string;
-// }
-
 const MessagesDisplay: React.FC = () => {
   const dispatch = useAppDispatch()
 
   const socket = useContext(SocketContext)
   const userId = useAppSelector(state => state.user.socketId)
   const messages = useAppSelector(state => state.room.messages)
-  // const [messages, setMessages] = useState<message[]>([])
 
   const messageEndRef = useRef<null | HTMLDivElement>(null)
 
@@ -44,8 +37,6 @@ const MessagesDisplay: React.FC = () => {
         id: generateRandomNum()
       }
       updateMessages(newMessage)
-      // dispatch(addMessage(newMessage))
-      // setMessages(messages.concat(newMessage))
     })
   }, [socket, messages, userId, updateMessages])
 
