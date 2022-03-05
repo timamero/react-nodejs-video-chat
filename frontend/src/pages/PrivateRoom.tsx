@@ -39,14 +39,16 @@ const PrivateRoom = () => {
         ? 
           <>
             <RoomOptions />
-            <VideoDisplay />
-            {
-              isChatVisible &&
-              <div>
-                <MessagesDisplay />
-                <MessageForm />
-              </div>
-            }
+            <div className="privateRoomContent bulma-overlay-mixin-parent">
+              <VideoDisplay />
+              {
+                isChatVisible &&
+                <div className="chat bulma-overlay-mixin">
+                  <MessagesDisplay />
+                  <MessageForm />
+                </div>
+              }
+            </div>
           </>
         : <p>No access</p>}
       </Layout>
