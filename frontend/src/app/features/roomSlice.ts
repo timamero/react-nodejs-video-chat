@@ -1,3 +1,6 @@
+/**
+ * Room state and action creators
+ */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Room, Message } from './types'
 
