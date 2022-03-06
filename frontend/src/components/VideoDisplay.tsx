@@ -1,3 +1,7 @@
+/**
+ * Local and remote video stream display
+ * RTC Peer connection handling
+ */
 import React, { useEffect, useContext, useRef, useCallback, useMemo } from "react";
 import { SocketContext } from "../context/socket";
 import { useAppDispatch } from '../app/hooks';
@@ -198,7 +202,7 @@ const VideoDisplay = () => {
         localStreamRef.current.srcObject = webcamStreamRef.current;
       }
     } catch (err) {
-      console.log('error in enterVideoChat - local webcam stream', err)
+      console.log('error in startVideoChat', err)
     }
   }, [createPeerConnection, mediaConstraints])
 
@@ -221,9 +225,16 @@ const VideoDisplay = () => {
     })
 
     socket.on('end video request', () => {
-      console.log('received end video request')
       closeVideoConnection()
     })
+
+    return () => {
+      socket.off('video ready')
+      socket.off('get video offer')
+      socket.off('get video answer')
+      socket.off('get candidate')
+      socket.off('end video request')
+    }
 
   }, [socket, dispatch, startVideoChat, handleVideoChatOffer, handleVideoChatAnswer, handleNewICECandidate])
 
