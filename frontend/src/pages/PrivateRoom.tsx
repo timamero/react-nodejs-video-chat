@@ -29,23 +29,29 @@ const PrivateRoom = () => {
     dispatch(addMessage(message))
   }, [dispatch])
 
+  const handleReceiveChatMessage = useCallback(( messageData ) => {
+    const firstMessageClassName = messages.length === 0 ? 'mt-auto' : ''
+    const userClassName = messageData.userId === userId ? 'peer1Message' : 'peer2Message'
+    const newMessage = {
+      content: messageData.msg,
+      userId: messageData.userId,
+      className: `${firstMessageClassName} ${userClassName}`,
+      id: generateRandomNum()
+    }
+    setMessages(newMessage)
+  }, [messages.length, setMessages, userId])
+
   useEffect(() => {
     socket.removeAllListeners('enter chat room')
   }, [socket])
   
   useEffect(() => {
-    socket.once('receive chat message', ( messageData ) => {
-      const firstMessageClassName = messages.length === 0 ? 'mt-auto' : ''
-      const userClassName = messageData.userId === userId ? 'peer1Message' : 'peer2Message'
-      const newMessage = {
-        content: messageData.msg,
-        userId: messageData.userId,
-        className: `${firstMessageClassName} ${userClassName}`,
-        id: generateRandomNum()
-      }
-      setMessages(newMessage)
-    })
-  }, [socket, messages, userId, setMessages])
+    socket.once('receive chat message', handleReceiveChatMessage)
+
+    return () => {
+      socket.off('receive chat message', handleReceiveChatMessage)
+    }
+  }, [socket, messages, userId, setMessages, handleReceiveChatMessage])
 
   if (!userHasAccess) {
     const notificationData = {
