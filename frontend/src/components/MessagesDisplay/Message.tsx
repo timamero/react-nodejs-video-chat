@@ -1,3 +1,6 @@
+/**
+ * Chat text message
+ */
 import React, { memo } from "react";
 
 interface MessageProps {
