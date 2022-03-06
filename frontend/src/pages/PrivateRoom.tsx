@@ -1,14 +1,17 @@
+/**
+ * Private video and text message chat room between two peers
+ */
 import React, { useEffect, useContext, useCallback } from 'react';
-import Layout from '../components/Layout';
-import { setNotification, resetNotification } from '../app/features/notificationSlice';
-import { useAppSelector, useAppDispatch } from '../app/hooks';
-import MessageForm from '../components/MessageForm';
-import MessagesDisplay from '../components/MessagesDisplay';
-import RoomOptions from '../components/RoomOptions';
 import { Navigate } from 'react-router-dom';
 import { SocketContext } from '../context/socket';
-import VideoDisplay from '../components/VideoDisplay';
+import { useAppSelector, useAppDispatch } from '../app/hooks';
+import { setNotification, resetNotification } from '../app/features/notificationSlice';
 import { addMessage } from "../app/features/roomSlice";
+import Layout from '../components/Layout';
+import RoomOptions from '../components/RoomOptions';
+import VideoDisplay from '../components/VideoDisplay';
+import MessagesDisplay from '../components/MessagesDisplay';
+import MessageForm from '../components/MessageForm';
 import { generateRandomNum } from '../util/helper';
 
 const PrivateRoom = () => {
@@ -20,15 +23,16 @@ const PrivateRoom = () => {
   const isChatVisible = useAppSelector(state => state.room.isChatVisible)
   const messages = useAppSelector(state => state.room.messages)
 
-  useEffect(() => {
-    socket.removeAllListeners('enter chat room')
-  }, [socket])
   const userHasAccess = room.users.includes(userId)
 
-  const updateMessages = useCallback((message) => {
+  const setMessages = useCallback((message) => {
     dispatch(addMessage(message))
   }, [dispatch])
 
+  useEffect(() => {
+    socket.removeAllListeners('enter chat room')
+  }, [socket])
+  
   useEffect(() => {
     socket.once('receive chat message', ( messageData ) => {
       const firstMessageClassName = messages.length === 0 ? 'mt-auto' : ''
@@ -39,9 +43,9 @@ const PrivateRoom = () => {
         className: `${firstMessageClassName} ${userClassName}`,
         id: generateRandomNum()
       }
-      updateMessages(newMessage)
+      setMessages(newMessage)
     })
-  }, [socket, messages, userId, updateMessages])
+  }, [socket, messages, userId, setMessages])
 
   if (!userHasAccess) {
     const notificationData = {
@@ -50,6 +54,7 @@ const PrivateRoom = () => {
       isLoading: false,
       isActive: true,
       }
+      
     dispatch(setNotification(notificationData))
     setTimeout(() => dispatch(resetNotification()), 5000)
     return <Navigate to="/" />
