@@ -20,7 +20,7 @@ const PrivateRoom = () => {
   
   const room = useAppSelector(state  => state.room)
   const userId = useAppSelector(state => state.user.socketId)
-  const isChatVisible = useAppSelector(state => state.room.isChatVisible)
+  const isTextChatVisible = useAppSelector(state => state.room.isTextChatVisible)
   const messages = useAppSelector(state => state.room.messages)
 
   const userHasAccess = room.users.includes(userId)
@@ -54,7 +54,7 @@ const PrivateRoom = () => {
       isLoading: false,
       isActive: true,
       }
-      
+
     dispatch(setNotification(notificationData))
     setTimeout(() => dispatch(resetNotification()), 5000)
     return <Navigate to="/" />
@@ -69,7 +69,7 @@ const PrivateRoom = () => {
             <div className="privateRoomContent bulma-overlay-mixin-parent">
               <VideoDisplay />
               {
-                isChatVisible &&
+                isTextChatVisible &&
                 <div className="chat bulma-overlay-mixin">
                   <MessagesDisplay />
                   <MessageForm />

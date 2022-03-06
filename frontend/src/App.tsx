@@ -3,18 +3,18 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import './styles/app.scss'
 import { useNavigate } from 'react-router-dom';
 import { SocketContext } from './context/socket';
-import TestRoom from './pages/TestRoom';
-import Home from './pages/Home';
-import { User } from './app/features/types';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import { setNewUser, setId } from './app/features/userSlice';
 import { getAllActiveUsers } from './app/features/activeUsersSlice';
 import { resetRoom, setRoom } from './app/features/roomSlice';
 import { setModal } from './app/features/modalSlice';
 import { setNotification, resetNotification } from './app/features/notificationSlice';
+import './styles/app.scss'
+import { User } from './app/features/types';
+import TestRoom from './pages/TestRoom';
+import Home from './pages/Home';
 import PrivateRoom from './pages/PrivateRoom';
 import { handleSendVideoInvite } from './services/publishers';
 
@@ -80,7 +80,7 @@ const App: React.FC = () => {
 
   const handleEnterChat = useCallback((roomData: RoomData) => {
     dispatch(resetNotification())
-    dispatch(setRoom({ roomId: roomData.roomId, users: roomData.users, isChatVisible: false, messages: [] }))
+    dispatch(setRoom({ roomId: roomData.roomId, users: roomData.users, isTextChatVisible: false, messages: [] }))
     navigate(`/p-room/${roomData.roomId}`)
     if (roomData.users[0] === currentUser) {
       // Start RTC Peer Connection

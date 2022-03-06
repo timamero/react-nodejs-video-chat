@@ -4,7 +4,7 @@ import { Room, Message } from './types'
 const initialState: Room = {
   roomId: '',
   users: [],
-  isChatVisible: false,
+  isTextChatVisible: false,
   messages: [],
 }
 
@@ -17,7 +17,7 @@ export const roomSlice = createSlice({
       state.users = state.users.concat(action.payload.users)
     },
     setChatVisbility: (state, action: PayloadAction<boolean>) => {
-      state.isChatVisible = action.payload
+      state.isTextChatVisible = action.payload
     },
     addMessage: (state, action: PayloadAction<Message>) => {
       state.messages = state.messages.concat(action.payload)
@@ -25,7 +25,7 @@ export const roomSlice = createSlice({
     resetRoom: (state) => {
       state.roomId = ''
       state.users = []
-      state.isChatVisible = false
+      state.isTextChatVisible = false
       state.messages = []
     }
   }
