@@ -1,7 +1,10 @@
+/**
+ * Private room button menu
+ */
 import React, { useContext } from "react";
-import { setChatVisbility } from "../app/features/roomSlice";
-import { useAppSelector, useAppDispatch } from '../app/hooks';
 import { SocketContext } from "../context/socket";
+import { useAppSelector, useAppDispatch } from '../app/hooks';
+import { setChatVisbility } from "../app/features/roomSlice";
 
 const RoomOptions = () => {
   const socket = useContext(SocketContext)
@@ -11,7 +14,6 @@ const RoomOptions = () => {
   const isChatVisible = useAppSelector(state => state.room.isChatVisible)
 
   const handleEndClick = () => {
-    console.log('end chat')
     socket.emit('end chat', room.roomId)
   }
 
