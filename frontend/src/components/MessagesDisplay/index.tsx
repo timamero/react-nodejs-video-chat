@@ -1,6 +1,9 @@
+/**
+ * Chat text message display
+ */
 import React, { useEffect, useRef } from "react";
-import Message from './Message';
 import { useAppSelector } from '../../app/hooks';
+import Message from './Message';
 
 const MessagesDisplay: React.FC = () => {
   const messages = useAppSelector(state => state.room.messages)
@@ -20,7 +23,6 @@ const MessagesDisplay: React.FC = () => {
       {messages.map(message => <Message message={message.content} key={message.id} className={message.className}/>)}
       <div ref={messageEndRef} />
     </div>
-    
   )
 }
 
