@@ -1,10 +1,13 @@
-import React, { useState, useContext, FormEvent } from "react";
+/**
+ * New user form
+ */
+
+import React, { useState, FormEvent } from "react";
 import { useAppDispatch } from "../app/hooks";
 import { setNewUser } from "../app/features/userSlice";
-import { SocketContext } from "../context/socket";
+import { sendUserEntered } from "../services/socket/publishers";
 
 const NewUserForm = () => {
-  const socket = useContext(SocketContext)
   const dispatch = useAppDispatch();
   const [usernameInput, setUsernameInput] = useState<string>('')
 
@@ -15,8 +18,7 @@ const NewUserForm = () => {
     dispatch(setNewUser(usernameInput))
     setUsernameInput('')
 
-    // Send server event when a new user creates a username
-    socket.emit('user entered', usernameInput)
+    sendUserEntered(usernameInput)
   }
 
   return (

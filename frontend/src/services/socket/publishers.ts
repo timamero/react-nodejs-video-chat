@@ -4,6 +4,13 @@
 import { socket } from "../../context/socket"
 
 /**
+ * Send socket invite for user entering room
+ */
+export const sendUserEntered = (username: string) => {
+  socket.emit('user entered', username)
+}
+
+/**
  * Send socket event to send invitation request to peer
  */
 export const sendInvite = (peerId: string) => {
