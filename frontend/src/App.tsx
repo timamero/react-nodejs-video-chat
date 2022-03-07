@@ -16,7 +16,7 @@ import { User } from './app/features/types';
 import TestRoom from './pages/TestRoom';
 import Home from './pages/Home';
 import PrivateRoom from './pages/PrivateRoom';
-import { handleSendVideoInvite } from './services/publishers';
+import { handleSendVideoInvite } from './services/socket/publishers';
 
 interface RoomData {
   roomId: string;

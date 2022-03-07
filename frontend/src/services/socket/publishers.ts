@@ -1,7 +1,7 @@
-import { socket } from "../context/socket"
-import { setNotification } from "../app/features/notificationSlice"
-import { setModal } from "../app/features/modalSlice";
-import { store } from "../app/store";
+import { socket } from "../../context/socket"
+import { setNotification } from "../../app/features/notificationSlice"
+import { setModal } from "../../app/features/modalSlice";
+import { store } from "../../app/store";
 
 export const handleInviteToChatClick = (peerId: string, peerUsername: string) => {
   const modalData = {
