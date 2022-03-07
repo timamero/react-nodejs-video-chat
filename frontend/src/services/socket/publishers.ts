@@ -1,18 +1,12 @@
+/**
+ * Socket event emitters
+ */
 import { socket } from "../../context/socket"
-import { setNotification } from "../../app/features/notificationSlice"
-import { store } from "../../app/store";
 
 /**
  * Send socket event to send invitation request to peer
  */
-export const handleSendInvite = (peerId: string, peerUsername: string) => {
-  const notificationData = {
-    notificationContent: `Waiting for a response from ${peerUsername}`,
-    notificationType: 'is-warning',
-    isLoading: true,
-    isActive: true,
-  }
-  store.dispatch(setNotification(notificationData))
+export const handleSendInvite = (peerId: string) => {
   socket.emit('invite private chat', peerId)
 }
 
