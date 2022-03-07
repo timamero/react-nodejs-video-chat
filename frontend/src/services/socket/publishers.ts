@@ -17,6 +17,9 @@ export const handleInviteToChatClick = (peerId: string, peerUsername: string) =>
   store.dispatch(setModal(modalData))
 }
 
+/**
+ * Send socket event to send invitation request to peer
+ */
 export const handleSendInvite = (peerId: string, peerUsername: string) => {
   const notificationData = {
     notificationContent: `Waiting for a response from ${peerUsername}`,
@@ -28,16 +31,23 @@ export const handleSendInvite = (peerId: string, peerUsername: string) => {
   socket.emit('invite private chat', peerId)
 }
 
+/**
+ * Send socket event to accept invitation to chat
+ */
 export const handleInviteAccepted = (peerId: string) => {
   socket.emit('invite accepted', peerId)
 }
 
+/**
+ * Send socket event to decline invitation to chat
+ */
 export const handleDeclineInvite = (peerId: string) => {
   socket.emit('decline invite', peerId)
 }
 
-// this event starts the RTC peer connection sequence
+/**
+ * Send socket event to start RTC peer connection process
+ */
 export const handleSendVideoInvite = () => {
-  console.log('starting RTC peer connection sequence')
   socket.emit('video request accepted')
 }
