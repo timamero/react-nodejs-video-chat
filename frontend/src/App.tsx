@@ -3,19 +3,20 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import './styles/app.scss'
 import { useNavigate } from 'react-router-dom';
 import { SocketContext } from './context/socket';
-import TestRoom from './pages/TestRoom';
-import Home from './pages/Home';
-import { User } from './app/features/types';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import { setNewUser, setId } from './app/features/userSlice';
 import { getAllActiveUsers } from './app/features/activeUsersSlice';
 import { resetRoom, setRoom } from './app/features/roomSlice';
 import { setModal } from './app/features/modalSlice';
 import { setNotification, resetNotification } from './app/features/notificationSlice';
+import './styles/app.scss'
+import { User } from './app/features/types';
+import TestRoom from './pages/TestRoom';
+import Home from './pages/Home';
 import PrivateRoom from './pages/PrivateRoom';
+import { handleSendVideoInvite } from './services/publishers';
 
 interface RoomData {
   roomId: string;
@@ -28,6 +29,7 @@ const App: React.FC = () => {
   const navigate = useNavigate()
 
   const activeUsers = useAppSelector(state => state.activeUsers.users)
+  const currentUser = useAppSelector(state => state.user.socketId)
 
   const handleSetNewUser = useCallback((usernameFromLocalStorage) => {
     dispatch(setNewUser(usernameFromLocalStorage))
@@ -78,23 +80,13 @@ const App: React.FC = () => {
 
   const handleEnterChat = useCallback((roomData: RoomData) => {
     dispatch(resetNotification())
-    dispatch(setRoom({ roomId: roomData.roomId, users: roomData.users, isVideoOn: false}))
+    dispatch(setRoom({ roomId: roomData.roomId, users: roomData.users, isTextChatVisible: false, messages: [] }))
     navigate(`/p-room/${roomData.roomId}`)
-  }, [dispatch, navigate])
-
-  const handleStartVideoInvite = useCallback(() => {
-    console.log('invitation received')
-    const modalData = {
-      modalName: 'start video chat',
-      modalContent: 'Start video chat?',
-      confirmBtnText: 'Accept',
-      declineBtnText: 'Decline',
-      isActive: true,
-      peerId: null,
-      socketEvent: 'video request accepted'
+    if (roomData.users[0] === currentUser) {
+      // Start RTC Peer Connection
+      handleSendVideoInvite()
     }
-    dispatch(setModal(modalData))
-  }, [dispatch])
+  }, [dispatch, navigate, currentUser])
 
   const handleCloseChatRoom = useCallback(() => {
     navigate('/')
@@ -124,7 +116,6 @@ const App: React.FC = () => {
     socket.on('invite requested', handleInviteRequested)
     socket.on('invite declined', handleInviteDeclined)
     socket.on('enter chat room', handleEnterChat)
-    socket.on('start video invite', handleStartVideoInvite)
     socket.on('close chat room', handleCloseChatRoom)
 
     return () => {
@@ -133,7 +124,6 @@ const App: React.FC = () => {
       socket.off('invite requested', handleInviteRequested)
       socket.off('invite declined', handleInviteDeclined)
       socket.off('enter chat room', handleEnterChat)
-      socket.off('start video invite', handleStartVideoInvite)
       socket.off('closeChatRoom', handleCloseChatRoom)
     }
   }, 
@@ -143,7 +133,6 @@ const App: React.FC = () => {
   handleInviteRequested,
   handleInviteDeclined,
   handleEnterChat,
-  handleStartVideoInvite,
   handleCloseChatRoom])
  
   return (

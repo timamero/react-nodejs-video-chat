@@ -11,8 +11,13 @@ body, html, #root, .App, .Layout {
   height: 92vh;
 }
 
+.chat {
+  height: 60%;
+}
+
 #messageDisplay {
   overflow-y: auto;
+  height: 80%;
 }
 
 .Message {
@@ -28,6 +33,6 @@ body, html, #root, .App, .Layout {
   background-color: #F1F4FF;
 }
 
-.videoWrapper {
-  max-width: 200px;
+.videoWrapper.local{
+  max-width: 100px;
 }

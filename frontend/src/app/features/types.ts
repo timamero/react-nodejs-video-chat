@@ -27,5 +27,12 @@ export interface Notification {
 export interface Room {
   roomId: string;
   users: string[];
-  isVideoOn: boolean;
+  isTextChatVisible: boolean;
+  messages: Message[];
+}
+
+export interface Message {
+  content: string;
+  id: number;
+  className: string;
 }

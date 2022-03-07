@@ -1,42 +1,18 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
-import { SocketContext } from "../../context/socket";
-import Message from './Message';
+/**
+ * Chat text message display
+ */
+import React, { useEffect, useRef } from "react";
 import { useAppSelector } from '../../app/hooks';
-
-export interface message {
-  content: string;
-  id: number;
-  className: string;
-}
+import Message from './Message';
 
 const MessagesDisplay: React.FC = () => {
-  const socket = useContext(SocketContext)
-  const userId = useAppSelector(state => state.user.socketId)
-  const [messages, setMessages] = useState<message[]>([])
+  const messages = useAppSelector(state => state.room.messages)
 
   const messageEndRef = useRef<null | HTMLDivElement>(null)
-
-  const generateRandomNum = () => {
-    return Math.floor((Math.random() * 10000))
-  }
 
   const scrollToBottom = () => {
     messageEndRef.current!.scrollIntoView({ behavior: 'smooth'})
   }
-
-  useEffect(() => {
-    socket.once('receive chat message', ( messageData ) => {
-      const firstMessageClassName = messages.length === 0 ? 'mt-auto' : ''
-      const userClassName = messageData.userId === userId ? 'peer1Message' : 'peer2Message'
-      const newMessage = {
-        content: messageData.msg,
-        userId: messageData.userId,
-        className: `${firstMessageClassName} ${userClassName}`,
-        id: generateRandomNum()
-      }
-      setMessages(messages.concat(newMessage))
-    })
-  }, [socket, messages, userId])
 
   useEffect(() => {
     scrollToBottom()
@@ -47,7 +23,6 @@ const MessagesDisplay: React.FC = () => {
       {messages.map(message => <Message message={message.content} key={message.id} className={message.className}/>)}
       <div ref={messageEndRef} />
     </div>
-    
   )
 }
 

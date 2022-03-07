@@ -1,7 +1,10 @@
+/**
+ * Local and remote video stream display
+ * RTC Peer connection handling
+ */
 import React, { useEffect, useContext, useRef, useCallback, useMemo } from "react";
 import { SocketContext } from "../context/socket";
 import { useAppDispatch } from '../app/hooks';
-import { setVideoState } from "../app/features/roomSlice";
 
 const VideoDisplay = () => {
   const socket = useContext(SocketContext);
@@ -199,7 +202,7 @@ const VideoDisplay = () => {
         localStreamRef.current.srcObject = webcamStreamRef.current;
       }
     } catch (err) {
-      console.log('error in enterVideoChat - local webcam stream', err)
+      console.log('error in startVideoChat', err)
     }
   }, [createPeerConnection, mediaConstraints])
 
@@ -211,7 +214,6 @@ const VideoDisplay = () => {
 
     socket.on('get video offer', (sdp: RTCSessionDescription) => {
       handleVideoChatOffer(sdp);
-      dispatch(setVideoState(true))
     })
 
     socket.on('get video answer', (sdp: RTCSessionDescription) => {
@@ -223,10 +225,16 @@ const VideoDisplay = () => {
     })
 
     socket.on('end video request', () => {
-      console.log('received end video request')
       closeVideoConnection()
-      dispatch(setVideoState(false))
     })
+
+    return () => {
+      socket.off('video ready')
+      socket.off('get video offer')
+      socket.off('get video answer')
+      socket.off('get candidate')
+      socket.off('end video request')
+    }
 
   }, [socket, dispatch, startVideoChat, handleVideoChatOffer, handleVideoChatAnswer, handleNewICECandidate])
 
@@ -269,11 +277,11 @@ const VideoDisplay = () => {
   }
 
   return (
-    <div className="is-flex is-flex-direction-row is-justify-content-space-evenly">
-      <div className="videoWrapper m-1">
+    <div className="is-flex is-flex-direction-column is-justify-content-space-evenly is-align-items-center">
+      <div className="videoWrapper local m-1">
         <video ref={el => { localStreamRef.current = el}} id="videoStream" autoPlay>There is a problem playing the video.</video>
       </div>
-      <div className="videoWrapper m-1">
+      <div className="videoWrapper remote m-1">
         <video ref={el => { remoteStreamRef.current = el}} id="remoteVideoStream" autoPlay>There is a problem playing the video.</video>
       </div>
     </div>

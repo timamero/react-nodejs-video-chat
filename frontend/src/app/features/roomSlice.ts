@@ -1,10 +1,14 @@
+/**
+ * Room state and action creators
+ */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Room } from './types'
+import { Room, Message } from './types'
 
 const initialState: Room = {
   roomId: '',
   users: [],
-  isVideoOn: false
+  isTextChatVisible: false,
+  messages: [],
 }
 
 export const roomSlice = createSlice({
@@ -15,17 +19,21 @@ export const roomSlice = createSlice({
       state.roomId = action.payload.roomId
       state.users = state.users.concat(action.payload.users)
     },
-    setVideoState: (state, action: PayloadAction<boolean>) => {
-      state.isVideoOn = action.payload
+    setChatVisbility: (state, action: PayloadAction<boolean>) => {
+      state.isTextChatVisible = action.payload
+    },
+    addMessage: (state, action: PayloadAction<Message>) => {
+      state.messages = state.messages.concat(action.payload)
     },
     resetRoom: (state) => {
       state.roomId = ''
       state.users = []
-      state.isVideoOn = false
+      state.isTextChatVisible = false
+      state.messages = []
     }
   }
 })
 
-export const { setRoom, resetRoom, setVideoState } = roomSlice.actions
+export const { setRoom, resetRoom, setChatVisbility, addMessage } = roomSlice.actions
 
 export default roomSlice.reducer

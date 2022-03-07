@@ -1,3 +1,6 @@
+/**
+ * Chat Message Text Input and Submit
+ */
 import React, { useContext } from "react";
 import { SocketContext } from "../context/socket";
 import { useAppSelector } from '../app/hooks';

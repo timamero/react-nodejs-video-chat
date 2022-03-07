@@ -1,7 +1,6 @@
 import { socket } from "../context/socket"
 import { setNotification } from "../app/features/notificationSlice"
 import { setModal } from "../app/features/modalSlice";
-import { setVideoState } from "../app/features/roomSlice";
 import { store } from "../app/store";
 
 export const handleInviteToChatClick = (peerId: string, peerUsername: string) => {
@@ -37,7 +36,8 @@ export const handleDeclineInvite = (peerId: string) => {
   socket.emit('decline invite', peerId)
 }
 
+// this event starts the RTC peer connection sequence
 export const handleSendVideoInvite = () => {
-  store.dispatch(setVideoState(true))
+  console.log('starting RTC peer connection sequence')
   socket.emit('video request accepted')
 }
