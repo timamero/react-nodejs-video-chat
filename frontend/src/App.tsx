@@ -9,7 +9,6 @@ import { useAppDispatch, useAppSelector } from './app/hooks';
 import { setNewUser, setId } from './app/features/userSlice';
 import { getAllActiveUsers } from './app/features/activeUsersSlice';
 import { resetRoom, setRoom } from './app/features/roomSlice';
-import { setModal } from './app/features/modalSlice';
 import { setNotification, resetNotification } from './app/features/notificationSlice';
 import './styles/app.scss'
 import { User } from './app/features/types';
@@ -17,6 +16,7 @@ import TestRoom from './pages/TestRoom';
 import Home from './pages/Home';
 import PrivateRoom from './pages/PrivateRoom';
 import { sendVideoInvite } from './services/socket/publishers';
+import { setModalInviteRequest } from './util/middleware/socketActions/modal';
 
 interface RoomData {
   roomId: string;
@@ -46,22 +46,12 @@ const App: React.FC = () => {
   }, [dispatch])
 
   const handleInviteRequested = useCallback(inviterId => {
-    console.log('invite from ', inviterId)
     const inviter = activeUsers.find((user: User) => user.socketId === inviterId)
 
     if (inviter) {
-        const modalData = {
-        modalName: 'private chat request',
-        modalContent: `${inviter.username} has invited you to a private chat?`,
-        confirmBtnText: 'Yes, accept invite.',
-        declineBtnText: 'No, decline invite.',
-        isActive: true,
-        peerId: inviterId,
-        socketEvent: 'invite requested'
-      }
-      dispatch(setModal(modalData))
+      setModalInviteRequest(inviterId, inviter)
     } 
-  }, [dispatch, activeUsers])
+  }, [activeUsers])
 
   const handleInviteDeclined = useCallback(inviteeId => {
     console.log('invitation to chat was declined by', inviteeId)
