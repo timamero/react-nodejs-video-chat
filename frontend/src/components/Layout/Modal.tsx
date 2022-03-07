@@ -5,7 +5,7 @@ import React from 'react';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { User } from '../../app/features/types'
 import { resetModal } from '../../app/features/modalSlice';
-import { handleSendInvite, handleInviteAccepted, handleDeclineInvite } from '../../services/socket/publishers';
+import { sendInvite, sendInviteAccepted, sendDeclineInvite } from '../../services/socket/publishers';
 import { setNotificationSendInvite } from '../../util/middleware/socketActions/notification';
 
 const ActionModal: React.FC = () => {
@@ -16,7 +16,7 @@ const ActionModal: React.FC = () => {
   
   const handleDeclineandCloseModal = () => {
     if (modalData.modalName === 'private chat request') {
-      handleDeclineInvite(modalData.peerId!)
+      sendDeclineInvite(modalData.peerId!)
     }
     
     dispatch(resetModal())
@@ -24,12 +24,12 @@ const ActionModal: React.FC = () => {
 
   const handleAcceptandCloseModal = () => {
     if (modalData.modalName === 'send chat invite') {
-      handleSendInvite(modalData.peerId!)
+      sendInvite(modalData.peerId!)
       setNotificationSendInvite(peerUsername)
     }
 
     if (modalData.modalName === 'private chat request') {
-      handleInviteAccepted(modalData.peerId!)
+      sendInviteAccepted(modalData.peerId!)
     }
     
     dispatch(resetModal())

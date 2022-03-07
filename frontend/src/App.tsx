@@ -16,7 +16,7 @@ import { User } from './app/features/types';
 import TestRoom from './pages/TestRoom';
 import Home from './pages/Home';
 import PrivateRoom from './pages/PrivateRoom';
-import { handleSendVideoInvite } from './services/socket/publishers';
+import { sendVideoInvite } from './services/socket/publishers';
 
 interface RoomData {
   roomId: string;
@@ -84,7 +84,7 @@ const App: React.FC = () => {
     navigate(`/p-room/${roomData.roomId}`)
     if (roomData.users[0] === currentUser) {
       // Start RTC Peer Connection
-      handleSendVideoInvite()
+      sendVideoInvite()
     }
   }, [dispatch, navigate, currentUser])
 
