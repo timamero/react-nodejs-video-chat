@@ -14,7 +14,7 @@ import { User } from './app/features/types';
 import TestRoom from './pages/TestRoom';
 import Home from './pages/Home';
 import PrivateRoom from './pages/PrivateRoom';
-import { sendVideoInvite } from './services/socket/publishers';
+import { sendUserEntered, sendVideoInvite } from './services/socket/publishers';
 import { setModalInviteRequest } from './util/middleware/socketActions/modal';
 import { setNotificatioInviteDeclined } from './util/middleware/socketActions/notification';
 import { setActiveUsers } from './util/middleware/socketActions/activeUsers';
@@ -71,7 +71,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const usernameFromLocalStorage = window.localStorage.getItem('chat-username')
     if (usernameFromLocalStorage) {
-      socket.emit('user entered', usernameFromLocalStorage)
+      sendUserEntered(usernameFromLocalStorage)
       setAppNewUser(usernameFromLocalStorage)
     }
   }, [socket])
