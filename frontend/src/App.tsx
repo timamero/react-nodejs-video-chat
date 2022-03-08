@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from './app/hooks';
 import { setNewUser, setId } from './app/features/userSlice';
 import { getAllActiveUsers } from './app/features/activeUsersSlice';
 import { resetRoom, setRoom } from './app/features/roomSlice';
-import { setNotification, resetNotification } from './app/features/notificationSlice';
+import { resetNotification } from './app/features/notificationSlice';
 import './styles/app.scss'
 import { User } from './app/features/types';
 import TestRoom from './pages/TestRoom';
@@ -17,6 +17,7 @@ import Home from './pages/Home';
 import PrivateRoom from './pages/PrivateRoom';
 import { sendVideoInvite } from './services/socket/publishers';
 import { setModalInviteRequest } from './util/middleware/socketActions/modal';
+import { setNotificatioInviteDeclined } from './util/middleware/socketActions/notification';
 
 interface RoomData {
   roomId: string;
@@ -54,19 +55,11 @@ const App: React.FC = () => {
   }, [activeUsers])
 
   const handleInviteDeclined = useCallback(inviteeId => {
-    console.log('invitation to chat was declined by', inviteeId)
     const peer = activeUsers.find((user: User) => user.socketId === inviteeId)
     if (peer) {
-      const notificationData = {
-      notificationContent: `${peer.username} is not able to chat`,
-      notificationType: 'is-warning',
-      isLoading: false,
-      isActive: true,
-      }
-      dispatch(setNotification(notificationData))
-      setTimeout(() => dispatch(resetNotification()), 5000)
+      setNotificatioInviteDeclined(peer)
     }
-  }, [dispatch, activeUsers])
+  }, [activeUsers])
 
   const handleEnterChat = useCallback((roomData: RoomData) => {
     dispatch(resetNotification())
