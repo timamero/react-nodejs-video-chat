@@ -1,5 +1,5 @@
 /**
- * Socket callbacks for setting the modal
+ * Actions for setting the modal
  */
 import { store } from "../../../app/store";
 import { setModal } from "../../../app/features/modalSlice";
@@ -15,7 +15,6 @@ export const setModalInviteToChat = (peerId: string, peerUsername: string) => {
     peerId,
     socketEvent: 'invite private chat'
   }
-
   store.dispatch(setModal(modalData))
 }
 

@@ -14,10 +14,10 @@ import TestRoom from './pages/TestRoom';
 import Home from './pages/Home';
 import PrivateRoom from './pages/PrivateRoom';
 import { sendUserEntered, sendVideoInvite } from './services/socket/publishers';
-import { setModalInviteRequest } from './util/middleware/socketActions/modal';
 import { setNotificatioInviteDeclined } from './util/middleware/socketActions/notification';
 import { setActiveUsers } from './util/middleware/socketActions/activeUsers';
 import { setUserId } from './util/middleware/socketActions/user';
+import { setModalInviteRequest } from './util/middleware/appActions/modal';
 import { setAppNewUser } from './util/middleware/appActions/user';
 
 interface RoomData {
