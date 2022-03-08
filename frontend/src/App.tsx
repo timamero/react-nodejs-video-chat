@@ -7,8 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { SocketContext } from './context/socket';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import { setId } from './app/features/userSlice';
-// import { setNewUser, setId } from './app/features/userSlice';
-import { getAllActiveUsers } from './app/features/activeUsersSlice';
 import { resetRoom, setRoom } from './app/features/roomSlice';
 import { resetNotification } from './app/features/notificationSlice';
 import './styles/app.scss'
@@ -19,6 +17,7 @@ import PrivateRoom from './pages/PrivateRoom';
 import { sendVideoInvite } from './services/socket/publishers';
 import { setModalInviteRequest } from './util/middleware/socketActions/modal';
 import { setNotificatioInviteDeclined } from './util/middleware/socketActions/notification';
+import { setActiveUsers } from './util/middleware/socketActions/activeUsers';
 import { setAppNewUser } from './util/middleware/appActions/user';
 
 interface RoomData {
@@ -33,11 +32,6 @@ const App: React.FC = () => {
 
   const activeUsers = useAppSelector(state => state.activeUsers.users)
   const currentUser = useAppSelector(state => state.user.socketId)
-
-  const handleAddUsers = useCallback((users: User[]) => {
-    // Get list of active users from server
-    dispatch(getAllActiveUsers(users))
-  }, [dispatch])
 
   const handleSetId = useCallback(id => {
     // Setting the socket ID as the current user's ID
@@ -89,7 +83,7 @@ const App: React.FC = () => {
     socket.once('connect', () => {
       console.log('Connected to server')
     })
-    socket.on('get user list', handleAddUsers)
+    socket.on('get user list', setActiveUsers)
     socket.on('get socket id', handleSetId)
     socket.on('invite requested', handleInviteRequested)
     socket.on('invite declined', handleInviteDeclined)
@@ -97,7 +91,7 @@ const App: React.FC = () => {
     socket.on('close chat room', handleCloseChatRoom)
 
     return () => {
-      socket.off('get user list', handleAddUsers)
+      socket.off('get user list', setActiveUsers)
       socket.off('get socket id', handleSetId)
       socket.off('invite requested', handleInviteRequested)
       socket.off('invite declined', handleInviteDeclined)
@@ -106,7 +100,6 @@ const App: React.FC = () => {
     }
   }, 
   [socket, 
-  handleAddUsers,
   handleSetId,
   handleInviteRequested,
   handleInviteDeclined,
