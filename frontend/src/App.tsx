@@ -6,7 +6,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { SocketContext } from './context/socket';
 import { useAppDispatch, useAppSelector } from './app/hooks';
-import { setNewUser, setId } from './app/features/userSlice';
+import { setId } from './app/features/userSlice';
+// import { setNewUser, setId } from './app/features/userSlice';
 import { getAllActiveUsers } from './app/features/activeUsersSlice';
 import { resetRoom, setRoom } from './app/features/roomSlice';
 import { resetNotification } from './app/features/notificationSlice';
@@ -18,6 +19,7 @@ import PrivateRoom from './pages/PrivateRoom';
 import { sendVideoInvite } from './services/socket/publishers';
 import { setModalInviteRequest } from './util/middleware/socketActions/modal';
 import { setNotificatioInviteDeclined } from './util/middleware/socketActions/notification';
+import { setAppNewUser } from './util/middleware/appActions/user';
 
 interface RoomData {
   roomId: string;
@@ -31,10 +33,6 @@ const App: React.FC = () => {
 
   const activeUsers = useAppSelector(state => state.activeUsers.users)
   const currentUser = useAppSelector(state => state.user.socketId)
-
-  const handleSetNewUser = useCallback((usernameFromLocalStorage) => {
-    dispatch(setNewUser(usernameFromLocalStorage))
-  }, [dispatch])
 
   const handleAddUsers = useCallback((users: User[]) => {
     // Get list of active users from server
@@ -78,14 +76,11 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const usernameFromLocalStorage = window.localStorage.getItem('chat-username')
-
     if (usernameFromLocalStorage) {
-      console.log('getting user from local storage')
       socket.emit('user entered', usernameFromLocalStorage)
-      handleSetNewUser(usernameFromLocalStorage)
+      setAppNewUser(usernameFromLocalStorage)
     }
-
-  }, [socket, handleSetNewUser])
+  }, [socket])
 
   useEffect(() => {
     /*
