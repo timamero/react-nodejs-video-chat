@@ -6,7 +6,6 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { SocketContext } from './context/socket';
 import { useAppDispatch, useAppSelector } from './app/hooks';
-import { setId } from './app/features/userSlice';
 import { resetRoom, setRoom } from './app/features/roomSlice';
 import { resetNotification } from './app/features/notificationSlice';
 import './styles/app.scss'
@@ -18,6 +17,7 @@ import { sendUserEntered, sendVideoInvite } from './services/socket/publishers';
 import { setModalInviteRequest } from './util/middleware/socketActions/modal';
 import { setNotificatioInviteDeclined } from './util/middleware/socketActions/notification';
 import { setActiveUsers } from './util/middleware/socketActions/activeUsers';
+import { setUserId } from './util/middleware/socketActions/user';
 import { setAppNewUser } from './util/middleware/appActions/user';
 
 interface RoomData {
@@ -32,11 +32,6 @@ const App: React.FC = () => {
 
   const activeUsers = useAppSelector(state => state.activeUsers.users)
   const currentUser = useAppSelector(state => state.user.socketId)
-
-  const handleSetId = useCallback(id => {
-    // Setting the socket ID as the current user's ID
-    dispatch(setId(id))
-  }, [dispatch])
 
   const handleInviteRequested = useCallback(inviterId => {
     const inviter = activeUsers.find((user: User) => user.socketId === inviterId)
@@ -84,7 +79,7 @@ const App: React.FC = () => {
       console.log('Connected to server')
     })
     socket.on('get user list', setActiveUsers)
-    socket.on('get socket id', handleSetId)
+    socket.on('get socket id', setUserId)
     socket.on('invite requested', handleInviteRequested)
     socket.on('invite declined', handleInviteDeclined)
     socket.on('enter chat room', handleEnterChat)
@@ -92,7 +87,7 @@ const App: React.FC = () => {
 
     return () => {
       socket.off('get user list', setActiveUsers)
-      socket.off('get socket id', handleSetId)
+      socket.off('get socket id', setUserId)
       socket.off('invite requested', handleInviteRequested)
       socket.off('invite declined', handleInviteDeclined)
       socket.off('enter chat room', handleEnterChat)
@@ -100,7 +95,6 @@ const App: React.FC = () => {
     }
   }, 
   [socket, 
-  handleSetId,
   handleInviteRequested,
   handleInviteDeclined,
   handleEnterChat,
