@@ -1,5 +1,5 @@
 /**
- * User actions
+ * Actions for updating User state
  */
 import { store } from "../../../app/store";
 import { setNewUser } from "../../../app/features/userSlice";
