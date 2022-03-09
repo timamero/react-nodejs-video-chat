@@ -1,3 +1,6 @@
+/**
+ * App
+ */
 import React, { useContext, useEffect, useCallback } from 'react';
 import {
   Routes,
@@ -30,16 +33,23 @@ const App: React.FC = () => {
 
   const currentUser = useAppSelector(state => state.user.socketId)
 
+  /**
+   * handleEnterChat is called after invitation to chat is accepted by recipient of invitation.
+   * The users are redirected to the private room chat page, and the user that initiated the
+   * invite starts the RTC peer connection by calling sendVideoInvite
+   */
   const handleEnterChat = useCallback((roomData: RoomData) => {
     dispatch(resetNotification())
     dispatch(setRoom({ roomId: roomData.roomId, users: roomData.users, isTextChatVisible: false, messages: [] }))
     navigate(`/p-room/${roomData.roomId}`)
     if (roomData.users[0] === currentUser) {
-      // Start RTC Peer Connection
       sendVideoInvite()
     }
   }, [dispatch, navigate, currentUser])
 
+  /**
+   * handleCloseChatRoom is called when one of the users presses the 'End Chat' button.
+   */
   const handleCloseChatRoom = useCallback(() => {
     navigate('/')
     dispatch(resetRoom())
@@ -53,10 +63,10 @@ const App: React.FC = () => {
     }
   }, [socket])
 
+  /**
+   * Register socket event listeners
+   */
   useEffect(() => {
-    /*
-    * Socket event listeners
-    */
     socket.once('connect', () => {
       console.log('Connected to server')
     })
