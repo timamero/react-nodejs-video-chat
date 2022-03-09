@@ -14,9 +14,9 @@ import TestRoom from './pages/TestRoom';
 import Home from './pages/Home';
 import PrivateRoom from './pages/PrivateRoom';
 import { sendUserEntered, sendVideoInvite } from './services/socket/publishers';
-import { setNotificatioInviteDeclined } from './util/middleware/appActions/notification';
 import { setActiveUsers } from './util/middleware/socketActions/activeUsers';
 import { setUserId } from './util/middleware/socketActions/user';
+import { handleInviteDeclined } from './util/middleware/socketActions/chat';
 import { setModalInviteRequest } from './util/middleware/appActions/modal';
 import { setAppNewUser } from './util/middleware/appActions/user';
 
@@ -39,13 +39,6 @@ const App: React.FC = () => {
     if (inviter) {
       setModalInviteRequest(inviterId, inviter)
     } 
-  }, [activeUsers])
-
-  const handleInviteDeclined = useCallback(inviteeId => {
-    const peer = activeUsers.find((user: User) => user.socketId === inviteeId)
-    if (peer) {
-      setNotificatioInviteDeclined(peer)
-    }
   }, [activeUsers])
 
   const handleEnterChat = useCallback((roomData: RoomData) => {
@@ -96,7 +89,6 @@ const App: React.FC = () => {
   }, 
   [socket, 
   handleInviteRequested,
-  handleInviteDeclined,
   handleEnterChat,
   handleCloseChatRoom])
  
