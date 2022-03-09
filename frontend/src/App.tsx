@@ -15,7 +15,7 @@ import PrivateRoom from './pages/PrivateRoom';
 import { sendUserEntered, sendVideoInvite } from './services/socket/publishers';
 import { setActiveUsers } from './util/middleware/socketActions/activeUsers';
 import { setUserId } from './util/middleware/socketActions/user';
-import { handleInviteRequested, handleInviteDeclined } from './util/middleware/socketActions/chat';
+import { handleInviteRequested, handleInviteDeclined } from './util/middleware/socketActions/invite';
 import { setAppNewUser } from './util/middleware/appActions/user';
 
 interface RoomData {

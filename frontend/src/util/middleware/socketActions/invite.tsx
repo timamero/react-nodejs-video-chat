@@ -1,5 +1,5 @@
 /**
- * Socket callbacks for chat invitation and setting up private chat room
+ * Socket callbacks for chat invitation
  */
 import { store } from "../../../app/store";
 import { User } from "../../../app/features/types";
