@@ -2,7 +2,7 @@
  * Room state and action creators
  */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Room, Message } from './types'
+import { Room, Message } from '../../util/types'
 
 const initialState: Room = {
   roomId: '',

@@ -2,7 +2,7 @@
  * Socket callbacks for setting notification
  */
 import { setNotification, resetNotification } from "../../../app/features/notificationSlice";
-import { User } from "../../../app/features/types";
+import { User } from "../../types";
 import { store } from "../../../app/store";
 
 export const setNotificationSendInvite = (peerUsername: string) => {

@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { User } from '../../app/features/types'
+import { User } from '../../util/types'
 import { resetModal } from '../../app/features/modalSlice';
 import { sendInvite, sendInviteAccepted, sendDeclineInvite } from '../../services/socket/publishers';
 import { setNotificationSendInvite } from '../../util/middleware/appActions/notification';

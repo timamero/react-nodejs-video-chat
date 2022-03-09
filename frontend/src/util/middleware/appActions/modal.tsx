@@ -3,7 +3,7 @@
  */
 import { store } from "../../../app/store";
 import { setModal } from "../../../app/features/modalSlice";
-import { User } from "../../../app/features/types";
+import { User } from "../../types";
 
 export const setModalInviteToChat = (peerId: string, peerUsername: string) => {
   const modalData = {

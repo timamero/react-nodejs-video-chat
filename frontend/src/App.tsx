@@ -9,6 +9,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { SocketContext } from './context/socket';
 import { useAppDispatch, useAppSelector } from './app/hooks';
+import { RoomData } from './util/types';
 import { resetRoom, setRoom } from './app/features/roomSlice';
 import { resetNotification } from './app/features/notificationSlice';
 import './styles/app.scss'
@@ -20,11 +21,6 @@ import { setActiveUsers } from './util/middleware/socketActions/activeUsers';
 import { setUserId } from './util/middleware/socketActions/user';
 import { handleInviteRequested, handleInviteDeclined } from './util/middleware/socketActions/invite';
 import { setAppNewUser } from './util/middleware/appActions/user';
-
-interface RoomData {
-  roomId: string;
-  users: [string];
-}
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -48,7 +44,8 @@ const App: React.FC = () => {
   }, [dispatch, navigate, currentUser])
 
   /**
-   * handleCloseChatRoom is called when one of the users presses the 'End Chat' button.
+   * handleCloseChatRoom is called when one of the users presses the 'End Chat' button
+   * in the private chat page.
    */
   const handleCloseChatRoom = useCallback(() => {
     navigate('/')

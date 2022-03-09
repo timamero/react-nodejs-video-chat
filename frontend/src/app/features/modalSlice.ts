@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Modal } from './types'
+import { Modal } from '../../util/types'
 
 const initialState: Modal = {
   modalName: '',

@@ -2,7 +2,7 @@
  * Socket callbacks for chat invitation
  */
 import { store } from "../../../app/store";
-import { User } from "../../../app/features/types";
+import { User } from "../../types";
 import { setNotificatioInviteDeclined } from "../appActions/notification";
 import { setModalInviteRequest } from "../appActions/modal";
 

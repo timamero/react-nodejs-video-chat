@@ -31,6 +31,11 @@ export interface Room {
   messages: Message[];
 }
 
+export interface RoomData {
+  roomId: string;
+  users: [string];
+}
+
 export interface Message {
   content: string;
   id: number;

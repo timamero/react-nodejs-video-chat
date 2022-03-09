@@ -2,7 +2,7 @@
  * Active user list item
  */
 import React from "react";
-import { User } from "../../app/features/types";
+import { User } from "../../util/types";
 import { setModalInviteToChat } from '../../util/middleware/appActions/modal';
 
 interface ActiveUserItemProps {
