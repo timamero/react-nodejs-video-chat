@@ -13,7 +13,6 @@ import { RoomData } from './util/types';
 import { resetRoom, setRoom } from './app/features/roomSlice';
 import { resetNotification } from './app/features/notificationSlice';
 import './styles/app.scss'
-import TestRoom from './pages/TestRoom';
 import Home from './pages/Home';
 import PrivateRoom from './pages/PrivateRoom';
 import { sendUserEntered, sendVideoInvite } from './services/socket/publishers';
@@ -92,7 +91,6 @@ const App: React.FC = () => {
       <Routes>
         <Route path='/' element={<Home />}/>
         <Route path='/p-room/:id' element={<PrivateRoom />} />
-        <Route path='/testroom' element={<TestRoom />} />
       </Routes>
     </div>
   );
