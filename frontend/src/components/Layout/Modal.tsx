@@ -6,7 +6,7 @@ import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { User } from '../../app/features/types'
 import { resetModal } from '../../app/features/modalSlice';
 import { sendInvite, sendInviteAccepted, sendDeclineInvite } from '../../services/socket/publishers';
-import { setNotificationSendInvite } from '../../util/middleware/socketActions/notification';
+import { setNotificationSendInvite } from '../../util/middleware/appActions/notification';
 
 const ActionModal: React.FC = () => {
   const dispatch = useAppDispatch();
