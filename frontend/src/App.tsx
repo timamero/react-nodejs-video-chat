@@ -9,15 +9,13 @@ import { useAppDispatch, useAppSelector } from './app/hooks';
 import { resetRoom, setRoom } from './app/features/roomSlice';
 import { resetNotification } from './app/features/notificationSlice';
 import './styles/app.scss'
-import { User } from './app/features/types';
 import TestRoom from './pages/TestRoom';
 import Home from './pages/Home';
 import PrivateRoom from './pages/PrivateRoom';
 import { sendUserEntered, sendVideoInvite } from './services/socket/publishers';
 import { setActiveUsers } from './util/middleware/socketActions/activeUsers';
 import { setUserId } from './util/middleware/socketActions/user';
-import { handleInviteDeclined } from './util/middleware/socketActions/chat';
-import { setModalInviteRequest } from './util/middleware/appActions/modal';
+import { handleInviteRequested, handleInviteDeclined } from './util/middleware/socketActions/chat';
 import { setAppNewUser } from './util/middleware/appActions/user';
 
 interface RoomData {
@@ -30,16 +28,7 @@ const App: React.FC = () => {
   const socket = useContext(SocketContext)
   const navigate = useNavigate()
 
-  const activeUsers = useAppSelector(state => state.activeUsers.users)
   const currentUser = useAppSelector(state => state.user.socketId)
-
-  const handleInviteRequested = useCallback(inviterId => {
-    const inviter = activeUsers.find((user: User) => user.socketId === inviterId)
-
-    if (inviter) {
-      setModalInviteRequest(inviterId, inviter)
-    } 
-  }, [activeUsers])
 
   const handleEnterChat = useCallback((roomData: RoomData) => {
     dispatch(resetNotification())
@@ -88,7 +77,6 @@ const App: React.FC = () => {
     }
   }, 
   [socket, 
-  handleInviteRequested,
   handleEnterChat,
   handleCloseChatRoom])
  
