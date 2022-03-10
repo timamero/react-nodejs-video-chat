@@ -1,8 +1,12 @@
+/**
+ * Modal that requires user action to accept/decline
+ */
 import React from 'react';
-import { resetModal } from '../../app/features/modalSlice';
-import { User } from '../../app/features/types'
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { handleSendInvite, handleInviteAccepted, handleDeclineInvite } from '../../services/publishers';
+import { User } from '../../util/types'
+import { resetModal } from '../../app/features/modalSlice';
+import { sendInvite, sendInviteAccepted, sendDeclineInvite } from '../../services/socket/publishers';
+import { setNotificationSendInvite } from '../../util/middleware/appActions/notification';
 
 const ActionModal: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -12,23 +16,21 @@ const ActionModal: React.FC = () => {
   
   const handleDeclineandCloseModal = () => {
     if (modalData.modalName === 'private chat request') {
-      handleDeclineInvite(modalData.peerId!)
+      sendDeclineInvite(modalData.peerId!)
     }
+    
     dispatch(resetModal())
   }
 
   const handleAcceptandCloseModal = () => {
     if (modalData.modalName === 'send chat invite') {
-      handleSendInvite(modalData.peerId!, peerUsername)
+      sendInvite(modalData.peerId!)
+      setNotificationSendInvite(peerUsername)
     }
 
     if (modalData.modalName === 'private chat request') {
-      handleInviteAccepted(modalData.peerId!)
+      sendInviteAccepted(modalData.peerId!)
     }
-
-    // if (modalData.modalName === 'start video chat') {
-    //   handleSendVideoInvite()
-    // }
     
     dispatch(resetModal())
   }
