@@ -1,5 +1,6 @@
 import { Db } from 'mongodb';
 import { client } from '../../src/database';
+import { createRoom } from '../../src/controllers/room'
 
 /**
  * Test room controller methods
@@ -28,6 +29,8 @@ describe('Controllers - users', () => {
 
     const insertedRoom = await room.find().toArray();
     expect(insertedRoom).toHaveLength(1)
-    expect(insertedRoom[0]).toEqual(expectedRoom);
+    expect(insertedRoom[0]).toEqual(
+      expect.objectContaining(expectedRoom)
+    );
   });
 });
