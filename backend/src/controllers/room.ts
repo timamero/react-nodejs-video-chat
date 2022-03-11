@@ -1,7 +1,7 @@
 /**
  * Functions to request data from room collection
  */
-import { client } from '../database';
+import { client } from '../database'
 
 const dbName = process.env.NODE_ENV === 'test' ? 'test' : 'chat'
 const collectionName = 'room'
