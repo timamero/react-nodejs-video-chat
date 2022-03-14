@@ -62,14 +62,13 @@ describe('Controllers - room', () => {
     const mockRoom = { users: [] }
     const socketId = 'b1_UnFDfzUoU3yUeAAAB'
 
-    const user = await users.findOne({ socketId })
+    const user = await users.findOne({ socket: socketId })
     const result = await room.insertOne(mockRoom)
-    await addUserBySocketId(socketId)
-
+    await addUserBySocketId(result.insertedId, socketId)
     const insertedRoom = await room.findOne({_id: result.insertedId})
 
-    expect(insertedRoom).toEqual(mockRoom)
+    expect(insertedRoom).toBeDefined();
     expect(insertedRoom?.users).toHaveLength(1)
-    expect(insertedRoom?.users).toContain(user?._id)
+    expect(insertedRoom?.users).toContainEqual(user?._id)
   })
 });
