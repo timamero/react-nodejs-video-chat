@@ -14,3 +14,7 @@ export async function createRoom() {
     return null
   }
 }
+
+export async function addUserBySocketId(socketId: string) {
+  return null
+}

@@ -1,6 +1,6 @@
 import { Db } from 'mongodb';
 import { client } from '../../src/database'
-import { createRoom } from '../../src/controllers/room'
+import { createRoom, addUserBySocketId } from '../../src/controllers/room'
 
 /**
  * Test room controller methods
@@ -46,18 +46,14 @@ describe('Controllers - room', () => {
   it('createRoom function should insert a doc into collection', async () => {
     const room = db.collection('room')
     const expectedRoom = { users: [] }
-    
-    try {
-      await createRoom();
-      const insertedRoom = await room.find().toArray()
 
-      expect(insertedRoom).toHaveLength(1)
-      expect(insertedRoom[0]).toEqual(
-        expect.objectContaining(expectedRoom)
-      );
-    } catch (error) {
-      console.error(error)
-    }
+    await createRoom();
+    const insertedRoom = await room.find().toArray()
+
+    expect(insertedRoom).toHaveLength(1)
+    expect(insertedRoom[0]).toEqual(
+      expect.objectContaining(expectedRoom)
+    );
   });
 
   it('addUserBySocketId function should add reference of user from users collection to a room collection\'s users array field', async () => {
@@ -66,18 +62,14 @@ describe('Controllers - room', () => {
     const mockRoom = { users: [] }
     const socketId = 'b1_UnFDfzUoU3yUeAAAB'
 
-    try {
-      const user = await users.findOne({ socketId })
-      const result = await room.insertOne(mockRoom)
-      await addUserBySocketId(socketId)
+    const user = await users.findOne({ socketId })
+    const result = await room.insertOne(mockRoom)
+    await addUserBySocketId(socketId)
 
-      const insertedRoom = await room.findOne({_id: result.insertedId})
+    const insertedRoom = await room.findOne({_id: result.insertedId})
 
-      expect(insertedRoom).toEqual(mockRoom)
-      expect(insertedRoom?.users).toHaveLength(1)
-      expect(insertedRoom?.users).toContain(user?._id)
-    } catch (error) {
-      console.error(error)
-    }
+    expect(insertedRoom).toEqual(mockRoom)
+    expect(insertedRoom?.users).toHaveLength(1)
+    expect(insertedRoom?.users).toContain(user?._id)
   })
 });
