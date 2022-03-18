@@ -1,6 +1,7 @@
 import { Db } from 'mongodb';
 import { client } from '../../src/database'
 import { createRoom, addUserBySocketId } from '../../src/controllers/room'
+import { lookup } from 'dns';
 
 /**
  * Test room controller methods
@@ -71,4 +72,19 @@ describe('Controllers - room', () => {
     expect(insertedRoom?.users).toHaveLength(1)
     expect(insertedRoom?.users).toContainEqual(user?._id)
   })
+
+  it('deleteRoomById function should delete a doc from collection', async () => {
+    const room = db.collection('room')
+    const mockRoom = { users: [] }
+
+    const result = await room.insertOne(mockRoom)
+    const roomBeforeDelete = await room.find().toArray()
+    expect(roomBeforeDelete).toHaveLength(1)
+
+    const roomId = result.insertedId
+    deleteRoomById(roomId)
+
+    const roomAfterDelete = await room.find().toArray()
+    expect(roomAfterDelete).toHaveLength(0)  
+  });
 });
