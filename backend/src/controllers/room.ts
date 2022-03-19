@@ -17,8 +17,6 @@ export async function createRoom() {
 }
 
 export async function addUserBySocketId(roomId: ObjectId, socketId: string) {
-  console.log('addUser...roomId', roomId)
-  console.log('addUser...socketId', socketId)
   try {
     const roomFilter = {
       _id: roomId
@@ -32,6 +30,16 @@ export async function addUserBySocketId(roomId: ObjectId, socketId: string) {
     }
 
     await client.db(dbName).collection(collectionName).findOneAndUpdate(roomFilter, update)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export async function deleteRoomById(roomId: ObjectId) {
+  try {
+    const result = await client.db(dbName).collection(collectionName).findOneAndDelete({_id: roomId})
+    // For testing, return room object that was deleted
+    return result.value
   } catch (error) {
     console.error(error)
   }
