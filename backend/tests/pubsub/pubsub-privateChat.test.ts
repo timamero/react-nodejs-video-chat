@@ -94,6 +94,13 @@ describe("Pubsub - privateChat", () => {
 
     /* Close MongoDB database connection */
     await client.close()
+
+    /*
+      Error when closing connection to database and sockets.
+      After connection to MongoDB is closed, asynchronous methods
+      using the database are called, resulting in a MongoDB 
+      connection error.
+    */
   });
 
   it.only("when server receives 'invite private chat' event, the server emits the 'invite requested' event to the invitee client", async () => {
