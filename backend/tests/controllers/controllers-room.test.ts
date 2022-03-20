@@ -72,7 +72,7 @@ describe('Controllers - room', () => {
     expect(insertedRoom?.users).toContainEqual(user?._id)
   })
 
-  it.only('deleteRoomById function should delete a doc from collection', async () => {
+  it('deleteRoomById function should delete a doc from collection', async () => {
     const room = db.collection('room')
     const mockRoom = { users: [] }
 
