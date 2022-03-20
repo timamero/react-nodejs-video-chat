@@ -7,6 +7,7 @@ export async function createUser(newUser: Document) {
   try {
     await client.db(dbName).collection('users').insertOne(newUser)
   } catch (error) {
+    console.log('error at users controllers: createUser')
     console.error(error)
     return null
   }
@@ -18,6 +19,7 @@ export async function deleteUserBySocketId(socketId: string) {
     // Return user object that was deleted
     return result.value
   } catch (error) {
+    console.log('error at users controllers: deleteUserBySocketId')
     console.error(error)
   }
 }
@@ -27,6 +29,7 @@ export async function getUserByUsername(username: string) {
     const result = await client.db(dbName).collection('users').findOne({username})
     return result
   } catch (error) {
+    console.log('error at users controllers: getUserByUsername')
     console.error(error)
   }
 }
@@ -36,6 +39,7 @@ export async function getAllUsers() {
     const result = await client.db(dbName).collection('users').find().toArray()
     return result
   } catch (error) {
+    console.log('error at users controllers: getAllUsers')
     console.error(error)
   }
 }
