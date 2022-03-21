@@ -5,16 +5,17 @@ import { Db } from 'mongodb';
 import { client } from '../../src/database';
 import { createUser } from '../../src/controllers/users'
 import user from '../../src/pubsub/users';
+import privateChat from '../../src/pubsub/privateChat';
 
 /**
  * Test privateChat socket event publishers and subscribers
  */
 describe("Pubsub - privateChat", () => {
-  let io: Server, serverSocket: Socket;
-  let clientSocket1: ClientSocket, clientSocket2: ClientSocket;
-  let  client1Id: String, client2Id: String;
+  let io: Server, serverSocket: Socket
+  let clientSocket1: ClientSocket, clientSocket2: ClientSocket
+  let  client1Id: String, client2Id: String
 
-  let db: Db;
+  let db: Db
 
   const port = 9000
 
@@ -29,7 +30,7 @@ describe("Pubsub - privateChat", () => {
       // Connect to sockets after MongoDB connection is established
 
       /* Create HTTP server */
-      const httpServer = createServer();
+      const httpServer = createServer()
       const options = {
         path: '/',
         serveClient: false,
@@ -43,8 +44,8 @@ describe("Pubsub - privateChat", () => {
       console.log('create server listener')
 
       /* Create client sockets and connect */
-      clientSocket1 = clientIo(`http://localhost:${port}`);
-      clientSocket2 = clientIo(`http://localhost:${port}`);
+      clientSocket1 = clientIo(`http://localhost:${port}`)
+      clientSocket2 = clientIo(`http://localhost:${port}`)
       clientSocket1.connect()
       clientSocket2.connect()
 
@@ -56,16 +57,19 @@ describe("Pubsub - privateChat", () => {
       io.on("connection", async (socket) => {
         if (connectionNumber === 0) {
           client1Id = socket.id
-          serverSocket = socket;
+          console.log('client1Id', client1Id)
+          serverSocket = socket
           /* Initialize users socket event publishers and subscribers */
-          user(serverSocket, io);
+          user(serverSocket, io)
 
           connectionNumber++
         } else {
           client2Id = socket.id
-          serverSocket = socket;
+          console.log('client2Id', client2Id)
+          serverSocket = socket
           /* Initialize users socket event publishers and subscribers */
-          user(serverSocket, io);
+          user(serverSocket, io)
+          privateChat(serverSocket, io)
           done()
         }
       });
@@ -83,6 +87,7 @@ describe("Pubsub - privateChat", () => {
   });
 
   afterAll(async () => {
+    console.log('closing sockets and database')
     /* Disconnect client sockets */
     clientSocket1.disconnect();
     clientSocket2.disconnect();
@@ -103,9 +108,16 @@ describe("Pubsub - privateChat", () => {
     */
   });
 
-  it.only("when server receives 'invite private chat' event, the server emits the 'invite requested' event to the invitee client", async () => {
-    const users = db.collection('users');
-    const usersList = await users.find({}).toArray()
-    console.log('userslist', usersList) 
+  it.only("when server receives 'invite private chat' event, the server emits the 'invite requested' event to the invitee client", (done) => {
+    // Test is currently failing.
+    // Error: thrown: "Exceeded timeout of 5000 ms for a test.
+    clientSocket1.emit('invite private chat', client2Id);  
+
+    clientSocket2.on('invite requested', (arg) => {
+      console.log('invite requested')
+      expect(arg).toBeDefined()
+      expect(arg).toEqual(client1Id)
+      done()
+    })
   });
 })
