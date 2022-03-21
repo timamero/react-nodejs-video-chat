@@ -8,8 +8,10 @@ const dbName = process.env.NODE_ENV === 'test' ? 'test' : 'chat'
 const collectionName = 'room'
 
 export async function createRoom() {
+  // Return the room id after room is created
   try {
-    await client.db(dbName).collection(collectionName).insertOne({ users: []})
+    const result = await client.db(dbName).collection(collectionName).insertOne({ users: []})
+    return result.insertedId.toString()
   } catch (error) {
     console.error(error)
     return null

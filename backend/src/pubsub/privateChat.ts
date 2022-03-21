@@ -1,9 +1,10 @@
 import { Server, Socket } from 'socket.io';
+import { createRoom } from '../../src/controllers/room'
 
 let peer1: string;
 let peer2: string;
-
-const privateChat = (socket: Socket, io: Server) => {
+console.log('privateChat loaded')
+const privateChat = async (socket: Socket, io: Server) => {
   socket.on('invite private chat', (inviteeId) => {
     console.log(`${socket.id} invited ${inviteeId} to a chat`)
 
@@ -11,18 +12,19 @@ const privateChat = (socket: Socket, io: Server) => {
     io.to(inviteeId).emit('invite requested', socket.id)
   })
 
-  socket.on('invite accepted', (inviterId) => {
+  socket.on('invite accepted', async (inviterId) => {
     console.log(`${socket.id} accepted chat with ${inviterId}`)
     peer1 = inviterId
     peer2 = socket.id
-    const roomId = `${peer1}-room`
+
+    const roomId = await createRoom()
     const roomData = { roomId: roomId, users: [peer1 , peer2] }
     
     
-    io.in(peer2).socketsJoin(roomId)
-    io.in(peer1).socketsJoin(roomId)
+    io.in(peer2).socketsJoin(roomId!)
+    io.in(peer1).socketsJoin(roomId!)
 
-    io.to(roomId).emit('enter chat room', roomData)
+    io.to(roomId!).emit('enter chat room', roomData)
   })
 
   socket.on('decline invite', (inviterId) => {
