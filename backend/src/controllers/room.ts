@@ -11,7 +11,7 @@ export async function createRoom() {
   // Return the room id after room is created
   try {
     const result = await client.db(dbName).collection(collectionName).insertOne({ users: []})
-    return result.insertedId.toString()
+    return result.insertedId
   } catch (error) {
     console.error(error)
     return null
@@ -24,8 +24,10 @@ export async function addUserBySocketId(roomId: ObjectId, socketId: string) {
       _id: roomId
     }
 
-    const user = await client.db(dbName).collection('users').findOne({ socket: socketId })
+    const user = await client.db(dbName).collection('users').findOne({ socketId })
+    console.log('found user', user)
     const room = await client.db(dbName).collection(collectionName).findOne(roomFilter)
+    console.log('found room', room)
 
     const update = {
       $set: { 'users' : room?.users.concat(user?._id) }

@@ -14,9 +14,9 @@ describe('Controllers - room', () => {
       db = await client.db()
       const users = db.collection('users');
       const mockUsers = [
-        { socket: 'a1_UnFDfzUoU3yUeAAAB', username: 'Jane'},
-        { socket: 'b1_UnFDfzUoU3yUeAAAB', username: 'Nora'},
-        { socket: 'c1_UnFDfzUoU3yUeAAAB', username: 'Cara'},
+        { socketId: 'a1_UnFDfzUoU3yUeAAAB', username: 'Jane'},
+        { socketId: 'b1_UnFDfzUoU3yUeAAAB', username: 'Nora'},
+        { socketId: 'c1_UnFDfzUoU3yUeAAAB', username: 'Cara'},
       ];
 
       await users.insertOne(mockUsers[0])
@@ -62,7 +62,7 @@ describe('Controllers - room', () => {
     const mockRoom = { users: [] }
     const socketId = 'b1_UnFDfzUoU3yUeAAAB'
 
-    const user = await users.findOne({ socket: socketId })
+    const user = await users.findOne({ socketId: socketId })
     const result = await room.insertOne(mockRoom)
     await addUserBySocketId(result.insertedId, socketId)
     const insertedRoom = await room.findOne({_id: result.insertedId})
