@@ -2,6 +2,7 @@
  * Functions to request data from room collection
  */
 import { ObjectId } from 'mongodb'
+import { User } from '../../util/types'
 import { client } from '../database'
 
 const dbName = process.env.NODE_ENV === 'test' ? 'test' : 'chat'
@@ -25,15 +26,26 @@ export async function addUserBySocketId(roomId: ObjectId, socketId: string) {
     }
 
     const user = await client.db(dbName).collection('users').findOne({ socketId })
-    console.log('found user', user)
     const room = await client.db(dbName).collection(collectionName).findOne(roomFilter)
-    console.log('found room', room)
 
     const update = {
       $set: { 'users' : room?.users.concat(user?._id) }
     }
 
     await client.db(dbName).collection(collectionName).findOneAndUpdate(roomFilter, update)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export async function getRoomUsersSocketId(roomId: ObjectId) {
+  try {
+    const room = await client.db(dbName).collection(collectionName).findOne({ _id: roomId })
+
+    const user1 = await client.db(dbName).collection('users').findOne({_id: room!.users[0]})
+    const user2 = await client.db(dbName).collection('users').findOne({_id: room!.users[1]})
+
+    return [user1!.socketId, user2!.socketId]
   } catch (error) {
     console.error(error)
   }
