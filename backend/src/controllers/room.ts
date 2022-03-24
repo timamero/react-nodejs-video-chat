@@ -38,6 +38,15 @@ export async function addUserBySocketId(roomId: ObjectId, socketId: string) {
   }
 }
 
+export async function getRoom(roomId: ObjectId) {
+  try {
+    const room = await client.db(dbName).collection(collectionName).findOne({ _id: roomId })
+    return room
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 export async function getRoomUsersSocketId(roomId: ObjectId) {
   try {
     const room = await client.db(dbName).collection(collectionName).findOne({ _id: roomId })

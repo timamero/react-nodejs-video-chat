@@ -1,6 +1,6 @@
 import { Db } from 'mongodb';
 import { client } from '../../src/database'
-import { createRoom, addUserBySocketId, getRoomUsersSocketId, deleteRoomById } from '../../src/controllers/room'
+import { createRoom, addUserBySocketId, getRoomUsersSocketId, deleteRoomById, getRoom } from '../../src/controllers/room'
 
 /**
  * Test room controller methods
@@ -72,7 +72,34 @@ describe('Controllers - room', () => {
     expect(insertedRoom?.users).toContainEqual(user?._id)
   })
 
-  it.only('getRoomUsersSocketId function should return the correct users socket IDs in the room', async () => {
+  it.only('getRoom function should return the room object', async () => {
+    const users = db.collection('users');
+    const room = db.collection('room')
+    const mockRoom = { users: [] }
+
+    // Create mock room and add users
+    const result = await room.insertOne(mockRoom)
+    const roomId = result.insertedId
+    const socketId1 = 'b1_UnFDfzUoU3yUeAAAB'
+    const socketId2 = 'c1_UnFDfzUoU3yUeAAAB'
+    const user1 = await users.findOne({ socketId: socketId1 })
+    const user2 = await users.findOne({ socketId: socketId2 })
+
+    const roomFilter = {
+      _id: result.insertedId
+    }
+    const update = {
+      $set: { 'users' : [user1?._id, user2?._id] }
+    }
+
+    await room.findOneAndUpdate(roomFilter, update)
+
+    const returnedRoom = await getRoom(roomId)
+    
+    expect(returnedRoom).toEqual({_id: roomId, users: [user1?._id, user2?._id]})
+  })
+
+  it('getRoomUsersSocketId function should return the users socket IDs in the room', async () => {
     const users = db.collection('users');
     const room = db.collection('room')
     const mockRoom = { users: [] }
