@@ -57,13 +57,15 @@ const privateChat = async (socket: Socket, io: Server) => {
     io.to(userSocketId).emit('video ready')
   })
 
-  socket.on('video offer', ({sdp}) => {
-    // need to update front-end, pass roomId
-    console.log(`send get video offer to ${peer2}`)
+  socket.on('video offer', async ({sdp, roomId}) => {
+    // TO-DO! need to update front-end, pass roomId
+    const room = await getRoom(roomId)
+    // The second user in the users array will receice `get video offer` event
+    const user = await getUserById(room!.users[1])
+    const userSocketId = user!.socketId  
+    console.log(`send get video offer to ${userSocketId}`)
     
-    if (socket.id === peer1) {
-      io.to(peer2).emit('get video offer', sdp)
-    }
+    io.to(userSocketId).emit('get video offer', sdp)
   })
 
   socket.on('video answer', ({sdp}) => {
