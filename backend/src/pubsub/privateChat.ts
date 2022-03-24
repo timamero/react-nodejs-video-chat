@@ -48,8 +48,9 @@ const privateChat = async (socket: Socket, io: Server) => {
   })
 
   socket.on('video request accepted', async (roomId) => {
-    // need to update front-end, pass roomId
+    // TO-DO! need to update front-end, pass roomId
     const room = await getRoom(roomId)
+    // The first user in the users array will initialize the RTCPeerConnection
     const user = await getUserById(room!.users[0])
     const userSocketId = user!.socketId
     console.log('send video ready to ', userSocketId)
@@ -57,6 +58,7 @@ const privateChat = async (socket: Socket, io: Server) => {
   })
 
   socket.on('video offer', ({sdp}) => {
+    // need to update front-end, pass roomId
     console.log(`send get video offer to ${peer2}`)
     
     if (socket.id === peer1) {
