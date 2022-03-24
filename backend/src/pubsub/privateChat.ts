@@ -1,5 +1,6 @@
 import { Server, Socket } from 'socket.io';
-import { createRoom, addUserBySocketId, getRoomUsersSocketId } from '../controllers/room'
+import { createRoom, addUserBySocketId, getRoomUsersSocketId, getRoom } from '../controllers/room'
+import { getUserById } from '../controllers/users';
 
 let peer1: string;
 let peer2: string;
@@ -46,9 +47,13 @@ const privateChat = async (socket: Socket, io: Server) => {
     console.log('message: ' + messageData.msg);
   })
 
-  socket.on('video request accepted', () => {
-    console.log('send video ready to ', peer1)
-    io.to(peer1).emit('video ready')
+  socket.on('video request accepted', async (roomId) => {
+    // need to update front-end, pass roomId
+    const room = await getRoom(roomId)
+    const user = await getUserById(room!.users[0])
+    const userSocketId = user!.socketId
+    console.log('send video ready to ', userSocketId)
+    io.to(userSocketId).emit('video ready')
   })
 
   socket.on('video offer', ({sdp}) => {
