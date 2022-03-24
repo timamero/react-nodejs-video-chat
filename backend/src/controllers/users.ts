@@ -1,4 +1,7 @@
-import { Document } from 'mongodb';
+/**
+ * Functions to request data from user collection
+ */
+import { Document, ObjectId } from 'mongodb';
 import { client } from '../database';
 
 const dbName = process.env.NODE_ENV === 'test' ? 'test' : 'chat'
@@ -7,7 +10,6 @@ export async function createUser(newUser: Document) {
   try {
     await client.db(dbName).collection('users').insertOne(newUser)
   } catch (error) {
-    console.log('error at users controllers: createUser')
     console.error(error)
     return null
   }
@@ -19,17 +21,15 @@ export async function deleteUserBySocketId(socketId: string) {
     // Return user object that was deleted
     return result.value
   } catch (error) {
-    console.log('error at users controllers: deleteUserBySocketId')
     console.error(error)
   }
 }
 
-export async function getUserByUsername(username: string) {
+export async function getUserById(id: ObjectId) {
   try {
-    const result = await client.db(dbName).collection('users').findOne({username})
+    const result = await client.db(dbName).collection('users').findOne({ _id: id })
     return result
   } catch (error) {
-    console.log('error at users controllers: getUserByUsername')
     console.error(error)
   }
 }
@@ -39,7 +39,6 @@ export async function getAllUsers() {
     const result = await client.db(dbName).collection('users').find().toArray()
     return result
   } catch (error) {
-    console.log('error at users controllers: getAllUsers')
     console.error(error)
   }
 }

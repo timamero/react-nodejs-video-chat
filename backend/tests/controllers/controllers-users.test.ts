@@ -1,6 +1,6 @@
-import { Db } from 'mongodb';
+import { Db, ObjectId } from 'mongodb';
 import { client } from '../../src/database';
-import { createUser, deleteUserBySocketId, getAllUsers, getUserByUsername } from '../../src/controllers/users'
+import { createUser, deleteUserBySocketId, getAllUsers, getUserById } from '../../src/controllers/users'
 
 /**
  * Test user controller methods
@@ -64,28 +64,28 @@ describe('Controllers - users', () => {
     expect(result).toEqual(null)
   });
 
-  it('getUserByUsername function should get correct user from collection', async () => {
+  it('getUserById function should get correct user from collection', async () => {
     const users = db.collection('users');
     const socketId = 'e1_UnFDfzUoU3yUeAAAB'
     const username = 'Jane04'
     
     const mockUser = { socketId, username};
-    await users.insertOne(mockUser);
+    const insertedUser = await users.insertOne(mockUser);
 
-    const result = await getUserByUsername(username)
+    const result = await getUserById(insertedUser.insertedId)
     expect(result).toEqual(mockUser)
   });
 
-  it('getUserByUsername function should return null if username is not found in collection', async () => {
+  it('getUserById function should return null if ID is not found in collection', async () => {
     const users = db.collection('users');
     const socketId = 'f1_UnFDfzUoU3yUeAAAB'
     const username = 'Jane05'
-    const usernameNotInCollection = 'Nora'
+    const idNotInCollection = new ObjectId('some-user-id')
     
     const mockUser = { socketId, username};
     await users.insertOne(mockUser);
 
-    const result = await getUserByUsername(usernameNotInCollection)
+    const result = await getUserById(idNotInCollection)
     expect(result).toEqual(null)
   });
 
