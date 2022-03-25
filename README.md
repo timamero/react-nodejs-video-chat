@@ -18,7 +18,7 @@ A video chat app created with Socket.io, Typescript, React, Redux, Node.js, and 
 
 *What was your process for completing this project?* 
 
-I used a kan ban board and created user stories to plan and visualize the tasks to create the application.
+I used a kanban board for creating user stories and keeping track of bugs. 
 
 ### Challenges
 
