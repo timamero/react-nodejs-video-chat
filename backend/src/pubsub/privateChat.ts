@@ -78,22 +78,36 @@ const privateChat = async (socket: Socket, io: Server) => {
     io.to(userSocketId).emit('get video answer', sdp)
   })
 
-  socket.on('candidate', ({candidate}) => {
+  socket.on('candidate', async ({candidate, roomId}) => {
+    // TO-DO! need to update front-end, pass roomId
+    const room = await getRoom(roomId)
     console.log(`ice candidate from ${socket.id}`)
+
+    const user1 = await getUserById(room!.users[0])
+    const user2 = await getUserById(room!.users[1])
+    const user1SocketId = user1!.socketId  
+    const user2SocketId = user2!.socketId  
     
-    if (socket.id === peer1) {
-      console.log('send get candidate to peer2')
-      io.to(peer2).emit('get candidate', candidate)
+    if (socket.id === user1SocketId) {
+      console.log(`send get candidate to ${user2SocketId}`)
+      io.to(user2SocketId).emit('get candidate', candidate)
     } else {
-      console.log('send get candidate to peer1')
-      io.to(peer1).emit('get candidate', candidate)
+      console.log(`send get candidate to ${user1SocketId}`)
+      io.to(user1SocketId).emit('get candidate', candidate)
     }
   })
 
-  socket.on('end chat', (roomId) => {
+  socket.on('end chat', async (roomId) => {
+    const room = await getRoom(roomId)
     console.log(`end chat for room ${roomId}`)
-    io.to(peer1).emit('end video request')
-    io.to(peer2).emit('end video request')
+
+    const user1 = await getUserById(room!.users[0])
+    const user2 = await getUserById(room!.users[1])
+    const user1SocketId = user1!.socketId  
+    const user2SocketId = user2!.socketId 
+
+    io.to(user1SocketId).emit('end video request')
+    io.to(user2SocketId).emit('end video request')
     io.to(roomId).emit('close chat room')
   })
 }
