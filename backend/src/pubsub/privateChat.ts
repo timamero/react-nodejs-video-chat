@@ -2,9 +2,13 @@ import { Server, Socket } from 'socket.io';
 import { createRoom, addUserBySocketId, getRoomUsersSocketId, getRoom } from '../controllers/room'
 import { getUserById } from '../controllers/users';
 
-let peer1: string;
-let peer2: string;
-console.log('privateChat loaded')
+/**
+ * Socket event listener functions for sending and receiving 
+ * invites to a private chat, creating and closing the private
+ * chat room, and for establishing the RTCPeerConnection
+ * @param socket 
+ * @param io 
+ */
 const privateChat = async (socket: Socket, io: Server) => {
   socket.on('invite private chat', (inviteeId) => {
     console.log(`${socket.id} invited ${inviteeId} to a chat`)
