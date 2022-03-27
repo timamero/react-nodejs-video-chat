@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import { createRoom, addUserBySocketId, getRoomUsersSocketId, getRoom } from '../controllers/room'
+import { createRoom, addUserBySocketId, getRoomUsersSocketId, getRoom, deleteRoomById } from '../controllers/room'
 import { getUserById } from '../controllers/users';
 
 /**
@@ -26,7 +26,7 @@ const privateChat = async (socket: Socket, io: Server) => {
       await addUserBySocketId(roomId!, socket.id)
       const socketIds = await getRoomUsersSocketId(roomId!)
       const roomData = { roomId: roomId?.toString(), users: socketIds }
-      
+
       io.in(socketIds![0]).socketsJoin(roomId!.toString())
       io.in(socketIds![1]).socketsJoin(roomId!.toString())
       io.to(roomId!.toString()).emit('enter chat room', roomData)
@@ -52,7 +52,6 @@ const privateChat = async (socket: Socket, io: Server) => {
   })
 
   socket.on('video request accepted', async (roomId) => {
-    // TO-DO! need to update front-end, pass roomId
     const room = await getRoom(roomId)
     // The first user in the users array will initialize the RTCPeerConnection
     const user = await getUserById(room!.users[0])
@@ -62,7 +61,6 @@ const privateChat = async (socket: Socket, io: Server) => {
   })
 
   socket.on('video offer', async ({sdp, roomId}) => {
-    // TO-DO! need to update front-end, pass roomId
     const room = await getRoom(roomId)
     // The second user in the users array will receice `get video offer` event
     const user = await getUserById(room!.users[1])
@@ -73,7 +71,6 @@ const privateChat = async (socket: Socket, io: Server) => {
   })
 
   socket.on('video answer', async ({sdp, roomId}) => {
-    // TO-DO! need to update front-end, pass roomId
     const room = await getRoom(roomId)
     const user = await getUserById(room!.users[0])
     const userSocketId = user!.socketId  
@@ -83,7 +80,6 @@ const privateChat = async (socket: Socket, io: Server) => {
   })
 
   socket.on('candidate', async ({candidate, roomId}) => {
-    // TO-DO! need to update front-end, pass roomId
     const room = await getRoom(roomId)
     console.log(`ice candidate from ${socket.id}`)
 
@@ -108,7 +104,9 @@ const privateChat = async (socket: Socket, io: Server) => {
     const user1 = await getUserById(room!.users[0])
     const user2 = await getUserById(room!.users[1])
     const user1SocketId = user1!.socketId  
-    const user2SocketId = user2!.socketId 
+    const user2SocketId = user2!.socketId
+
+    await deleteRoomById(roomId)
 
     io.to(user1SocketId).emit('end video request')
     io.to(user2SocketId).emit('end video request')
