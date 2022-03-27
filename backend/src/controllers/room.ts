@@ -2,7 +2,6 @@
  * Functions to request data from room collection
  */
 import { ObjectId } from 'mongodb'
-import { User } from '../../util/types'
 import { client } from '../database'
 
 const dbName = process.env.NODE_ENV === 'test' ? 'test' : 'chat'
@@ -38,9 +37,10 @@ export async function addUserBySocketId(roomId: ObjectId, socketId: string) {
   }
 }
 
-export async function getRoom(roomId: ObjectId) {
+export async function getRoom(roomId: string) {
   try {
-    const room = await client.db(dbName).collection(collectionName).findOne({ _id: roomId })
+    const id = new ObjectId(roomId)
+    const room = await client.db(dbName).collection(collectionName).findOne({ _id: id })
     return room
   } catch (error) {
     console.error(error)
@@ -60,9 +60,10 @@ export async function getRoomUsersSocketId(roomId: ObjectId) {
   }
 }
 
-export async function deleteRoomById(roomId: ObjectId) {
+export async function deleteRoomById(roomId: string) {
   try {
-    const result = await client.db(dbName).collection(collectionName).findOneAndDelete({_id: roomId})
+    const id = new ObjectId(roomId)
+    const result = await client.db(dbName).collection(collectionName).findOneAndDelete({_id: id})
     // For testing, return room object that was deleted
     return result.value
   } catch (error) {
