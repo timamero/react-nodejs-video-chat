@@ -39,3 +39,11 @@ export const sendVideoInvite = () => {
   const roomId = store.getState().room.roomId
   socket.emit('video request accepted', roomId)
 }
+
+/**
+ * Send socket event to send offer to remote peer
+ */
+//  export const sendVideoOffer = ({sdp: RTCSessionDescription}) => {
+//   const roomId = store.getState().room.roomId
+//   socket.emit('video request accepted', {sdp, roomId})
+// }
