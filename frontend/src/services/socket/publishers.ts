@@ -2,6 +2,7 @@
  * Socket event emitters
  */
 import { socket } from "../../context/socket"
+import { store } from "../../app/store"
 
 /**
  * Send socket invite for user entering room
@@ -35,5 +36,6 @@ export const sendDeclineInvite = (peerId: string) => {
  * Send socket event to start RTC peer connection process
  */
 export const sendVideoInvite = () => {
-  socket.emit('video request accepted')
+  const roomId = store.getState().room.roomId
+  socket.emit('video request accepted', roomId)
 }
