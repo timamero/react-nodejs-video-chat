@@ -14,6 +14,11 @@ const user = async (socket: Socket, io: Server) => {
     }
   })
 
+  socket.on('update user list', async () => {
+    let usersList = await getAllUsers()
+    io.emit('get user list', usersList);
+  })
+
   socket.on('disconnect', async () => {
     try {
       await deleteUserBySocketId(socket.id)
