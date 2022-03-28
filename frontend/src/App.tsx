@@ -15,12 +15,11 @@ import { resetNotification } from './app/features/notificationSlice';
 import './styles/app.scss'
 import Home from './pages/Home';
 import PrivateRoom from './pages/PrivateRoom';
-import { sendUserEntered, sendVideoInvite } from './services/socket/publishers';
+import { sendUpdateUserList, sendUserEntered, sendVideoInvite } from './services/socket/publishers';
 import { setActiveUsers } from './util/middleware/socketActions/activeUsers';
 import { setUserId } from './util/middleware/socketActions/user';
 import { handleInviteRequested, handleInviteDeclined } from './util/middleware/socketActions/invite';
 import { setAppNewUser } from './util/middleware/appActions/user';
-import { setBusy } from './app/features/userSlice';
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -35,7 +34,7 @@ const App: React.FC = () => {
    * invite starts the RTC peer connection by calling sendVideoInvite
    */
   const handleEnterChat = useCallback((roomData: RoomData) => {
-    dispatch(setBusy(true))
+    sendUpdateUserList()
     dispatch(resetNotification())
     dispatch(setRoom({ roomId: roomData.roomId, users: roomData.users, isTextChatVisible: false, messages: [] }))
     navigate(`/p-room/${roomData.roomId}`)
@@ -49,7 +48,7 @@ const App: React.FC = () => {
    * in the private chat page.
    */
   const handleCloseChatRoom = useCallback(() => {
-    dispatch(setBusy(false))
+    sendUpdateUserList()
     navigate('/')
     dispatch(resetRoom())
   }, [navigate, dispatch])
