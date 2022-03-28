@@ -25,8 +25,9 @@ describe('Controllers - users', () => {
     const users = db.collection('users');
     const socketId = 'a1_UnFDfzUoU3yUeAAAB'
     const username = 'Jane01'
+    const isBusy = false
     
-    const mockUser = { socketId, username};
+    const mockUser = { socketId, username, isBusy};
     await createUser(mockUser);
 
     const insertedUser = await users.findOne({ socketId });
