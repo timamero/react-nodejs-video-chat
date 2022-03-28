@@ -4,9 +4,11 @@
  */
 import React, { useEffect, useContext, useRef, useCallback, useMemo } from "react";
 import { SocketContext } from "../context/socket";
-import { useAppDispatch } from '../app/hooks';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+// import { sendVideoOffer } from "../services/socket/publishers";
 
 const VideoDisplay = () => {
+  const roomId = useAppSelector(state => state.room.roomId)
   const socket = useContext(SocketContext);
   const dispatch = useAppDispatch();
 
@@ -39,18 +41,19 @@ const VideoDisplay = () => {
         await myPeerConnectionRef.current.setLocalDescription(offer)
 
         // send offer to remote peer
-        socket.emit('video offer', {sdp: myPeerConnectionRef.current.localDescription})
+        socket.emit('video offer', {sdp: myPeerConnectionRef.current.localDescription, roomId})
+        // sendVideoOffer({sdp: myPeerConnectionRef.current.localDescription})
       } catch (err) {
         console.log('error in handleNegotiationNeededEvent: ', err)
       }
     } 
-  }, [socket])
+  }, [socket, roomId])
 
   const handleICECandidateEvent = useCallback((event: RTCPeerConnectionIceEvent) => {
     if (event.candidate) {
-      socket.emit('candidate', {candidate: event.candidate})
+      socket.emit('candidate', {candidate: event.candidate, roomId})
     }
-  }, [socket])
+  }, [socket, roomId])
 
   const handleNewICECandidate = useCallback(async (candidate: RTCIceCandidate) => {
     if (myPeerConnectionRef.current) {
@@ -164,7 +167,7 @@ const VideoDisplay = () => {
             offerToReceiveAudio: true,
           })
           await myPeerConnectionRef.current.setLocalDescription(new RTCSessionDescription(answer))
-          socket.emit('video answer', {sdp: myPeerConnectionRef.current.localDescription})
+          socket.emit('video answer', {sdp: myPeerConnectionRef.current.localDescription, roomId})
         } catch (err) {
           console.log('error in handleVideoChatOffer - sending answer', err)
         }
@@ -172,7 +175,7 @@ const VideoDisplay = () => {
         console.log('error in handleVideoChatOffer')
       }
     } 
-  }, [createPeerConnection, socket, mediaConstraints])
+  }, [createPeerConnection, socket, mediaConstraints, roomId])
 
   const handleVideoChatAnswer = useCallback(async (sdp: RTCSessionDescription) => {
     if (myPeerConnectionRef.current) {

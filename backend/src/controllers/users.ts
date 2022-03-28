@@ -1,4 +1,7 @@
-import { Document } from 'mongodb';
+/**
+ * Functions to request data from user collection
+ */
+import { Document, ObjectId } from 'mongodb';
 import { client } from '../database';
 
 const dbName = process.env.NODE_ENV === 'test' ? 'test' : 'chat'
@@ -22,9 +25,9 @@ export async function deleteUserBySocketId(socketId: string) {
   }
 }
 
-export async function getUserByUsername(username: string) {
+export async function getUserById(id: ObjectId) {
   try {
-    const result = await client.db(dbName).collection('users').findOne({username})
+    const result = await client.db(dbName).collection('users').findOne({ _id: id })
     return result
   } catch (error) {
     console.error(error)

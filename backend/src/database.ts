@@ -7,7 +7,14 @@ if (process.env.NODE_ENV === 'test') {
   let globalURI = global as typeof globalThis & {
     __MONGO_URI__: string;
   }
-  client= new MongoClient(globalURI.__MONGO_URI__);
+
+  const options: MongoOptions = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    keepAlive: true,
+  }
+
+  client= new MongoClient(globalURI.__MONGO_URI__, options);
 } else {
   client = new MongoClient(uri)
 }
