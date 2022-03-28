@@ -4,7 +4,7 @@ import { getAllUsers, createUser, deleteUserBySocketId } from '../controllers/us
 const user = async (socket: Socket, io: Server) => {
   socket.on('user entered', async (username) => {
     try {
-      await createUser({socketId: socket.id, username: username});
+      await createUser({socketId: socket.id, username: username, isBusy: false});
 
       let usersList = await getAllUsers()
       io.emit('get user list', usersList);
@@ -12,6 +12,11 @@ const user = async (socket: Socket, io: Server) => {
     } catch (error) {
       console.error(error)
     }
+  })
+
+  socket.on('update user list', async () => {
+    let usersList = await getAllUsers()
+    io.emit('get user list', usersList);
   })
 
   socket.on('disconnect', async () => {

@@ -15,6 +15,20 @@ export async function createUser(newUser: Document) {
   }
 }
 
+export async function setUserStatus(id: ObjectId, status: boolean) {
+  try {
+    const update = {
+      $set: { 'isBusy' : status }
+    }
+    await client.db(dbName).collection('users').findOneAndUpdate(
+      { _id: id },
+      update
+    )
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 export async function deleteUserBySocketId(socketId: string) {
   try {
     const result = await client.db(dbName).collection('users').findOneAndDelete({socketId})

@@ -1,6 +1,6 @@
 import { Db, ObjectId } from 'mongodb';
 import { client } from '../../src/database';
-import { createUser, deleteUserBySocketId, getAllUsers, getUserById } from '../../src/controllers/users'
+import { createUser, deleteUserBySocketId, getAllUsers, getUserById, setUserStatus } from '../../src/controllers/users'
 
 /**
  * Test user controller methods
@@ -25,13 +25,30 @@ describe('Controllers - users', () => {
     const users = db.collection('users');
     const socketId = 'a1_UnFDfzUoU3yUeAAAB'
     const username = 'Jane01'
+    const isBusy = false
     
-    const mockUser = { socketId, username};
+    const mockUser = { socketId, username, isBusy};
     await createUser(mockUser);
 
     const insertedUser = await users.findOne({ socketId });
     expect(insertedUser).toEqual(mockUser);
   });
+
+  it.only('setUserStatus function should update the user status field in the user doc', async () => {
+    const users = db.collection('users');
+    const socketId = 'a1_UnFDfzUoU3yUeAAAB'
+    const username = 'Jane01'
+    const isBusy = false
+    
+    const mockUser = { socketId, username, isBusy};
+    const insertedUser = await users.insertOne(mockUser);
+
+    setUserStatus(insertedUser.insertedId, true)
+
+    const result = await users.findOne({ _id: insertedUser.insertedId})
+
+    expect(result!.isBusy).toEqual(true)
+  })
 
   it('deleteUserBySocketId function should delete a doc from collection', async () => {
     const users = db.collection('users');

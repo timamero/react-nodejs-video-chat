@@ -4,6 +4,7 @@ import { User } from '../../util/types'
 const initialState: User = {
   socketId: '',
   username: '',
+  isBusy: false,
 }
 
 export const userSlice = createSlice({

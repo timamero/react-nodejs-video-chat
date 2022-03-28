@@ -10,11 +10,15 @@ interface ActiveUserItemProps {
 }
 
 const ActiveUserItem: React.FC<ActiveUserItemProps> = ({ user }) => {
-
   return (
     <div className="panel-block is-active is-flex is-flex-direction-row is-justify-content-center">
       <p className="mx-4">{user.username}</p>
-      <button onClick={() => setModalInviteToChat(user.socketId, user.username)} className="button is-link is-light">Invite to Chat</button>
+      {!user.isBusy 
+        ?
+        <button onClick={() => setModalInviteToChat(user.socketId, user.username)} className="button is-link is-light">Invite to Chat</button>
+        :
+        <span className="tag is-warning is-light">Not Available</span>
+      }
     </div>
   )
 }
