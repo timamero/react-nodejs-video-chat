@@ -17,7 +17,7 @@ const ActiveUserItem: React.FC<ActiveUserItemProps> = ({ user }) => {
         ?
         <button onClick={() => setModalInviteToChat(user.socketId, user.username)} className="button is-link is-light">Invite to Chat</button>
         :
-        <p>Not Available</p>
+        <span className="tag is-warning is-light">Not Available</span>
       }
     </div>
   )
