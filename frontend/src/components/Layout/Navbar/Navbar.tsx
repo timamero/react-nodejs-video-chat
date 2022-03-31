@@ -6,7 +6,11 @@ const Navbar: React.FC = () => {
     <nav id="navbar" className="navbar" role="navigation"  aria-label="main navigation">
       <div className="navbar-menu is-active">
         <div className="navbar-end">
-        <Link to="/" className="navbar-item has-text-centered">Home</Link>
+        <Link to="/" className="navbar-item has-text-centered">
+          <span className="icon">
+            <i className="fas fa-home"></i>
+          </span>
+        </Link>
         </div>
       </div>
     </nav>
