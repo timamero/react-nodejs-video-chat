@@ -22,6 +22,11 @@ if (process.env.NODE_ENV === 'test') {
 const main = async () => {
   try {
     await client.connect()
+
+    // clean database everytime the server restarts
+    await client.db('chat').collection('users').deleteMany({})
+    await client.db('chat').collection('room').deleteMany({})
+
     console.log('Connected to MongoDB')
   } catch(e) {
     console.log(e)
