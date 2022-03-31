@@ -2,11 +2,11 @@
  * Modal that requires user action to accept/decline
  */
 import React from 'react';
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { User } from '../../util/types'
-import { resetModal } from '../../app/features/modalSlice';
-import { sendInvite, sendInviteAccepted, sendDeclineInvite } from '../../services/socket/publishers';
-import { setNotificationSendInvite } from '../../util/middleware/appActions/notification';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks';
+import { User } from '../../../util/types'
+import { resetModal } from '../../../app/features/modalSlice';
+import { sendInvite, sendInviteAccepted, sendDeclineInvite } from '../../../services/socket/publishers';
+import { setNotificationSendInvite } from '../../../util/middleware/appActions/notification';
 
 const ActionModal: React.FC = () => {
   const dispatch = useAppDispatch();

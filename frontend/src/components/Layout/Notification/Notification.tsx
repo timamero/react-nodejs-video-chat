@@ -1,8 +1,7 @@
 import React from "react";
-import { useAppSelector } from '../../app/hooks';
+import { useAppSelector } from '../../../app/hooks';
 
-
-const Notification = () => {
+const Notification: React.FC = () => {
   const notificationData = useAppSelector(state => state.notification)
   return (
     <div className={`${notificationData.notificationType} notification is-flex is-flex-direction-row is-justify-content-center is-align-items-center`}>
