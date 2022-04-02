@@ -1,38 +1,4 @@
-@charset "utf-8";
-@import "~bulma/bulma.sass";
-@import 'helpers/mixins';
-
-body, html, #root, .App, .Layout {
-  height: 100vh;
-  overflow-y: hidden; /* Hide vertical scrollbar */
-}
-
-.section {
-  height: 92vh;
-}
-
-.chat {
-  height: 60%;
-}
-
-#messageDisplay {
-  overflow-y: auto;
-  height: 80%;
-}
-
-.Message {
-  width: 75%;
-  max-width: 300px;
-}
-
-.peer1Message {
-  align-self: end;
-}
-
-.peer2Message {
-  background-color: #F1F4FF;
-}
-
-.videoWrapper.local{
-  max-width: 100px;
-}
+@import 'helpers/helpers';
+@import "plugins/plugins";
+@import 'base/base';
+@import 'modules/modules'

@@ -89,12 +89,12 @@ const App: React.FC = () => {
   handleCloseChatRoom])
  
   return (
-    <div className="App is-flex is-flex-direction-column">
+    <>
       <Routes>
         <Route path='/' element={<Home />}/>
         <Route path='/p-room/:id' element={<PrivateRoom />} />
       </Routes>
-    </div>
+    </>
   );
 }
 
