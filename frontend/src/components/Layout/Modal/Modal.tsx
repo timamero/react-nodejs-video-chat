@@ -38,12 +38,14 @@ const ActionModal: React.FC = () => {
   return (
     <div className={`modal ${modalData.isActive && 'is-active'}`}>
       <div className="modal-background"></div>
-      <div className="modal-content box">
+      <div className="modal-card">
+        <section className='modal-card-body'>
         <p className="has-text-centered is-size-4 my-2">{modalData.modalContent}</p>
         <div className="is-flex is-flex-direction-row is-justify-content-space-around">
-          <button onClick={handleAcceptandCloseModal} className="button is-primary">{modalData.confirmBtnText}</button>
-          <button onClick={handleDeclineandCloseModal} className="button is-danger">{modalData.declineBtnText}</button>
+          <button onClick={handleAcceptandCloseModal} className="button is-link">{modalData.confirmBtnText}</button>
+          <button onClick={handleDeclineandCloseModal} className="button is-warning">{modalData.declineBtnText}</button>
         </div>
+        </section>
       </div>
       <button onClick={handleDeclineandCloseModal} className="modal-close is-large" aria-label="close"></button>
     </div>
