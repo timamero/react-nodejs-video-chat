@@ -2,6 +2,9 @@
 $black-ter: hsl(0, 0%, 14%);
 $grey-darker: hsl(0, 0%, 21%);
 $white-ter: hsl(0, 0%, 96%);
+$grey-lightest: hsl(0, 0%, 93%);
+
+  // new colors
 $cyan: #D4FFA3;  // change cyan to light lime green color
 $blue: #3F7A9C;
 $light-blue: #8ca8b8;
@@ -10,6 +13,7 @@ $light-blue: #8ca8b8;
 // Bulma derived values
 $body-background-color: $black-ter;
 $text: $white-ter;
+$text-strong: $grey-lightest;
 
 $navbar-background-color: $grey-darker;
 $navbar-item-hover-background-color: $black-ter;
