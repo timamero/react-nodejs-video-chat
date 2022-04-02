@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const Navbar: React.FC = () => {
   const [isMenuActive, setIsMenuActive] = useState(false)
   return (
-    <nav id="navbar" className="navbar is-fixed-top" role="navigation"  aria-label="main navigation">
+    <nav id="navbar" className="navbar is-fixed-top is-dark" role="navigation"  aria-label="main navigation">
       <div className="navbar-brand">
         <Link to="/" className="navbar-item">
           <span className="icon">
@@ -31,7 +31,7 @@ const Navbar: React.FC = () => {
             </span>
           </Link>
           <div className='buttons is-flex is-flex-direction-row is-justify-content-center'>
-            <button className="button is-light">
+            <button className="button is-info">
               Logout
             </button>
           </div>
