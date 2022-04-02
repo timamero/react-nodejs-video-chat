@@ -5,16 +5,21 @@ $white-ter: hsl(0, 0%, 96%);
 $grey-lightest: hsl(0, 0%, 93%);
 
   // new colors
-$cyan: #D4FFA3;  // change cyan to light lime green color
-$blue: #3F7A9C;
+$cyan: #A9EEC2;
+$blue: #FAD284;
+$yellow: #F38181;
 $light-blue: #8ca8b8;
+// F38181 color for unavailable and end chat button
 
 
 // Bulma derived values
 $body-background-color: $black-ter;
 $text: $white-ter;
 $text-strong: $grey-lightest;
+$shadow: 0 0.5em 1em -0.125em hsl(0, 0%, 24%), 0 0px 0 1px hsl(0, 0%, 11%);
 
 $navbar-background-color: $grey-darker;
 $navbar-item-hover-background-color: $black-ter;
 $navbar-item-hover-color: $light-blue;
+
+$panel-block-active-color: $white-ter;

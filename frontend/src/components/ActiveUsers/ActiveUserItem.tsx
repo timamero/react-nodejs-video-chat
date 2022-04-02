@@ -15,9 +15,9 @@ const ActiveUserItem: React.FC<ActiveUserItemProps> = ({ user }) => {
       <p className="mx-4">{user.username}</p>
       {!user.isBusy 
         ?
-        <button onClick={() => setModalInviteToChat(user.socketId, user.username)} className="button is-link is-light">Invite to Chat</button>
+        <button onClick={() => setModalInviteToChat(user.socketId, user.username)} className="button is-link is-primary">Invite to Chat</button>
         :
-        <span className="tag is-warning is-light">Not Available</span>
+        <span className="tag is-warning is-rounded">Not Available</span>
       }
     </div>
   )
