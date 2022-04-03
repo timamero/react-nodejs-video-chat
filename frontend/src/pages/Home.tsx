@@ -10,7 +10,7 @@ const Home: React.FC = () => {
   return (
     <Layout>
       {username
-        ? <p className="is-size-5 has-text-centered">Welcome {username}</p>
+        ? <p id="welcome" className="is-size-5 has-text-centered">Welcome {username}</p>
         : <p className="is-size-5 has-text-centered">Create a username to chat.</p>
       }
       {!username

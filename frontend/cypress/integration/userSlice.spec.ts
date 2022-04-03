@@ -1,5 +1,4 @@
-/* eslint-disable jest/valid-expect */
-import reducer, { setNewUser, setId } from '../../src/app/features/userSlice'
+import reducer, { setNewUser, setId } from '../../src/app/features/userSlice';
 
 describe('userSlice tests', () => {
   it('initial state of user slice', () => {
@@ -9,34 +8,39 @@ describe('userSlice tests', () => {
       .invoke('getState')
       .its('user')
       .should('deep.equal', {
-        id: '',
+        socketId: '',
         username: '',
-      })
-  })
+        isBusy: false
+      });
+  });
 
   it('set username', () => {
     const previousState = {
-      id: '',
-      username: ''
-    }
+      socketId: '',
+      username: '',
+      isBusy: false,
+    };
 
     expect(reducer(previousState, setNewUser('sampleUser')))
-      .to.deep.equal({ 
-        id: '',
-        username: 'sampleUser'
-      })
-  })
+      .to.deep.equal({
+        socketId: '',
+        username: 'sampleUser',
+        isBusy: false
+      });
+  });
 
   it('set id', () => {
     const previousState = {
-      id: '',
-      username: 'sampleUser'
-    }
+      socketId: '',
+      username: 'sampleUser',
+      isBusy: false,
+    };
 
     expect(reducer(previousState, setId('123abc')))
-      .to.deep.equal({ 
-        id: '123abc',
-        username: 'sampleUser'
-      })
-  })
-})
+      .to.deep.equal({
+        socketId: '123abc',
+        username: 'sampleUser',
+        isBusy: false
+      });
+  });
+});
