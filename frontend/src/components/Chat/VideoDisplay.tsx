@@ -3,8 +3,8 @@
  * RTC Peer connection handling
  */
 import React, { useEffect, useContext, useRef, useCallback, useMemo } from "react";
-import { SocketContext } from "../context/socket";
-import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { SocketContext } from "../../context/socket";
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 // import { sendVideoOffer } from "../services/socket/publishers";
 
 const VideoDisplay = () => {

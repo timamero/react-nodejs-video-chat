@@ -2,9 +2,9 @@
  * Private room button menu
  */
 import React, { useContext } from "react";
-import { SocketContext } from "../context/socket";
-import { useAppSelector, useAppDispatch } from '../app/hooks';
-import { setChatVisbility } from "../app/features/roomSlice";
+import { SocketContext } from "../../context/socket";
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { setChatVisbility } from "../../app/features/roomSlice";
 
 const RoomOptions = () => {
   const socket = useContext(SocketContext)

@@ -8,11 +8,12 @@ import { useAppSelector, useAppDispatch } from '../app/hooks';
 import { setNotification, resetNotification } from '../app/features/notificationSlice';
 import { addMessage } from "../app/features/roomSlice";
 import Layout from '../components/Layout';
-import RoomOptions from '../components/RoomOptions';
-import VideoDisplay from '../components/VideoDisplay';
-import MessagesDisplay from '../components/MessagesDisplay';
-import MessageForm from '../components/MessageForm';
+import RoomOptions from '../components/Chat/RoomOptions';
+import VideoDisplay from '../components/Chat/VideoDisplay';
+import MessagesDisplay from '../components/Chat/MessagesDisplay';
+import MessageForm from '../components/Chat/MessageForm';
 import { generateRandomNum } from '../util/helper';
+import Chat from '../components/Chat';
 
 const PrivateRoom = () => {
   const socket = useContext(SocketContext)
@@ -20,7 +21,6 @@ const PrivateRoom = () => {
   
   const room = useAppSelector(state  => state.room)
   const userId = useAppSelector(state => state.user.socketId)
-  const isTextChatVisible = useAppSelector(state => state.room.isTextChatVisible)
   const messages = useAppSelector(state => state.room.messages)
 
   const userHasAccess = room.users.includes(userId)
@@ -69,21 +69,8 @@ const PrivateRoom = () => {
     return (
       <Layout>
         {userHasAccess 
-        ? 
-          <>
-            <RoomOptions />
-            <div className="privateRoomContent bulma-overlay-mixin-parent">
-              <VideoDisplay />
-              {
-                isTextChatVisible &&
-                <div className="chat bulma-overlay-mixin">
-                  <MessagesDisplay />
-                  <MessageForm />
-                </div>
-              }
-            </div>
-          </>
-        : <p>No access</p>}
+        ? <Chat />
+        : <p className="box">No access</p>}
       </Layout>
     )
   }
