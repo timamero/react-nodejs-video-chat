@@ -29,6 +29,17 @@ const user = async (socket: Socket, io: Server) => {
     }
   });
 
+  socket.on('user exit', async () => {
+    try {
+      await deleteUserBySocketId(socket.id);
+
+      const usersList = await getAllUsers();
+      io.emit('get user list', usersList);
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
   socket.on('disconnect', async () => {
     try {
       await deleteUserBySocketId(socket.id);
