@@ -3,8 +3,8 @@ import { useAppSelector } from "../../app/hooks";
 import ActiveUserItem from "./ActiveUserItem";
 
 const ActiveUsers = () => {
-  const activeUsers = useAppSelector(state => state.activeUsers.users)
-  const appId = useAppSelector(state => state.user.socketId)
+  const activeUsers = useAppSelector(state => state.activeUsers.users);
+  const appId = useAppSelector(state => state.user.socketId);
 
   return (
     <div id="activeUsersList" className="panel is-dark mt-4">
@@ -25,6 +25,6 @@ const ActiveUsers = () => {
       }   
     </div>
   )
-}
+};
 
 export default ActiveUsers;

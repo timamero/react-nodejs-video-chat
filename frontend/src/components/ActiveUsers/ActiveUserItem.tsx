@@ -7,7 +7,7 @@ import { setModalInviteToChat } from '../../util/middleware/appActions/modal';
 
 interface ActiveUserItemProps {
   user: User;
-}
+};
 
 const ActiveUserItem: React.FC<ActiveUserItemProps> = ({ user }) => {
   return (
@@ -21,6 +21,6 @@ const ActiveUserItem: React.FC<ActiveUserItemProps> = ({ user }) => {
       }
     </div>
   )
-}
+};
 
 export default ActiveUserItem;
