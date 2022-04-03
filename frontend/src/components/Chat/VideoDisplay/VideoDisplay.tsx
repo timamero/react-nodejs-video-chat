@@ -24,6 +24,10 @@ const VideoDisplay = () => {
     };
   }, []);
 
+  /**
+   * Event handler for the negotiationneeded event
+   * Documentation: https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/negotiationneeded_event
+   */
   const handleNegotiationNeededEvent = useCallback(async () => {
     if (myPeerConnectionRef.current) {
       try {
@@ -39,37 +43,53 @@ const VideoDisplay = () => {
 
         await myPeerConnectionRef.current.setLocalDescription(offer);
 
-        // send offer to remote peer
+        // Send offer to remote peer
         socket.emit('video offer', {sdp: myPeerConnectionRef.current.localDescription, roomId});
       } catch (err) {
-        console.log('error in handleNegotiationNeededEvent: ', err);
+        console.error('error in negotiationneeded event: ', err);
       };
     };
   }, [socket, roomId]);
 
+  /**
+   * Event handler for icecandidateevent
+   * Documentation: https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/icecandidate_event
+   */
   const handleICECandidateEvent = useCallback((event: RTCPeerConnectionIceEvent) => {
     if (event.candidate) {
       socket.emit('candidate', {candidate: event.candidate, roomId});
     };
   }, [socket, roomId]);
 
+  /**
+   * Handle event for receiving ice candidate
+   * Documentation: https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/addIceCandidate
+   */
   const handleNewICECandidate = useCallback(async (candidate: RTCIceCandidate) => {
     if (myPeerConnectionRef.current) {
       candidate = new RTCIceCandidate(candidate);
       try {
         await myPeerConnectionRef.current.addIceCandidate(candidate);
       } catch (err) {
-        console.log('error in handleNewICECandidate', err);
+        console.error('error in adding ice candidate ', err);
       } ;
     };
   }, []);
 
+  /**
+   * Event handler for icegatheringstatechange event
+   * Documentation: https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/icegatheringstatechange_event
+   */
   const handleICEGatheringStateChangeEvent = useCallback((event: any) => {
     if (myPeerConnectionRef.current) {
       console.log(`ice gathering state changed to: ${myPeerConnectionRef.current.iceGatheringState}`);
     };
   }, []);
 
+  /**
+   * Event handler for iceconnectionstatechange event
+   * Documentation: https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/iceconnectionstatechange_event
+   */
   const handleICEConnectionStateChangeEvent = useCallback((event: any) => {
     if (myPeerConnectionRef.current) {
       switch(myPeerConnectionRef.current.iceConnectionState) {
@@ -82,6 +102,10 @@ const VideoDisplay = () => {
     };
   }, []);
 
+  /**
+   * Event handler for signalingstatechange event
+   * Documentation: https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/signalingstatechange_event
+   */
   const handleSignalingStateChangeEvent = useCallback((event: any) => {
     if (myPeerConnectionRef.current) {
       switch (myPeerConnectionRef.current.signalingState) {
@@ -92,6 +116,10 @@ const VideoDisplay = () => {
     };
   }, []);
 
+  /**
+   * Create RTCPeerConnection
+   * Documentation: https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/RTCPeerConnection
+   */
   const createPeerConnection = useCallback( async () => {
     myPeerConnectionRef.current = new RTCPeerConnection(); // For peers to connect from different networks, need to specify TURN or STUN servers
     
@@ -111,8 +139,19 @@ const VideoDisplay = () => {
     handleNegotiationNeededEvent,
   ]);
 
+  /**
+   * When handleVideoChatOffer is called, the remote and local descriptions are set
+   * and the local web stream is added to the RTCPeerConnection
+   * Documentation - 
+   * RTCSessionDescription: https://developer.mozilla.org/en-US/docs/Web/API/RTCSessionDescription
+   * signalingState: https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/signalingState
+   * setLocalDescription: https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/setLocalDescription
+   * setRemoteDescription: https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/setRemoteDescription
+   * createAnswer: https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/createAnswer
+   * mediaDevices.getUserMedia: https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
+   */
   const handleVideoChatOffer = useCallback(async (sdp: RTCSessionDescription) => {
-    // If not already connect, create RTCPeerConncetion  
+    // If not already connected, create RTCPeerConncetion  
     if (!myPeerConnectionRef.current) {
       createPeerConnection();
     };
@@ -132,28 +171,28 @@ const VideoDisplay = () => {
           await myPeerConnectionRef.current.setRemoteDescription(desc);
         };
 
-        // Get webcam stream
         if (!webcamStreamRef.current) {
-          // Get access to webcam stream and display it in local stream
+          // Get access to local webcam stream
           try {
             webcamStreamRef.current = await navigator.mediaDevices.getUserMedia(mediaConstraints);
             if (localStreamRef.current) {
               localStreamRef.current.srcObject = webcamStreamRef.current;
             };
           } catch (err) {
-            console.log('error in handleVideoChatOffer - local webcam stream', err);
+            console.error('error in handleVideoChatOffer - local webcam stream', err);
           };
-
-          // Add tracks from stream to the RTCPeerConnection
+          
+          // Add tracks from local stream to the RTCPeerConnection
           if (webcamStreamRef.current) {
             try {
+              // webcamStreamRef.current = await navigator.mediaDevices.getUserMedia(mediaConstraints);
               webcamStreamRef.current.getTracks().forEach((track: MediaStreamTrack) => {
                 if (myPeerConnectionRef.current) {
                   myPeerConnectionRef.current.addTrack(track, webcamStreamRef.current!);
                 };
               });
             } catch (err) {
-              console.log('error in handleVideoChatOffer - webcam stream add tracks', err);
+              console.error('error in handleVideoChatOffer - webcam stream add tracks', err);
             };
           };
         };
@@ -167,21 +206,27 @@ const VideoDisplay = () => {
           await myPeerConnectionRef.current.setLocalDescription(new RTCSessionDescription(answer));
           socket.emit('video answer', {sdp: myPeerConnectionRef.current.localDescription, roomId});
         } catch (err) {
-          console.log('error in handleVideoChatOffer - sending answer', err);
+          console.error('error in handleVideoChatOffer - sending answer', err);
         };
       } catch (err) {
-        console.log('error in handleVideoChatOffer');
+        console.error('error in handleVideoChatOffer');
       };
     };
   }, [createPeerConnection, socket, mediaConstraints, roomId]);
 
+  /**
+   * When handleVideoChatAnswer is called, the sets the specified session description as the remote peer's current answer.
+   * Documentation - 
+   * RTCSessionDescription: https://developer.mozilla.org/en-US/docs/Web/API/RTCSessionDescription
+   * setRemoteDescription: https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/setRemoteDescription
+   */
   const handleVideoChatAnswer = useCallback(async (sdp: RTCSessionDescription) => {
     if (myPeerConnectionRef.current) {
       try {
         const desc = new RTCSessionDescription(sdp);
         await myPeerConnectionRef.current.setRemoteDescription(desc);
       } catch (err) {
-        console.log('error in handleVideoChatAnswer', err);
+        console.error('error in handleVideoChatAnswer', err);
       };
     };
   }, []);
@@ -240,9 +285,7 @@ const VideoDisplay = () => {
   }, [socket, dispatch, startVideoChat, handleVideoChatOffer, handleVideoChatAnswer, handleNewICECandidate]);
 
   function handleTrackEvent(event: RTCTrackEvent) {
-    if (remoteStreamRef.current) {
-      remoteStreamRef.current.srcObject = event.streams[0];
-    };
+    remoteStreamRef.current!.srcObject = event.streams[0];
   };
 
   function closeVideoConnection() {
