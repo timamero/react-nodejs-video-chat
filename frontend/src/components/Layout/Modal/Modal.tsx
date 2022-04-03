@@ -43,7 +43,7 @@ const ActionModal: React.FC = () => {
         <p className="has-text-centered is-size-4 my-2">{modalData.modalContent}</p>
         <div className="is-flex is-flex-direction-row is-justify-content-space-around">
           <button onClick={handleAcceptandCloseModal} className="button is-link">{modalData.confirmBtnText}</button>
-          <button onClick={handleDeclineandCloseModal} className="button is-warning">{modalData.declineBtnText}</button>
+          <button onClick={handleDeclineandCloseModal} className="button is-danger">{modalData.declineBtnText}</button>
         </div>
         </section>
       </div>

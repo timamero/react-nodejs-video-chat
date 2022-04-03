@@ -5,9 +5,10 @@ $white-ter: hsl(0, 0%, 96%);
 $grey-lightest: hsl(0, 0%, 93%);
 
   // new colors
+$turquoise: #A9EEC2;
 $cyan: #4b4c4b;
 $blue: #FAD284;
-$yellow: #F38181;
+$red: #F38181;
 $light-blue: #8ca8b8;
 // #A9EEC2
 
@@ -17,6 +18,12 @@ $body-background-color: $black-ter;
 $text: $white-ter;
 $text-strong: $grey-lightest;
 $shadow: 0 0.5em 1em -0.125em hsl(0, 0%, 24%), 0 0px 0 1px hsl(0, 0%, 11%);
+
+$button-color: $black-ter;
+$button-text-color: $black-ter;
+$button-static-color: $black-ter;
+
+$tag-color: $black-ter;
 
 $navbar-background-color: $grey-darker;
 $navbar-item-hover-background-color: $black-ter;
