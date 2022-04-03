@@ -59,6 +59,6 @@ export const sendEndChat = (roomId: string): void => {
 /**
  * Send socket event to remove logged out user from database
  */
-export const sendRemoveUser = (socketId: string): void => {
-  socket.emit('user exit', socketId);
+export const sendRemoveUser = (): void => {
+  socket.emit('user exit');
 };
