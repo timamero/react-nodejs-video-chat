@@ -1,6 +1,14 @@
 import { MongoClient } from 'mongodb';
 
-const uri = process.env.MONGODB_URI;
+let uri;
+if (process.env.NODE_ENV === 'production') {
+  console.log('production: uri', process.env.MONGODB_URI_PROD);
+  uri = process.env.MONGODB_URI_PROD;
+} else {
+  console.log('not production', process.env.NODE_ENV);
+  uri = process.env.MONGODB_URI;
+}
+// const uri = process.env.MONGODB_URI;
 
 /*
  * Create the mongodb client

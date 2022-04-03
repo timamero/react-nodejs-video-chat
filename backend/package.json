@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
+    "start": "node dist/index.js",
     "build:watch": "npx tsc --watch",
     "server": "nodemon dist/index.js",
     "dev": "concurrently \"npm run build:watch\" \"npm run server\"",
@@ -16,6 +17,7 @@
     "@shelf/jest-mongodb": "^2.2.0",
     "bulma": "^0.9.3",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.0.0",
     "express": "^4.17.1",
     "mongodb": "^4.3.1",
