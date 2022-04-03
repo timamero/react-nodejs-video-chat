@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 dotenv.config();
-import main from './database';
+import connectDatabase from './database';
 
 const app = express();
 app.use(cors());
@@ -16,6 +16,6 @@ dotenv.config();
 /*
  * Connect to MongoDB database
 */
-main().catch(console.error);
+connectDatabase().catch(console.error);
 
 export default app;
