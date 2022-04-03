@@ -1,3 +1,6 @@
+/**
+ * The ActiveUsers component displays list of active users and if they are available to chat
+ */
 import React from 'react';
 import { useAppSelector } from '../../app/hooks';
 import ActiveUserItem from './ActiveUserItem';

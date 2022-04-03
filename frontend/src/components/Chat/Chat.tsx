@@ -1,3 +1,6 @@
+/**
+ * The Chat component displays the video and text messaging components
+ */
 import React, { useEffect, useCallback, useContext } from 'react';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { SocketContext } from '../../context/socket';

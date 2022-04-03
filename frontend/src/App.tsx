@@ -1,6 +1,3 @@
-/**
- * App
- */
 import React, { useContext, useEffect, useCallback } from 'react';
 import {
   Routes,
