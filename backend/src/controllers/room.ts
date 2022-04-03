@@ -8,8 +8,11 @@ import { setUserStatus } from './users';
 const dbName = process.env.NODE_ENV === 'test' ? 'test' : 'chat';
 const collectionName = 'room';
 
+/**
+ * Create new room document
+ * @returns {ObjectId} The id of the created room
+ */
 export async function createRoom() {
-  // Return the room id after room is created
   try {
     const result = await client.db(dbName).collection(collectionName).insertOne({ users: [] });
     return result.insertedId;
@@ -19,6 +22,11 @@ export async function createRoom() {
   }
 }
 
+/**
+ * Update room collection with users
+ * @param {ObjectId} roomId - The room id
+ * @param {string} socketId - The user's socketId to be added to room
+ */
 export async function addUserBySocketId(roomId: ObjectId, socketId: string) {
   try {
     const roomFilter = {
@@ -41,6 +49,11 @@ export async function addUserBySocketId(roomId: ObjectId, socketId: string) {
   }
 }
 
+/**
+ * Get the room document
+ * @param {string} roomId - The room id
+ * @returns {Room} The room object
+ */
 export async function getRoom(roomId: string) {
   try {
     const id = new ObjectId(roomId);
@@ -51,6 +64,11 @@ export async function getRoom(roomId: string) {
   }
 }
 
+/**
+ * Get the list of socket ids of the users in the room
+ * @param {ObjectId} roomId - The room id
+ * @returns {string[]} The list of socket ids
+ */
 export async function getRoomUsersSocketId(roomId: ObjectId) {
   try {
     const room = await client.db(dbName).collection(collectionName).findOne({ _id: roomId });
@@ -64,6 +82,11 @@ export async function getRoomUsersSocketId(roomId: ObjectId) {
   }
 }
 
+/**
+ * Delete room document and update user status field
+ * @param {string} roomId - The room id
+ * @returns {Room} The room object that was deleted is returned for testing purposes
+ */
 export async function deleteRoomById(roomId: string) {
   try {
     const id = new ObjectId(roomId);
@@ -77,7 +100,6 @@ export async function deleteRoomById(roomId: string) {
 
     const result = await client.db(dbName).collection(collectionName).findOneAndDelete({ _id: id });
 
-    // For testing, return room object that was deleted
     return result.value;
   } catch (error) {
     console.error(error);

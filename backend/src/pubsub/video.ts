@@ -1,5 +1,8 @@
-// events for test room
-// keep for reference
+/**
+ * The streamPeers socket listeners and event publishers
+ * were created for a test component. This file is kept
+ * for reference
+ */
 import { Server, Socket } from 'socket.io';
 
 interface user {

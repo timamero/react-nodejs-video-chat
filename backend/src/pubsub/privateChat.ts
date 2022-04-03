@@ -6,8 +6,8 @@ import { getUserById } from '../controllers/users';
  * Socket event listener functions for sending and receiving
  * invites to a private chat, creating and closing the private
  * chat room, and for establishing the RTCPeerConnection
- * @param socket
- * @param io
+ * @param {Socket} socket
+ * @param {Server} io
  */
 const privateChat = async (socket: Socket, io: Server) => {
   socket.on('invite private chat', (inviteeId) => {
@@ -52,65 +52,85 @@ const privateChat = async (socket: Socket, io: Server) => {
   });
 
   socket.on('video request accepted', async (roomId) => {
-    const room = await getRoom(roomId);
-    // The first user in the users array will initialize the RTCPeerConnection
-    const user = await getUserById(room!.users[0]);
-    const userSocketId = user!.socketId;
-    console.log('send video ready to ', userSocketId);
-    io.to(userSocketId).emit('video ready');
+    try {
+      const room = await getRoom(roomId);
+      // The first user in the users array will initialize the RTCPeerConnection
+      const user = await getUserById(room!.users[0]);
+      const userSocketId = user!.socketId;
+      console.log('send video ready to ', userSocketId);
+      io.to(userSocketId).emit('video ready');
+    } catch (error) {
+      console.error(error);
+    }
   });
 
   socket.on('video offer', async ({ sdp, roomId }) => {
-    const room = await getRoom(roomId);
-    // The second user in the users array will receice `get video offer` event
-    const user = await getUserById(room!.users[1]);
-    const userSocketId = user!.socketId;
-    console.log(`send get video offer to ${userSocketId}`);
+    try {
+      const room = await getRoom(roomId);
+      // The second user in the users array will receice `get video offer` event
+      const user = await getUserById(room!.users[1]);
+      const userSocketId = user!.socketId;
+      console.log(`send get video offer to ${userSocketId}`);
 
-    io.to(userSocketId).emit('get video offer', sdp);
+      io.to(userSocketId).emit('get video offer', sdp);
+    } catch (error) {
+      console.error(error);
+    }
   });
 
   socket.on('video answer', async ({ sdp, roomId }) => {
-    const room = await getRoom(roomId);
-    const user = await getUserById(room!.users[0]);
-    const userSocketId = user!.socketId;
-    console.log(`answer - send get video answer to ${userSocketId}`);
+    try {
+      const room = await getRoom(roomId);
+      const user = await getUserById(room!.users[0]);
+      const userSocketId = user!.socketId;
+      console.log(`answer - send get video answer to ${userSocketId}`);
 
-    io.to(userSocketId).emit('get video answer', sdp);
+      io.to(userSocketId).emit('get video answer', sdp);
+    } catch (error) {
+      console.error(error);
+    }
   });
 
   socket.on('candidate', async ({ candidate, roomId }) => {
-    const room = await getRoom(roomId);
-    console.log(`ice candidate from ${socket.id}`);
+    try {
+      const room = await getRoom(roomId);
+      console.log(`ice candidate from ${socket.id}`);
 
-    const user1 = await getUserById(room!.users[0]);
-    const user2 = await getUserById(room!.users[1]);
-    const user1SocketId = user1!.socketId;
-    const user2SocketId = user2!.socketId;
+      const user1 = await getUserById(room!.users[0]);
+      const user2 = await getUserById(room!.users[1]);
+      const user1SocketId = user1!.socketId;
+      const user2SocketId = user2!.socketId;
 
-    if (socket.id === user1SocketId) {
-      console.log(`send get candidate to ${user2SocketId}`);
-      io.to(user2SocketId).emit('get candidate', candidate);
-    } else {
-      console.log(`send get candidate to ${user1SocketId}`);
-      io.to(user1SocketId).emit('get candidate', candidate);
+      if (socket.id === user1SocketId) {
+        console.log(`send get candidate to ${user2SocketId}`);
+        io.to(user2SocketId).emit('get candidate', candidate);
+      } else {
+        console.log(`send get candidate to ${user1SocketId}`);
+        io.to(user1SocketId).emit('get candidate', candidate);
+      }
+    } catch (error) {
+      console.error(error);
     }
   });
 
   socket.on('end chat', async (roomId) => {
-    const room = await getRoom(roomId);
-    console.log(`end chat for room ${roomId}`);
+    try {
+      const room = await getRoom(roomId);
+      console.log(`end chat for room ${roomId}`);
 
-    const user1 = await getUserById(room!.users[0]);
-    const user2 = await getUserById(room!.users[1]);
-    const user1SocketId = user1!.socketId;
-    const user2SocketId = user2!.socketId;
+      const user1 = await getUserById(room!.users[0]);
+      const user2 = await getUserById(room!.users[1]);
+      const user1SocketId = user1!.socketId;
+      const user2SocketId = user2!.socketId;
 
-    await deleteRoomById(roomId);
+      await deleteRoomById(roomId);
 
-    io.to(user1SocketId).emit('end video request');
-    io.to(user2SocketId).emit('end video request');
-    io.to(roomId).emit('close chat room');
+      io.to(user1SocketId).emit('end video request');
+      io.to(user2SocketId).emit('end video request');
+      io.to(roomId).emit('close chat room');
+    } catch (error) {
+      console.error(error);
+    }
   });
 };
 

@@ -2,6 +2,9 @@ import { MongoClient } from 'mongodb';
 
 const uri = process.env.MONGODB_URI;
 
+/*
+ * Create the mongodb client
+*/
 export let client: MongoClient;
 if (process.env.NODE_ENV === 'test') {
   const globalURI = global as typeof globalThis & {
@@ -19,6 +22,9 @@ if (process.env.NODE_ENV === 'test') {
   client = new MongoClient(uri);
 }
 
+/**
+ * Connect mongodb client
+ */
 const main = async () => {
   try {
     await client.connect();
