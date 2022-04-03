@@ -1,5 +1,5 @@
-import React from "react";
-import { Provider } from "react-redux";
+import React from 'react';
+import { Provider } from 'react-redux';
 import { Store } from 'redux';
 
 interface ReduxProviderProps {
@@ -7,10 +7,10 @@ interface ReduxProviderProps {
   store: Store;
 }
 
-export const ReduxProvider: React.FC<ReduxProviderProps> = ({ children, store }) => {   
+export const ReduxProvider: React.FC<ReduxProviderProps> = ({ children, store }) => {
   return (
     <Provider store={store}>
       {children}
     </Provider>
-)}
+  );};
 

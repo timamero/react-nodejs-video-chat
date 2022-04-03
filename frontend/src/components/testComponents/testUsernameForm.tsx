@@ -1,11 +1,11 @@
-import React, { FormEventHandler} from "react";
+import React, { FormEventHandler } from 'react';
 
 interface testUsernameFormProps {
   submitUsername: FormEventHandler<HTMLFormElement>;
   username: string;
 }
 
-const TestUsernameForm: React.FC<testUsernameFormProps> = ({submitUsername, username}) => {
+const TestUsernameForm: React.FC<testUsernameFormProps> = ({ submitUsername, username }) => {
   return (
     <div>
       {!username
@@ -18,7 +18,7 @@ const TestUsernameForm: React.FC<testUsernameFormProps> = ({submitUsername, user
         </form>
       }
     </div>
-  )
-}
+  );
+};
 
 export default TestUsernameForm;

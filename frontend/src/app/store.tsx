@@ -13,7 +13,7 @@ export const store = configureStore({
     notification: notificationSlice,
     room: roomSlice
   },
-})
+});
 
 export type RootState = ReturnType<typeof store.getState>
 

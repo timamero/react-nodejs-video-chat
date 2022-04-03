@@ -1,12 +1,12 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Notification } from '../../util/types'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Notification } from '../../util/types';
 
 const initialState: Notification = {
   notificationContent: '',
   notificationType: '',
   isLoading: false,
   isActive: false,
-}
+};
 
 export const notificationSlice = createSlice({
   name: 'notification',
@@ -25,8 +25,8 @@ export const notificationSlice = createSlice({
       state.isActive = false;
     }
   }
-})
+});
 
-export const { setNotification, resetNotification } = notificationSlice.actions
+export const { setNotification, resetNotification } = notificationSlice.actions;
 
-export default notificationSlice.reducer
+export default notificationSlice.reducer;

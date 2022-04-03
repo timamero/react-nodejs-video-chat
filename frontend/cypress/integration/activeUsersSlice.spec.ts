@@ -1,5 +1,4 @@
-/* eslint-disable jest/valid-expect */
-import reducer, { getAllActiveUsers } from '../../src/app/features/activeUsersSlice'
+import reducer, { getAllActiveUsers } from '../../src/app/features/activeUsersSlice';
 
 describe('activeUserSlice tests', () => {
   it('initial state of active user slice', () => {
@@ -10,42 +9,48 @@ describe('activeUserSlice tests', () => {
       .its('activeUsers')
       .should('deep.equal', {
         users: []
-      })
-  })
+      });
+  });
 
   it('get all active users', () => {
-    const previousState = { users: []}
+    const previousState = { users: [] };
 
     const userArr = [
       {
-        id: '1',
+        socketId: '1',
         username: 'user1',
+        isBusy: false
       },
       {
-        id: '2',
+        socketId: '2',
         username: 'user2',
+        isBusy: false
       },
       {
-        id: '3',
+        socketId: '3',
         username: 'user3',
+        isBusy: false
       }
-    ]
+    ];
     expect(reducer(previousState, getAllActiveUsers(userArr)))
       .to.deep.equal({
         users: [
           {
-            id: '1',
+            socketId: '1',
             username: 'user1',
+            isBusy: false
           },
           {
-            id: '2',
+            socketId: '2',
             username: 'user2',
+            isBusy: false
           },
           {
-            id: '3',
+            socketId: '3',
             username: 'user3',
+            isBusy: false
           }
         ]
-      })
-  })
-})
+      });
+  });
+});

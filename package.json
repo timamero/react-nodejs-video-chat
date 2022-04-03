@@ -16,10 +16,5 @@
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^6.3.0"
-  },
-  "dependencies": {
-    "bulma": "^0.9.3",
-    "dotenv": "^16.0.0",
-    "node-sass": "^6.0.1"
   }
 }

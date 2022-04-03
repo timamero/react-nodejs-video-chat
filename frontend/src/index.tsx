@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux'
+import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { SocketContext, socket } from './context/socket';
 import App from './App';
@@ -13,12 +13,12 @@ ReactDOM.render(
         <App />
       </Router>
     </SocketContext.Provider>
-  </Provider>, 
+  </Provider>,
   document.getElementById('root')
 );
 
 // @ts-ignore
-if (window.Cypress) { 
+if (window.Cypress) {
   // @ts-ignore
-  window.store = store
+  window.store = store;
 }
