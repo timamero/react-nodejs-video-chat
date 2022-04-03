@@ -19,10 +19,15 @@ export const userSlice = createSlice({
     },
     setIsBusy: (state, action: PayloadAction<boolean>) => {
       state.isBusy = action.payload;
+    },
+    resetUser: (state) => {
+      state.socketId =  '';
+      state.username = '';
+      state.isBusy = false;
     }
   }
 });
 
-export const { setNewUser, setId, setIsBusy } = userSlice.actions;
+export const { setNewUser, setId, setIsBusy, resetUser } = userSlice.actions;
 
 export default userSlice.reducer;

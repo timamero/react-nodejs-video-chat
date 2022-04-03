@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { resetAppUser } from '../../../util/middleware/appActions/user';
 
 const Navbar: React.FC = () => {
   const [isMenuActive, setIsMenuActive] = useState(false);
+
+  const handleLogout = () => {
+    window.localStorage.removeItem('chat-username');
+    resetAppUser();
+  };
+
   return (
     <nav id="navbar" className="navbar is-fixed-top is-dark" role="navigation"  aria-label="main navigation">
       <div className="navbar-brand">
@@ -31,7 +38,7 @@ const Navbar: React.FC = () => {
             </span>
           </Link>
           <div className='buttons is-flex is-flex-direction-row is-justify-content-center'>
-            <button className="button is-info">
+            <button className="button is-info" onClick={handleLogout}>
               Logout
             </button>
           </div>
