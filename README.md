@@ -1,8 +1,7 @@
 # 💬 Video Chat App
 
-A video chat app created with Socket.io, Typescript, React, Redux, Node.js, and Express.  
+A video chat app created with Socket.io, Typescript, React, Redux, Node.js, Express, and MongoDB.  
   
-*This project is still in development.*
 
 ## ✨Overview
 
@@ -22,23 +21,23 @@ I used a kanban board for creating user stories and keeping track of bugs.
 
 ### Challenges
 
-[To do] 
+#### RTC Peer Connection
+Setting up the peer-to-peer connection for the two-way video streaming was a difficult task. I used the project [WebRTC Video and Signaling sample](https://github.com/mdn/samples-server/tree/master/s/webrtc-from-chat) as a starting point and main reference. I was able to understand the process better when I added dev logging to learn the order of the RTCPeerConnection events. Problems with the RTCPeerConnection emerged due to component re-rendering caused by state changes or changes in dependencies in callback functions. To resolve those problems, I removed state variables inside the component and used the React.memo function to ensure that no re-renders are performed.
 
 ### Outcome
 
 *What did you learn from making this project?*
 
-[To do] 
-
-*What learnings have you taken with you into other projects?*
-
-[To do] 
+- I learned more about web sockets, WebRTC, and RTCPeer Connection.
+- I learned how to use React.memo and React.useCallback.
 
 ### Retrospection
 
 *What would you do differently next time?*
 
-[To do] 
+- Implement better file structure and organization at the beginning of the project instead of fixing it later.
+- Install ESLint and set rules at the beginning of the project instead of adding it later.
+- Write better tests.
 
 ## 🚀 Quick Start
 1. Clone this repository
@@ -84,3 +83,13 @@ I used a kanban board for creating user stories and keeping track of bugs.
 
 E2E tests are located in `frontend/cypress/integration`.
 Component tests are located in `frontend/src/__tests__`.
+
+## ⚒️ Extending the project
+List of things I would like to do if I had more time:
+- Add user authenitication with password
+- Add tab component in home page so you can  switch between viewing active users, inactive users, and logged out users
+- Enforce unique username
+- Add tests for react components and redux slices
+- Update and add tests for socket and database methods
+- Add chat room for 3+ users (text chat only)
+- In text chat, allow sending other media (images, gifs, audio)

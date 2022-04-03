@@ -37,7 +37,7 @@ const Navbar: React.FC = () => {
               <i className="fas fa-home p-1"></i>
             </span>
           </Link>
-          <Link to="/" className="navbar-item has-text-centered">
+          <Link to="/about" className="navbar-item has-text-centered">
             <span className="icon">
               <i className="fas fa-info-circle p-1"></i>
             </span>

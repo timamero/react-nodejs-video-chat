@@ -19,6 +19,7 @@ import { handleInviteRequested, handleInviteDeclined } from './util/middleware/s
 import { setAppNewUser } from './util/middleware/appActions/user';
 import { setIsBusy } from './app/features/userSlice';
 import { setNotificationChatClosed } from './util/middleware/appActions/notification';
+import About from './pages/About';
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -94,6 +95,7 @@ const App: React.FC = () => {
     <>
       <Routes>
         <Route path='/' element={<Home />}/>
+        <Route path='/about' element={<About />} />
         <Route path='/p-room/:id' element={<PrivateRoom />} />
       </Routes>
     </>
