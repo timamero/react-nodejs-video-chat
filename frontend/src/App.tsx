@@ -17,6 +17,8 @@ import { setActiveUsers } from './util/middleware/socketActions/activeUsers';
 import { setUserId } from './util/middleware/socketActions/user';
 import { handleInviteRequested, handleInviteDeclined } from './util/middleware/socketActions/invite';
 import { setAppNewUser } from './util/middleware/appActions/user';
+import { setIsBusy } from './app/features/userSlice';
+import { setNotificationChatClosed } from './util/middleware/appActions/notification';
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -24,6 +26,7 @@ const App: React.FC = () => {
   const navigate = useNavigate();
 
   const currentUser = useAppSelector(state => state.user.socketId);
+  const activeUsersUsernames = useAppSelector(state => state.activeUsers.users).map(user => user.username);
 
   /**
    * handleEnterChat is called after invitation to chat is accepted by recipient of invitation.
@@ -48,11 +51,13 @@ const App: React.FC = () => {
     sendUpdateUserList();
     navigate('/');
     dispatch(resetRoom());
+    dispatch(setIsBusy(false));
+    setNotificationChatClosed();
   }, [navigate, dispatch]);
 
   useEffect(() => {
     const usernameFromLocalStorage = window.localStorage.getItem('chat-username');
-    if (usernameFromLocalStorage) {
+    if (usernameFromLocalStorage && !activeUsersUsernames.includes(usernameFromLocalStorage)) {
       sendUserEntered(usernameFromLocalStorage);
       setAppNewUser(usernameFromLocalStorage);
     }

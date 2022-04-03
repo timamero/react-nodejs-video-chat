@@ -1,20 +1,24 @@
 /**
  * Private room button menu
  */
-import React, { useContext } from 'react';
-import { SocketContext } from '../../../context/socket';
+import React from 'react';
+// import { SocketContext } from '../../../context/socket';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import { setChatVisbility } from '../../../app/features/roomSlice';
+import { sendEndChat } from '../../../services/socket/publishers';
+// import { setIsBusy } from '../../../app/features/userSlice';
 
 const RoomOptions: React.FC = () => {
-  const socket = useContext(SocketContext);
+  // const socket = useContext(SocketContext);
   const dispatch = useAppDispatch();
 
   const room = useAppSelector(state => state.room);
   const isTextChatVisible = useAppSelector(state => state.room.isTextChatVisible);
 
   const handleEndClick = () => {
-    socket.emit('end chat', room.roomId);
+    sendEndChat(room.roomId);
+    // dispatch(setIsBusy(false));
+    // socket.emit('end chat', room.roomId);
   };
 
   const handleToggleChat = () => {

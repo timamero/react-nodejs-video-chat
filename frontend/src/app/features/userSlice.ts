@@ -16,10 +16,13 @@ export const userSlice = createSlice({
     },
     setId: (state, action: PayloadAction<string>) => {
       state.socketId = action.payload;
+    },
+    setIsBusy: (state, action: PayloadAction<boolean>) => {
+      state.isBusy = action.payload;
     }
   }
 });
 
-export const { setNewUser, setId } = userSlice.actions;
+export const { setNewUser, setId, setIsBusy } = userSlice.actions;
 
 export default userSlice.reducer;
