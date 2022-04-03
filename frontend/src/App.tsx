@@ -26,6 +26,7 @@ const App: React.FC = () => {
   const navigate = useNavigate();
 
   const currentUser = useAppSelector(state => state.user.socketId);
+  const activeUsersUsernames = useAppSelector(state => state.activeUsers.users).map(user => user.username);
 
   /**
    * handleEnterChat is called after invitation to chat is accepted by recipient of invitation.
@@ -56,7 +57,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const usernameFromLocalStorage = window.localStorage.getItem('chat-username');
-    if (usernameFromLocalStorage) {
+    if (usernameFromLocalStorage && !activeUsersUsernames.includes(usernameFromLocalStorage)) {
       sendUserEntered(usernameFromLocalStorage);
       setAppNewUser(usernameFromLocalStorage);
     }
