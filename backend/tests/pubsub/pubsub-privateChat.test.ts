@@ -21,7 +21,7 @@ describe('Pubsub - privateChat', () => {
 
   beforeAll((done) => {
     /* Connect to MongoDB test database*/
-    client.connect(err => {
+    client.connect(() => {
       const globalDBName = global as typeof globalThis & {
         __MONGO_DB_NAME__: string;
       };
