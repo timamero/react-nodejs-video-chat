@@ -284,6 +284,9 @@ const VideoDisplay = () => {
 
   }, [socket, dispatch, startVideoChat, handleVideoChatOffer, handleVideoChatAnswer, handleNewICECandidate]);
 
+  /**
+   * Get remote stream so that it can be displayed
+   */
   function handleTrackEvent(event: RTCTrackEvent) {
     remoteStreamRef.current!.srcObject = event.streams[0];
   };
