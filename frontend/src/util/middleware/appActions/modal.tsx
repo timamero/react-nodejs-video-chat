@@ -1,11 +1,11 @@
 /**
  * Actions for setting the modal
  */
-import { store } from "../../../app/store";
-import { setModal } from "../../../app/features/modalSlice";
-import { User } from "../../types";
+import { store } from '../../../app/store';
+import { setModal } from '../../../app/features/modalSlice';
+import { User } from '../../types';
 
-export const setModalInviteToChat = (peerId: string, peerUsername: string) => {
+export const setModalInviteToChat = (peerId: string, peerUsername: string): void => {
   const modalData = {
     modalName: 'send chat invite',
     modalContent: `Would you like to invite ${peerUsername} to private chat?`,
@@ -14,11 +14,11 @@ export const setModalInviteToChat = (peerId: string, peerUsername: string) => {
     isActive: true,
     peerId,
     socketEvent: 'invite private chat'
-  }
-  store.dispatch(setModal(modalData))
-}
+  };
+  store.dispatch(setModal(modalData));
+};
 
-export const setModalInviteRequest = (inviterId: string, inviter: User) => {
+export const setModalInviteRequest = (inviterId: string, inviter: User): void => {
   const modalData = {
     modalName: 'private chat request',
     modalContent: `${inviter.username} has invited you to a private chat?`,
@@ -27,6 +27,6 @@ export const setModalInviteRequest = (inviterId: string, inviter: User) => {
     isActive: true,
     peerId: inviterId,
     socketEvent: 'invite requested'
-  }
-  store.dispatch(setModal(modalData))
-}
+  };
+  store.dispatch(setModal(modalData));
+};

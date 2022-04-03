@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Modal } from '../../util/types'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Modal } from '../../util/types';
 
 const initialState: Modal = {
   modalName: '',
@@ -9,7 +9,7 @@ const initialState: Modal = {
   isActive: false,
   peerId: null,
   socketEvent: ''
-}
+};
 
 export const modalSlice = createSlice({
   name: 'modal',
@@ -34,8 +34,8 @@ export const modalSlice = createSlice({
       state.socketEvent = '';
     }
   }
-})
+});
 
-export const { setModal, resetModal } = modalSlice.actions
+export const { setModal, resetModal } = modalSlice.actions;
 
-export default modalSlice.reducer
+export default modalSlice.reducer;

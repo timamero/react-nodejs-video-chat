@@ -1,12 +1,12 @@
 /**
  * Private room button menu
  */
-import React, { useContext } from "react";
-import { SocketContext } from "../../../context/socket";
+import React, { useContext } from 'react';
+import { SocketContext } from '../../../context/socket';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
-import { setChatVisbility } from "../../../app/features/roomSlice";
+import { setChatVisbility } from '../../../app/features/roomSlice';
 
-const RoomOptions = () => {
+const RoomOptions: React.FC = () => {
   const socket = useContext(SocketContext);
   const dispatch = useAppDispatch();
 
@@ -26,7 +26,7 @@ const RoomOptions = () => {
       <button className="button is-danger mr-1" onClick={handleEndClick}>End Chat</button>
       <button className="button is-primary mr-1" onClick={handleToggleChat}>{isTextChatVisible ? 'Hide Chat' : 'Show Chat'}</button>
     </div>
-  )
+  );
 };
 
 export default RoomOptions;

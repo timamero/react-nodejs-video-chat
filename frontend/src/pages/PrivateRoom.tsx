@@ -9,18 +9,18 @@ import { setNotification, resetNotification } from '../app/features/notification
 import Layout from '../components/Layout';
 import Chat from '../components/Chat';
 
-const PrivateRoom = () => {
-  const socket = useContext(SocketContext)
-  const dispatch = useAppDispatch()
-  
-  const room = useAppSelector(state  => state.room)
-  const userId = useAppSelector(state => state.user.socketId)
+const PrivateRoom: React.FC = () => {
+  const socket = useContext(SocketContext);
+  const dispatch = useAppDispatch();
 
-  const userHasAccess = room.users.includes(userId)
+  const room = useAppSelector(state  => state.room);
+  const userId = useAppSelector(state => state.user.socketId);
+
+  const userHasAccess = room.users.includes(userId);
 
   useEffect(() => {
-    socket.removeAllListeners('enter chat room')
-  }, [socket])
+    socket.removeAllListeners('enter chat room');
+  }, [socket]);
 
   if (!userHasAccess) {
     const notificationData = {
@@ -28,21 +28,21 @@ const PrivateRoom = () => {
       notificationType: 'is-warning',
       isLoading: false,
       isActive: true,
-      }
+    };
 
-    dispatch(setNotification(notificationData))
-    setTimeout(() => dispatch(resetNotification()), 5000)
-    return <Navigate to="/" />
-    
+    dispatch(setNotification(notificationData));
+    setTimeout(() => dispatch(resetNotification()), 5000);
+    return <Navigate to="/" />;
+
   } else {
     return (
       <Layout>
-        {userHasAccess 
-        ? <Chat />
-        : <p className="box">No access</p>}
+        {userHasAccess
+          ? <Chat />
+          : <p className="box">No access</p>}
       </Layout>
-    )
+    );
   }
-}
+};
 
-export default PrivateRoom
+export default PrivateRoom;

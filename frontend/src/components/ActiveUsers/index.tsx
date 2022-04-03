@@ -1,1 +1,1 @@
-export { default } from './ActiveUsers'
+export { default } from './ActiveUsers';

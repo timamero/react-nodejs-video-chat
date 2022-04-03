@@ -1,8 +1,8 @@
 /**
  * Chat Message Text Input and Submit
  */
-import React, { useContext } from "react";
-import { SocketContext } from "../../../context/socket";
+import React, { useContext } from 'react';
+import { SocketContext } from '../../../context/socket';
 import { useAppSelector } from '../../../app/hooks';
 
 
@@ -25,19 +25,19 @@ const MessageForm: React.FC = () => {
     if (messageData.msg) {
       socket.emit('send chat message', messageData);
       target.message.value = '';
-    };
+    }
   };
-  
+
   return (
     <form id="form" onSubmit={handleMessageSubmit} className="is-flex is-flex-direction-row mb-2">
-      <input 
-        type="text" 
-        name="message" 
-        id="message" 
+      <input
+        type="text"
+        name="message"
+        id="message"
         className="input"/>
       <button type="submit" className="button is-info ml-2">Send</button>
     </form>
-  )
+  );
 };
 
 export default MessageForm;

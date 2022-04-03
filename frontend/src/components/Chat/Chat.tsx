@@ -8,7 +8,7 @@ import MessageForm from './MessageForm/MessageForm';
 import { addMessage } from '../../app/features/roomSlice';
 import { generateRandomNum } from '../../util/helper';
 
-const Chat = () => {
+const Chat: React.FC = () => {
   const socket = useContext(SocketContext);
   const dispatch = useAppDispatch();
 
@@ -17,7 +17,7 @@ const Chat = () => {
   const messages = useAppSelector(state => state.room.messages);
 
   const setMessages = useCallback((message) => {
-    dispatch(addMessage(message))
+    dispatch(addMessage(message));
   }, [dispatch]);
 
   const handleReceiveChatMessage = useCallback(( messageData ) => {
@@ -31,13 +31,13 @@ const Chat = () => {
     };
     setMessages(newMessage);
   }, [messages.length, setMessages, userId]);
-  
+
   useEffect(() => {
-    socket.once('receive chat message', handleReceiveChatMessage)
+    socket.once('receive chat message', handleReceiveChatMessage);
 
     return () => {
-      socket.off('receive chat message', handleReceiveChatMessage)
-    }
+      socket.off('receive chat message', handleReceiveChatMessage);
+    };
   }, [socket, messages, userId, setMessages, handleReceiveChatMessage]);
 
   return (
@@ -54,7 +54,7 @@ const Chat = () => {
         }
       </div>
     </>
-  )
+  );
 };
 
 export default Chat;

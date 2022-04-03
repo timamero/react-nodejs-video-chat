@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
-  const [isMenuActive, setIsMenuActive] = useState(false)
+  const [isMenuActive, setIsMenuActive] = useState(false);
   return (
     <nav id="navbar" className="navbar is-fixed-top is-dark" role="navigation"  aria-label="main navigation">
       <div className="navbar-brand">
         <Link to="/" className="navbar-item">
           <span className="icon">
-          <i className="fas fa-comments"></i>
+            <i className="fas fa-comments"></i>
           </span>
         </Link>
 
@@ -35,11 +35,11 @@ const Navbar: React.FC = () => {
               Logout
             </button>
           </div>
-          
+
         </div>
       </div>
     </nav>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
