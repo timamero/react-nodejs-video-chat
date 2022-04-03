@@ -7,7 +7,7 @@ const ActiveUsers = () => {
   const appId = useAppSelector(state => state.user.socketId)
 
   return (
-    <div id="activeUsersList" className="panel is-dark">
+    <div id="activeUsersList" className="panel is-dark mt-4">
       <p className="panel-heading">
         Active Users
       </p>
