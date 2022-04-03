@@ -24,6 +24,6 @@
        <div ref={messageEndRef} />
      </div>
    )
- }
+ };
  
  export default MessagesDisplay;

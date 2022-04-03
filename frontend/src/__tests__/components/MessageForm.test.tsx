@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from '@cypress/react';
-import MessageForm from '../../components/Chat/MessageForm';
+import MessageForm from '../../components/Chat/MessageForm/MessageForm';
 
 it('renders send button link', () => {
   mount(<MessageForm />);

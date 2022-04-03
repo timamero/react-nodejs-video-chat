@@ -14,6 +14,6 @@ const Message: React.FC<MessageProps> = memo(({ message, className }) => {
       {message}
     </div>
   )
-})
+});
 
 export default Message;
