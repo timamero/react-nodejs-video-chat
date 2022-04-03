@@ -24,20 +24,20 @@ const options = {
     origin: '*',
     methods: ['GET', 'POST']
   },
-}
+};
 
 const io: Server = new Server(server, options);
 
 io.on('connection', (socket) => {
   console.log('a user connected');
-  
+
   user(socket, io);
   privateChat(socket, io);
   video.streamPeers(socket, io); // test
 
   socket.on('disconnect', () => {
     console.log('user disconnected');
-  })
-})
+  });
+});
 
 io.listen(port);
