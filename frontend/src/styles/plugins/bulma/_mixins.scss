@@ -7,9 +7,9 @@
     @include overlay(5rem);
     transform: translateY(100px);
   }
-  background-color: lightgray;
+  background-color: $grey-darker;
   border-radius: 0.25em;
-  color: white;
+  color: $white-ter;
   opacity: 0.95;
   padding: 1em;
 }

@@ -35,7 +35,7 @@ const MessageForm: React.FC = () => {
         name="message" 
         id="message" 
         className="input"/>
-      <button type="submit" className="button is-primary">Send</button>
+      <button type="submit" className="button is-info">Send</button>
     </form>
   )
 }
