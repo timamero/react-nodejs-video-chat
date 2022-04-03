@@ -26,3 +26,14 @@ export const setNotificatioInviteDeclined = (peer: User): void => {
   store.dispatch(setNotification(notificationData));
   setTimeout(() => store.dispatch(resetNotification()), 5000);
 };
+
+export const setNotificationChatClosed = (): void => {
+  const notificationData = {
+    notificationContent: 'Chat room closed',
+    notificationType: 'is-warning',
+    isLoading: false,
+    isActive: true,
+  };
+  store.dispatch(setNotification(notificationData));
+  setTimeout(() => store.dispatch(resetNotification()), 5000);
+};

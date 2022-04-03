@@ -46,3 +46,10 @@ export const sendVideoInvite = (): void => {
 export const sendUpdateUserList = (): void => {
   socket.emit('update user list');
 };
+
+/**
+ * Send socket event to end chat
+ */
+export const sendEndChat = (roomId: string): void => {
+  socket.emit('end chat', roomId);
+};

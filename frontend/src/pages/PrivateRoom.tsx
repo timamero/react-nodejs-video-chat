@@ -8,6 +8,7 @@ import { useAppSelector, useAppDispatch } from '../app/hooks';
 import { setNotification, resetNotification } from '../app/features/notificationSlice';
 import Layout from '../components/Layout';
 import Chat from '../components/Chat';
+import { setIsBusy } from '../app/features/userSlice';
 
 const PrivateRoom: React.FC = () => {
   const socket = useContext(SocketContext);
@@ -19,6 +20,7 @@ const PrivateRoom: React.FC = () => {
   const userHasAccess = room.users.includes(userId);
 
   useEffect(() => {
+    dispatch(setIsBusy(true));
     socket.removeAllListeners('enter chat room');
   }, [socket]);
 

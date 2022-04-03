@@ -17,6 +17,8 @@ import { setActiveUsers } from './util/middleware/socketActions/activeUsers';
 import { setUserId } from './util/middleware/socketActions/user';
 import { handleInviteRequested, handleInviteDeclined } from './util/middleware/socketActions/invite';
 import { setAppNewUser } from './util/middleware/appActions/user';
+import { setIsBusy } from './app/features/userSlice';
+import { setNotificationChatClosed } from './util/middleware/appActions/notification';
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -48,6 +50,8 @@ const App: React.FC = () => {
     sendUpdateUserList();
     navigate('/');
     dispatch(resetRoom());
+    dispatch(setIsBusy(false));
+    setNotificationChatClosed();
   }, [navigate, dispatch]);
 
   useEffect(() => {
