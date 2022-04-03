@@ -36,7 +36,7 @@ const NewUserForm = () => {
         <button 
           id="submitUsername"
           type="submit" 
-          className="button is-primary is-light"
+          className="button is-primary"
           >
             Submit
           </button>
