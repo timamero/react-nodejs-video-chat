@@ -46,6 +46,7 @@ const Chat: React.FC = () => {
   return (
     <>
       <RoomOptions />
+      <p className='is-size-7 is-family-monospace has-text-centered'>For this application demo, the duration of this chat room is set at 5 minutes.</p>
       <div className="privateRoomContent bulma-overlay-mixin-parent">
         <VideoDisplay />
         {
