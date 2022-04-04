@@ -8,7 +8,6 @@ import { store } from '../../app/store';
  * Send socket invite for user entering room
  */
 export const sendUserEntered = (username: string): void => {
-  console.log('sent event user entered');
   socket.emit('user entered', username);
 };
 
@@ -45,7 +44,6 @@ export const sendVideoInvite = (): void => {
  * Send socket event to update user list
  */
 export const sendUpdateUserList = (): void => {
-  console.log('sent event update user list');
   socket.emit('update user list');
 };
 

@@ -3,11 +3,9 @@ import ActiveUsers from '../components/ActiveUsers';
 import Layout from '../components/Layout';
 import NewUserForm from '../components/NewUserForm/NewUserForm';
 import { useAppSelector } from '../app/hooks';
-// import { SocketContext } from '../context/socket';
 import { sendEndChat } from '../services/socket/publishers';
 
 const Home: React.FC = () => {
-  // const socket = useContext(SocketContext);
   const username = useAppSelector(state => state.user.username);
   const isUserBusy = useAppSelector(state => state.user.isBusy);
   const roomId = useAppSelector(state => state.room.roomId);
