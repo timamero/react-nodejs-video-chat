@@ -26,7 +26,7 @@ const NewUserForm: React.FC = () => {
 
   return (
     <form id="usernameForm" className="box" onSubmit={handleUsernameSubmit}>
-      <p className='is-size-7 is-family-monospace'>For this application demo, the allowed usernames are user1 and user2</p>
+      <p className='is-size-7 is-family-monospace'>For this application demo, the allowed usernames are user1 and user2.</p>
       <label id="username" htmlFor="usernameInput" className="label">Username</label>
       <div className="control block">
         <input

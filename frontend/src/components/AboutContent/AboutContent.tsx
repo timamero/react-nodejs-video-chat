@@ -8,7 +8,7 @@ const AboutContent: React.FC = () => {
         <p>Hello! Welcome to my chat application project.</p>
         <p>Because this is a demonstration application, some limitations have been applied:</p>
         <ul>
-          <li>The allowed usernames are &apos;user1&apos;, and &apos;user2&apos;.</li>
+          <li>The allowed usernames are &apos;user1&apos; and &apos;user2&apos;.</li>
           <li>The duration of chat rooms is set at 5 minutes.</li>
         </ul>
         <p>To test application, open app in two separate browsers tabs and sign in with the allowed usernames in each browser.</p>
