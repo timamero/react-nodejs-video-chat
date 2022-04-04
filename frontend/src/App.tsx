@@ -49,10 +49,10 @@ const App: React.FC = () => {
    * in the private chat page.
    */
   const handleCloseChatRoom = useCallback(() => {
+    dispatch(setIsBusy(false));
     sendUpdateUserList();
     navigate('/');
     dispatch(resetRoom());
-    dispatch(setIsBusy(false));
     setNotificationChatClosed();
   }, [navigate, dispatch]);
 
