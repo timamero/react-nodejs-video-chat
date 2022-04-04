@@ -1,6 +1,20 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/7caaf4f8-2ecb-46ec-a28b-6fd24810fb68/deploy-status)](https://app.netlify.com/sites/fc-chat-app-demo/deploys)
 # 💬 Video Chat App
 
 A video chat app created with Socket.io, Typescript, React, Redux, Node.js, Express, and MongoDB.  
+
+## Demo
+
+[View a demo of the application here.](https://fc-chat-app-demo.netlify.app)
+
+Because this is a demonstration application, some limitations have been applied:
+
+- The allowed usernames are 'user1', and 'user2'.
+- The duration of chat rooms is set at 5 minutes.
+
+To test application, open app in two separate browsers tabs and sign in with the allowed usernames in each browser.
+
+Video streaming between two peers works best between the same browsers. The video streams are not displayed on mobile browsers.
   
 
 ## ✨Overview
@@ -86,6 +100,7 @@ Component tests are located in `frontend/src/__tests__`.
 
 ## ⚒️ Extending the project
 List of things I would like to do if I had more time:
+- Get video streaming with WebRTC connection to work with mobile browsers and across different browsers
 - Add user authenitication with password
 - Add tab component in home page so you can  switch between viewing active users, inactive users, and logged out users
 - Enforce unique username
