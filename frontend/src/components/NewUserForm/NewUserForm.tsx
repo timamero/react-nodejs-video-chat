@@ -13,15 +13,20 @@ const NewUserForm: React.FC = () => {
   const handleUsernameSubmit = (event: FormEvent) => {
     event.preventDefault();
 
-    window.localStorage.setItem('chat-username', usernameInput);
-    dispatch(setNewUser(usernameInput));
-    setUsernameInput('');
+    // For demonstration application, the allowed usernames are `user1` and `user2`
+    // To remove this limitation, move code outside of the if block and delete if block
+    if (usernameInput === 'user1' || usernameInput === 'user2') {
+      window.localStorage.setItem('chat-username', usernameInput);
+      dispatch(setNewUser(usernameInput));
+      setUsernameInput('');
 
-    sendUserEntered(usernameInput);
+      sendUserEntered(usernameInput);
+    }
   };
 
   return (
     <form id="usernameForm" className="box" onSubmit={handleUsernameSubmit}>
+      <p className='is-size-7 is-family-monospace'>For this application demo, the allowed usernames are user1 and user2</p>
       <label id="username" htmlFor="usernameInput" className="label">Username</label>
       <div className="control block">
         <input
