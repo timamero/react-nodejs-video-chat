@@ -9,6 +9,7 @@ import { setNotification, resetNotification } from '../app/features/notification
 import Layout from '../components/Layout';
 import Chat from '../components/Chat';
 import { setIsBusy } from '../app/features/userSlice';
+import { sendEndChat } from '../services/socket/publishers';
 
 const PrivateRoom: React.FC = () => {
   const socket = useContext(SocketContext);
@@ -37,6 +38,11 @@ const PrivateRoom: React.FC = () => {
     return <Navigate to="/" />;
 
   } else {
+
+    // For demonstration application, the duration of chat room is set to 5 min
+    // To remove this limitation, delete the following line of code with the setTimeout
+    setTimeout(() => sendEndChat(room.roomId), 5 * 60 * 1000);
+
     return (
       <Layout>
         {userHasAccess

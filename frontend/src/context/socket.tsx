@@ -5,7 +5,7 @@ import { createContext } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 let base = 'ws://localhost:';
-let port = '3001';
+let port = '8000';
 
 if (process.env.NODE_ENV === 'production') {
   base = process.env.REACT_APP_BASE_URL!;
