@@ -1,14 +1,14 @@
 {
   "compilerOptions": {
     "lib": ["ES2021"],
-    "module": "CommonJS",
+    "module": "node16",
     "target": "ES2021",
-    "rootDirs": ["./src"],
-    "outDir": "./dist", 
+    "rootDir": "./*",
+    "outDir": "./dist",
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
+    "moduleResolution": "node16",
+    "esModuleInterop": true
   },
   "compileOnSave": false
 }
