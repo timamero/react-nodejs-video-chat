@@ -1,11 +1,11 @@
 {
   "name": "chat",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "scripts": {
-    "server": "cd backend && npm run dev",
-    "client": "cd frontend && npm start",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && pnpm run dev",
+    "client": "cd frontend && pnpm start",
+    "dev": "concurrently \"pnpm run server\" \"pnpm run client\"",
     "cypress:prestart": "npm run dev",
     "cypress-e2e": "cd frontend && npx cypress open",
     "cypress-ct": "cd frontend && npx cypress open-ct",

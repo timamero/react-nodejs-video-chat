@@ -5,9 +5,9 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "node dist/index.js",
-    "build:watch": "npx tsc --watch",
+    "build:watch": "pnpm dlx tsc --watch",
     "server": "nodemon dist/index.js",
-    "dev": "concurrently \"npm run build:watch\" \"npm run server\"",
+    "dev": "concurrently \"pnpm run build:watch\" \"pnpm run server\"",
     "test": "jest"
   },
   "keywords": [],
