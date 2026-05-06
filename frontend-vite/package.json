@@ -5,23 +5,19 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && pnpm exec react-router build",
+    "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@react-router/node": "^7.15.0",
-    "@react-router/serve": "^7.15.0",
     "bulma": "^1.0.4",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-router": "^7.15.0",
-    "sass": "^1.99.0",
-    "isbot": "^5"
+    "sass": "^1.99.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@react-router/dev": "^7.15.0",
     "@types/node": "^24.12.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",

@@ -1,5 +1,6 @@
 import { Outlet, Scripts } from 'react-router';
-
+// convert to declarative mode
+// https://reactrouter.com/start/declarative/installation
 export default function App() {
   return (
     <html>
