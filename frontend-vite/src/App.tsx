@@ -1,7 +1,8 @@
-import './styles/app.scss';
+// import './styles/app.scss';
 
 import Layout from './components/Layout';
 //https://reactrouter.com/start/data/installation
+
 function App() {
   return (
     <Layout>
