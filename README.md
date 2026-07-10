@@ -3,9 +3,10 @@
 
 A video chat app created with Socket.io, Typescript, React, Redux, Node.js, Express, and MongoDB.  
 
-## Demo
+## Active Development
+This project is under active development. Planned updates include migrating the backend from MongoDB to Redis, and moving the frontend from Create React App to Vite.
 
-[View a demo of the application here.](https://fc-chat-app-demo.netlify.app)
+## Demo
 
 Because this is a demonstration application, some limitations have been applied:
 
