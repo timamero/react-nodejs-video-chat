@@ -1,3 +1,9 @@
+/**
+ * This file is responsible for creating a redis client and connecting to the redis server
+ * References:
+ * - https://redis.io/docs/latest/develop/clients/nodejs/
+ * - https://redis.js.org/#node-redis
+ */
 import { createClient } from 'redis';
 
 let url: string;
