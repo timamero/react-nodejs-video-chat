@@ -15,7 +15,6 @@
   "license": "ISC",
   "dependencies": {
     "@shelf/jest-mongodb": "^2.2.0",
-    "bulma": "^0.9.3",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.0",
