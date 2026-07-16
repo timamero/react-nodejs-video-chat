@@ -10,12 +10,12 @@ if (port === null) {
 
 /*
  * Create HTTP server
-*/
+ */
 const server = http.createServer(app);
 
 /*
  * Create and connect socket.io server
-*/
+ */
 const io: Server = createSocket(server);
 console.log('Server listening on port ', port);
 io.listen(Number(port));
