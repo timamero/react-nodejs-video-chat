@@ -1,9 +1,17 @@
-import { ObjectId } from 'mongodb';
-
+/**
+ * This file contains TypeScript interfaces for the Room and
+ * User entities used in the application. These interfaces
+ * define the structure of the data objects that represent
+ * rooms and users.
+ */
 export interface Room {
-  _id: ObjectId;
+  id: string;
   users: User[];
 }
+// export interface Room {
+//   _id: ObjectId;
+//   users: User[];
+// }
 
 export interface User {
   id: string;
