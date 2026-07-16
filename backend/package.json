@@ -7,6 +7,8 @@
     "start": "node dist/index.js",
     "build:watch": "npx tsc --watch",
     "server": "nodemon dist/index.js",
+    "redis:start": "docker run --name chat-redis -p 6379:6379 -d redis:8.0-rc1",
+    "redis:stop": "docker stop chat-redis && docker rm my-redis",
     "dev": "concurrently \"npm run build:watch\" \"npm run server\"",
     "test": "jest"
   },
