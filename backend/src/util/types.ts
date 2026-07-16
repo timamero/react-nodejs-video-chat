@@ -6,7 +6,14 @@ export interface Room {
 }
 
 export interface User {
-  _id: ObjectId;
-  username: string;
+  id: string;
   socketId: string;
+  username: string;
+  isBusy: string;
+  [key: string]: any; // To allow other dynamic fields
 }
+// export interface User {
+//   _id: ObjectId;
+//   username: string;
+//   socketId: string;
+// }
