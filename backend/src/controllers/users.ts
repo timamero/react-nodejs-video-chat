@@ -1,41 +1,60 @@
 /**
- * Functions to request data from user collection
+ * Functions to request user data from redis database
  */
-import { Document, ObjectId } from 'mongodb';
-import { client } from '../database';
+import { randomUUID } from 'crypto';
 
-const dbName = process.env.NODE_ENV === 'test' ? 'test' : 'chat';
+import { client } from '../database';
+import { User } from '../util/types';
+
+const PREFIX = process.env.NODE_ENV === 'test' ? 'test:users' : 'chat:users';
+const ACTIVE_SET = `${PREFIX}:active_ids`;
 
 /**
- * Create new user document
+ * Create new user document in redis database
  * @param {User} newUser - The new user object to be added
  * @returns {null} For testing, returns null when there is an error
  */
-export async function createUser(newUser: Document) {
+export async function createUser(newUser: Partial<User>) {
   try {
-    await client.db(dbName).collection('users').insertOne(newUser);
+    const id = newUser.id || randomUUID();
+    const userKey = `${PREFIX}:${id}`;
+
+    const userData = {
+      id,
+      socketId: newUser.socketId || '',
+      username: newUser.username || '',
+      isBusy: String(newUser.isBusy ?? false),
+    };
+
+    // Store the user object in Redis as a hash
+    await client.hset(userKey, userData);
+
+    // Add the ID to our set of active users so we can query them later
+    await client.sAdd(ACTIVE_SET, id);
+
+    return userData;
   } catch (error) {
-    console.error(error);
+    console.error('Redis createUser error: ', error);
     return null;
   }
 }
 
 /**
- * Update `isBusy` field in user document
- * @param {ObjectId} id - The user id
+ * Update `isBusy` status of a user in redis database
+ * @param {string} id - The user id
  * @param {boolean} status - The status of the user
  */
-export async function setUserStatus(id: ObjectId, status: boolean) {
+export async function setUserStatus(id: string, status: boolean) {
   try {
-    const update = {
-      $set: { 'isBusy' : status }
-    };
-    await client.db(dbName).collection('users').findOneAndUpdate(
-      { _id: id },
-      update
-    );
+    const userKey = `${PREFIX}:${id}`;
+
+    // Ensure the user exists before updating
+    const exists = await client.exists(userKey);
+    if (exists) {
+      await client.hSet(userKey, 'isBusy', String(status));
+    }
   } catch (error) {
-    console.error(error);
+    console.error('Redis setUserStatus error:', error);
   }
 }
 
@@ -46,24 +65,37 @@ export async function setUserStatus(id: ObjectId, status: boolean) {
  */
 export async function deleteUserBySocketId(socketId: string) {
   try {
-    const result = await client.db(dbName).collection('users').findOneAndDelete({ socketId });
-    return result.value;
+    // const result = await client
+    //   .db(dbName)
+    //   .collection('users')
+    //   .findOneAndDelete({ socketId });
+    // return result.value;
   } catch (error) {
     console.error(error);
   }
 }
 
 /**
- * Get user document by id
- * @param {ObjectId} id - The user id
+ * Get user hash by user id
+ * @param {string} id - The user id
  * @returns {User} The user object
  */
-export async function getUserById(id: ObjectId) {
+export async function getUserById(id: string) {
   try {
-    const result = await client.db(dbName).collection('users').findOne({ _id: id });
-    return result;
+    const userKey = `${PREFIX}:${id}`;
+    const userData = await client.hGetAll(userKey);
+
+    // If hash is empty, return null
+    if (Object.keys(userData).length === 0) {
+      return null;
+    }
+
+    // Convert isBusy from string to boolean
+    userData.isBusy = String(userData.isBusy === 'true');
+
+    return userData as User;
   } catch (error) {
-    console.error(error);
+    console.error('Redis getUserById error: ', error);
   }
 }
 
@@ -73,9 +105,19 @@ export async function getUserById(id: ObjectId) {
  */
 export async function getAllUsers() {
   try {
-    const result = await client.db(dbName).collection('users').find().toArray();
-    return result;
+    // Get all user IDs currently stored in the active set
+    const ids = await client.sMembers(ACTIVE_SET);
+    const users: User[] = [];
+
+    // Retrieve the hash for each user ID and push it to the user array
+    for (const id of ids) {
+      const userData = await getUserById(id);
+      if (userData) {
+        users.push(userData);
+      }
+    }
+    return users;
   } catch (error) {
-    console.error(error);
+    console.error('Redis getAllUsers error', error);
   }
 }
