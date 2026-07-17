@@ -18,13 +18,15 @@ export async function createUser(newUser: Partial<User>) {
   try {
     const id = newUser.id || randomUUID();
     const userKey = `${PREFIX}:${id}`;
-
+    console.log('Setting user with userKey: ', userKey)
+    
     const userData = {
       id,
       socketId: newUser.socketId || '',
       username: newUser.username || '',
-      isBusy: String(newUser.isBusy ?? false),
+      isBusy: newUser.isBusy === 'false' ? 'false' : 'true',
     };
+    console.log('userData: ', userData)
 
     // Store the user object in Redis as a hash
     await client.hset(userKey, userData);
@@ -44,14 +46,14 @@ export async function createUser(newUser: Partial<User>) {
  * @param {string} id - The user id
  * @param {boolean} status - The status of the user
  */
-export async function setUserStatus(id: string, status: boolean) {
+export async function setUserStatus(id: string, status: string) {
   try {
     const userKey = `${PREFIX}:${id}`;
 
     // Ensure the user exists before updating
     const exists = await client.exists(userKey);
     if (exists) {
-      await client.hSet(userKey, 'isBusy', String(status));
+      await client.hSet(userKey, 'isBusy', status === 'true' ? 'true' : 'false');
     }
   } catch (error) {
     console.error('Redis setUserStatus error:', error);

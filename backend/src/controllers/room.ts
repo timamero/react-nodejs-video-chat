@@ -75,7 +75,7 @@ export async function addUserBySocketId(roomId: string, socketId: string) {
     await client.hSet(`${ROOM_PREFIX}:${roomId}`, 'users', room.users);
 
     // Set the user's isBusy status to true
-    await setUserStatus(user.id, true);
+    await setUserStatus(user.id, 'true');
   } catch (error) {
     console.error('Redis addUserBySocketId error: ', error);
   }
@@ -169,7 +169,7 @@ export async function deleteRoomById(roomId: string) {
     for (const userId of userIds) {
       const user = allUsers.find((u) => u.id === userId);
       if (user) {
-        await setUserStatus(user.id, false);
+        await setUserStatus(user.id, 'false');
       }
     }
 
