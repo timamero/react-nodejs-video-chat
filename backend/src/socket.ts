@@ -6,17 +6,18 @@ import privateChat from './pubsub/privateChat';
 
 /*
  * Create socket.io server
-*/
+ */
 const options = {
   path: '/',
   serveClient: false,
   cors: {
     origin: '*',
-    methods: ['GET', 'POST']
+    methods: ['GET', 'POST'],
   },
 };
 
 const main = (server: http.Server) => {
+  console.log('creating socket server');
   const io: Server = new Server(server, options);
 
   io.on('connection', (socket) => {
