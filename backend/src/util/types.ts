@@ -13,6 +13,6 @@ export interface User {
   id: string;
   socketId: string;
   username: string;
-  isBusy: string;
+  isBusy: 'true' | 'false';
   [key: string]: any; // To allow other dynamic fields
 }
