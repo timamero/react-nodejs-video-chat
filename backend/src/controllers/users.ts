@@ -6,7 +6,7 @@ import { randomUUID } from 'crypto';
 import { client } from '../database';
 import { User } from '../util/types';
 
-const PREFIX = process.env.NODE_ENV === 'test' ? 'test' : 'dev';
+const PREFIX = process.env.NODE_ENV === 'test' ? 'test:user' : 'dev:user';
 const ACTIVE_SET = `${PREFIX}:active_ids`;
 
 /**
@@ -65,13 +65,13 @@ export async function setUserStatus(id: string, status: boolean) {
  */
 export async function deleteUserBySocketId(socketId: string) {
   try {
-    const allUserIds = await getAllUsers();
-    if (!allUserIds) {
+    const allUsers = await getAllUsers();
+    if (!allUsers) {
       console.warn('No users found in the active set.');
       return null;
     }
 
-    const userToDelete = allUserIds.find((user) => user.socketId === socketId);
+    const userToDelete = allUsers.find((user) => user.socketId === socketId);
 
     if (userToDelete) {
       const userKey = `${PREFIX}:${userToDelete.id}`;

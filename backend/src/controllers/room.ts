@@ -1,106 +1,179 @@
 /**
- * Functions to request data from room collection
+ * Functions set, update, and delete room data in redis database
  */
-import { ObjectId } from 'mongodb';
-import { client } from '../database';
-import { setUserStatus } from './users';
+import { randomUUID } from 'crypto';
 
-const dbName = process.env.NODE_ENV === 'test' ? 'test' : 'chat';
-const collectionName = 'room';
+import { client } from '../database';
+import { Room, User } from '../util/types';
+import { setUserStatus, getAllUsers } from './users';
+
+const ROOM_PREFIX = process.env.NODE_ENV === 'test' ? 'test:room' : 'dev:room';
+const USER_PREFIX = process.env.NODE_ENV === 'test' ? 'test:user' : 'dev:user';
+const ROOMT_SET = `${ROOM_PREFIX}:room_ids`;
 
 /**
- * Create new room document
- * @returns {ObjectId} The id of the created room
+ * Create new room key and add to room set in redis database
+ * @returns {string} The id of the new room
+ * @returns {null} For testing, returns null when there is an error
  */
 export async function createRoom() {
   try {
-    const result = await client.db(dbName).collection(collectionName).insertOne({ users: [] });
-    return result.insertedId;
+    const id = randomUUID();
+    const roomKey = `${ROOM_PREFIX}:${id}`;
+
+    const roomData: Room = {
+      id,
+      users: JSON.stringify([]), // Store users as a JSON string
+    };
+
+    // Store the room object in Redis as a hash
+    await client.hset(roomKey, roomData);
+
+    // Add the ID to our set of active rooms so we can query them later
+    await client.sAdd(ROOMT_SET, id);
+
+    return roomData.id;
   } catch (error) {
-    console.error(error);
+    console.error('Redis createRoom error: ', error);
     return null;
   }
 }
 
 /**
- * Update room collection with users
- * @param {ObjectId} roomId - The room id
+ * Update room value in redis database by adding user to room
+ * @param {string} roomId - The room id
  * @param {string} socketId - The user's socketId to be added to room
  */
-export async function addUserBySocketId(roomId: ObjectId, socketId: string) {
+export async function addUserBySocketId(roomId: string, socketId: string) {
   try {
-    const roomFilter = {
-      _id: roomId
-    };
+    let user: User;
+    const room = await getRoom(roomId);
+    if (!room) {
+      console.error(`Room with id ${roomId} not found`);
+      return;
+    }
 
-    const user = await client.db(dbName).collection('users').findOne({ socketId });
-    const room = await client.db(dbName).collection(collectionName).findOne(roomFilter);
+    // Find the user by socketId
+    const allUsers = await getAllUsers();
+    if (!allUsers) {
+      console.warn('No users found in the active set.');
+      return;
+    }
+    user = allUsers.find((u) => u.socketId === socketId)!;
 
-    const update = {
-      $set: { 'users' : room?.users.concat(user?._id) }
-    };
+    if (!user) {
+      console.error(`User with socketId ${socketId} not found`);
+      return;
+    }
 
-    await client.db(dbName).collection(collectionName).findOneAndUpdate(roomFilter, update);
+    // Update the room's users array
+    const updatedUsers = JSON.parse(room.users);
+    updatedUsers.push(user.id);
+    room.users = JSON.stringify(updatedUsers);
 
-    // set the isBusy field in user doc to true when user is added to a room
-    await setUserStatus(user!._id, true);
+    // Update the room in Redis
+    await client.hSet(`${ROOM_PREFIX}:${roomId}`, 'users', room.users);
+
+    // Set the user's isBusy status to true
+    await setUserStatus(user.id, true);
   } catch (error) {
-    console.error(error);
+    console.error('Redis addUserBySocketId error: ', error);
   }
 }
 
 /**
- * Get the room document
+ * Get the room object by room id
  * @param {string} roomId - The room id
  * @returns {Room} The room object
  */
 export async function getRoom(roomId: string) {
   try {
-    const id = new ObjectId(roomId);
-    const room = await client.db(dbName).collection(collectionName).findOne({ _id: id });
+    let room: Room;
+    const rawRoom = await client.hGetAll(`${ROOM_PREFIX}:${roomId}`);
+    if (!rawRoom || Object.keys(rawRoom).length === 0) {
+      console.error(`Room with id ${roomId} not found`);
+      return;
+    } else {
+      room = {
+        id: rawRoom.id,
+        users: rawRoom.users,
+      };
+    }
+
     return room;
   } catch (error) {
-    console.error(error);
+    console.error('Redis getRoom error: ', error);
   }
 }
 
 /**
  * Get the list of socket ids of the users in the room
- * @param {ObjectId} roomId - The room id
+ * @param {string} roomId - The room id
  * @returns {string[]} The list of socket ids
  */
-export async function getRoomUsersSocketId(roomId: ObjectId) {
+export async function getRoomUsersSocketId(roomId: string) {
   try {
-    const room = await client.db(dbName).collection(collectionName).findOne({ _id: roomId });
+    const room = await getRoom(roomId);
+    if (!room) {
+      console.error(`Room with id ${roomId} not found`);
+      return;
+    }
 
-    const user1 = await client.db(dbName).collection('users').findOne({ _id: room!.users[0] });
-    const user2 = await client.db(dbName).collection('users').findOne({ _id: room!.users[1] });
+    const allUsers = await getAllUsers();
+    if (!allUsers) {
+      console.warn('No users found in the active set.');
+      return;
+    }
 
-    return [user1!.socketId, user2!.socketId];
+    const socketIds = JSON.parse(room.users)
+      .map((userId: string) => {
+        const user = allUsers.find((u) => u.id === userId);
+        return user ? user.socketId : null;
+      })
+      .filter((socketId: string | null) => socketId !== null);
+
+    return socketIds;
   } catch (error) {
-    console.error(error);
+    console.error('Redis getRoomUsersSocketId error: ', error);
   }
 }
 
 /**
- * Delete room document and update user status field
+ * Delete room object by room id and set the isBusy field in user doc to false
  * @param {string} roomId - The room id
- * @returns {Room} The room object that was deleted is returned for testing purposes
+ * @returns {Room} The room object that was deleted
  */
 export async function deleteRoomById(roomId: string) {
   try {
-    const id = new ObjectId(roomId);
+    const room = await getRoom(roomId);
+    if (!room) {
+      console.error(`Room with id ${roomId} not found`);
+      return;
+    }
 
-    // set the isBusy field in user doc to false when user is added to a room
-    const room = await client.db(dbName).collection(collectionName).findOne({ _id: id });
-    const user1 = await client.db(dbName).collection('users').findOne({ _id: room!.users[0] });
-    const user2 = await client.db(dbName).collection('users').findOne({ _id: room!.users[1] });
-    await setUserStatus(user1!._id, false);
-    await setUserStatus(user2!._id, false);
+    const roomKey = `${ROOM_PREFIX}:${roomId}`;
 
-    const result = await client.db(dbName).collection(collectionName).findOneAndDelete({ _id: id });
+    // Remove the room from the room set
+    await client.sRem(ROOMT_SET, roomId);
+    // Delete the room hash
+    await client.del(roomKey);
 
-    return result.value;
+    // Set the isBusy field in user docs to false
+    const allUsers = await getAllUsers();
+    if (!allUsers) {
+      console.warn('No users found in the active set.');
+      return;
+    }
+
+    const userIds = JSON.parse(room.users);
+    for (const userId of userIds) {
+      const user = allUsers.find((u) => u.id === userId);
+      if (user) {
+        await setUserStatus(user.id, false);
+      }
+    }
+
+    return room;
   } catch (error) {
     console.error(error);
   }
