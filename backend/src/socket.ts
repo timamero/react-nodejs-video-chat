@@ -8,7 +8,6 @@ import privateChat from './pubsub/privateChat';
  * Create socket.io server
  */
 const options = {
-  path: '/',
   serveClient: false,
   cors: {
     origin: '*',
