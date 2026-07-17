@@ -8,6 +8,7 @@ import { store } from '../../app/store';
  * Send socket invite for user entering room
  */
 export const sendUserEntered = (username: string): void => {
+  console.log('sendUserEntered called', username);
   socket.emit('user entered', username);
 };
 
