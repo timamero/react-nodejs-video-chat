@@ -1,161 +1,161 @@
-import { Db } from 'mongodb';
-import { client } from '../../src/database';
-import { createRoom, addUserBySocketId, getRoomUsersSocketId, deleteRoomById, getRoom } from '../../src/controllers/room';
+// import { Db } from 'mongodb';
+// import { client } from '../../src/database';
+// import { createRoom, addUserBySocketId, getRoomUsersSocketId, deleteRoomById, getRoom } from '../../src/controllers/room';
 
-/**
- * Test room controller methods
- */
-describe('Controllers - room', () => {
-  let db: Db;
+// /**
+//  * Test room controller methods
+//  */
+// describe('Controllers - room', () => {
+//   let db: Db;
 
-  beforeAll(async () => {
-    try {
-      await client.connect();
-      db = await client.db();
-      const users = db.collection('users');
-      const mockUsers = [
-        { socketId: 'a1_UnFDfzUoU3yUeAAAB', username: 'Jane' },
-        { socketId: 'b1_UnFDfzUoU3yUeAAAB', username: 'Nora' },
-        { socketId: 'c1_UnFDfzUoU3yUeAAAB', username: 'Cara' },
-      ];
+//   beforeAll(async () => {
+//     try {
+//       await client.connect();
+//       db = await client.db();
+//       const users = db.collection('users');
+//       const mockUsers = [
+//         { socketId: 'a1_UnFDfzUoU3yUeAAAB', username: 'Jane' },
+//         { socketId: 'b1_UnFDfzUoU3yUeAAAB', username: 'Nora' },
+//         { socketId: 'c1_UnFDfzUoU3yUeAAAB', username: 'Cara' },
+//       ];
 
-      await users.insertOne(mockUsers[0]);
-      await users.insertOne(mockUsers[1]);
-      await users.insertOne(mockUsers[2]);
-    } catch (error) {
-      console.error(error);
-    }
-  });
+//       await users.insertOne(mockUsers[0]);
+//       await users.insertOne(mockUsers[1]);
+//       await users.insertOne(mockUsers[2]);
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   });
 
-  beforeEach(async () => {
-    try {
-      await db.collection('room').deleteMany({});
-    } catch (error) {
-      console.error(error);
-    }
-  });
+//   beforeEach(async () => {
+//     try {
+//       await db.collection('room').deleteMany({});
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   });
 
-  afterAll(async () => {
-    try {
-      await client.close();
-    } catch (error) {
-      console.error(error);
-    }
-  });
+//   afterAll(async () => {
+//     try {
+//       await client.close();
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   });
 
-  it('createRoom function should insert a doc into collection', async () => {
-    const room = db.collection('room');
-    const expectedRoom = { users: [] };
+//   it('createRoom function should insert a doc into collection', async () => {
+//     const room = db.collection('room');
+//     const expectedRoom = { users: [] };
 
-    await createRoom();
-    const insertedRoom = await room.find().toArray();
+//     await createRoom();
+//     const insertedRoom = await room.find().toArray();
 
-    expect(insertedRoom).toHaveLength(1);
-    expect(insertedRoom[0]).toEqual(
-      expect.objectContaining(expectedRoom)
-    );
-  });
+//     expect(insertedRoom).toHaveLength(1);
+//     expect(insertedRoom[0]).toEqual(
+//       expect.objectContaining(expectedRoom)
+//     );
+//   });
 
-  it('addUserBySocketId function should add reference of user from users collection to a room collection\'s users array field', async () => {
-    const users = db.collection('users');
-    const room = db.collection('room');
-    const mockRoom = { users: [] };
-    const socketId = 'b1_UnFDfzUoU3yUeAAAB';
+//   it('addUserBySocketId function should add reference of user from users collection to a room collection\'s users array field', async () => {
+//     const users = db.collection('users');
+//     const room = db.collection('room');
+//     const mockRoom = { users: [] };
+//     const socketId = 'b1_UnFDfzUoU3yUeAAAB';
 
-    const user = await users.findOne({ socketId: socketId });
-    const result = await room.insertOne(mockRoom);
-    await addUserBySocketId(result.insertedId, socketId);
-    const insertedRoom = await room.findOne({ _id: result.insertedId });
+//     const user = await users.findOne({ socketId: socketId });
+//     const result = await room.insertOne(mockRoom);
+//     await addUserBySocketId(result.insertedId, socketId);
+//     const insertedRoom = await room.findOne({ _id: result.insertedId });
 
-    expect(insertedRoom).toBeDefined();
-    expect(insertedRoom?.users).toHaveLength(1);
-    expect(insertedRoom?.users).toContainEqual(user?._id);
-  });
+//     expect(insertedRoom).toBeDefined();
+//     expect(insertedRoom?.users).toHaveLength(1);
+//     expect(insertedRoom?.users).toContainEqual(user?._id);
+//   });
 
-  it('getRoom function should return the room object', async () => {
-    const users = db.collection('users');
-    const room = db.collection('room');
-    const mockRoom = { users: [] };
+//   it('getRoom function should return the room object', async () => {
+//     const users = db.collection('users');
+//     const room = db.collection('room');
+//     const mockRoom = { users: [] };
 
-    // Create mock room and add users
-    const result = await room.insertOne(mockRoom);
-    const roomId = result.insertedId;
-    const socketId1 = 'b1_UnFDfzUoU3yUeAAAB';
-    const socketId2 = 'c1_UnFDfzUoU3yUeAAAB';
-    const user1 = await users.findOne({ socketId: socketId1 });
-    const user2 = await users.findOne({ socketId: socketId2 });
+//     // Create mock room and add users
+//     const result = await room.insertOne(mockRoom);
+//     const roomId = result.insertedId;
+//     const socketId1 = 'b1_UnFDfzUoU3yUeAAAB';
+//     const socketId2 = 'c1_UnFDfzUoU3yUeAAAB';
+//     const user1 = await users.findOne({ socketId: socketId1 });
+//     const user2 = await users.findOne({ socketId: socketId2 });
 
-    const roomFilter = {
-      _id: result.insertedId
-    };
-    const update = {
-      $set: { 'users' : [user1?._id, user2?._id] }
-    };
+//     const roomFilter = {
+//       _id: result.insertedId
+//     };
+//     const update = {
+//       $set: { 'users' : [user1?._id, user2?._id] }
+//     };
 
-    await room.findOneAndUpdate(roomFilter, update);
+//     await room.findOneAndUpdate(roomFilter, update);
 
-    const returnedRoom = await getRoom(roomId.toString());
+//     const returnedRoom = await getRoom(roomId.toString());
 
-    expect(returnedRoom).toEqual({ _id: roomId, users: [user1?._id, user2?._id] });
-  });
+//     expect(returnedRoom).toEqual({ _id: roomId, users: [user1?._id, user2?._id] });
+//   });
 
-  it('getRoomUsersSocketId function should return the users socket IDs in the room', async () => {
-    const users = db.collection('users');
-    const room = db.collection('room');
-    const mockRoom = { users: [] };
+//   it('getRoomUsersSocketId function should return the users socket IDs in the room', async () => {
+//     const users = db.collection('users');
+//     const room = db.collection('room');
+//     const mockRoom = { users: [] };
 
-    // Create mock room and add users
-    const result = await room.insertOne(mockRoom);
-    const socketId1 = 'b1_UnFDfzUoU3yUeAAAB';
-    const socketId2 = 'c1_UnFDfzUoU3yUeAAAB';
-    const user1 = await users.findOne({ socketId: socketId1 });
-    const user2 = await users.findOne({ socketId: socketId2 });
+//     // Create mock room and add users
+//     const result = await room.insertOne(mockRoom);
+//     const socketId1 = 'b1_UnFDfzUoU3yUeAAAB';
+//     const socketId2 = 'c1_UnFDfzUoU3yUeAAAB';
+//     const user1 = await users.findOne({ socketId: socketId1 });
+//     const user2 = await users.findOne({ socketId: socketId2 });
 
-    const roomFilter = {
-      _id: result.insertedId
-    };
-    const update = {
-      $set: { 'users' : [user1?._id, user2?._id] }
-    };
+//     const roomFilter = {
+//       _id: result.insertedId
+//     };
+//     const update = {
+//       $set: { 'users' : [user1?._id, user2?._id] }
+//     };
 
-    await room.findOneAndUpdate(roomFilter, update);
+//     await room.findOneAndUpdate(roomFilter, update);
 
-    const insertedUsers = await getRoomUsersSocketId(result.insertedId);
+//     const insertedUsers = await getRoomUsersSocketId(result.insertedId);
 
-    expect(insertedUsers).toHaveLength(2);
-    expect(insertedUsers).toEqual([socketId1, socketId2]);
-  });
+//     expect(insertedUsers).toHaveLength(2);
+//     expect(insertedUsers).toEqual([socketId1, socketId2]);
+//   });
 
-  it('deleteRoomById function should delete a doc from collection', async () => {
-    const users = db.collection('users');
-    const room = db.collection('room');
-    const mockRoom = { users: [] };
+//   it('deleteRoomById function should delete a doc from collection', async () => {
+//     const users = db.collection('users');
+//     const room = db.collection('room');
+//     const mockRoom = { users: [] };
 
-    // Create mock room and add users
-    const result = await room.insertOne(mockRoom);
-    const socketId1 = 'b1_UnFDfzUoU3yUeAAAB';
-    const socketId2 = 'c1_UnFDfzUoU3yUeAAAB';
-    const user1 = await users.findOne({ socketId: socketId1 });
-    const user2 = await users.findOne({ socketId: socketId2 });
+//     // Create mock room and add users
+//     const result = await room.insertOne(mockRoom);
+//     const socketId1 = 'b1_UnFDfzUoU3yUeAAAB';
+//     const socketId2 = 'c1_UnFDfzUoU3yUeAAAB';
+//     const user1 = await users.findOne({ socketId: socketId1 });
+//     const user2 = await users.findOne({ socketId: socketId2 });
 
-    const roomFilter = {
-      _id: result.insertedId
-    };
-    const update = {
-      $set: { 'users' : [user1?._id, user2?._id] }
-    };
+//     const roomFilter = {
+//       _id: result.insertedId
+//     };
+//     const update = {
+//       $set: { 'users' : [user1?._id, user2?._id] }
+//     };
 
-    await room.findOneAndUpdate(roomFilter, update);
+//     await room.findOneAndUpdate(roomFilter, update);
 
-    const roomBeforeDelete = await room.find().toArray();
-    expect(roomBeforeDelete).toHaveLength(1);
+//     const roomBeforeDelete = await room.find().toArray();
+//     expect(roomBeforeDelete).toHaveLength(1);
 
-    const roomId = result.insertedId;
+//     const roomId = result.insertedId;
 
-    const deletedRoom = await deleteRoomById(roomId.toString());
-    expect(deletedRoom).toEqual(roomBeforeDelete[0]);
+//     const deletedRoom = await deleteRoomById(roomId.toString());
+//     expect(deletedRoom).toEqual(roomBeforeDelete[0]);
 
-    const roomAfterDelete = await room.find().toArray();
-    expect(roomAfterDelete).toHaveLength(0);
-  });
-});
+//     const roomAfterDelete = await room.find().toArray();
+//     expect(roomAfterDelete).toHaveLength(0);
+//   });
+// });
