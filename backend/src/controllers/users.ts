@@ -1,16 +1,16 @@
 /**
- * Functions to request user data from redis database
+ * Functions to set, update, and delete user data in redis database
  */
 import { randomUUID } from 'crypto';
 
 import { client } from '../database';
 import { User } from '../util/types';
 
-const PREFIX = process.env.NODE_ENV === 'test' ? 'test:users' : 'chat:users';
+const PREFIX = process.env.NODE_ENV === 'test' ? 'test' : 'dev';
 const ACTIVE_SET = `${PREFIX}:active_ids`;
 
 /**
- * Create new user document in redis database
+ * Create new user key and add to active set in redis database
  * @param {User} newUser - The new user object to be added
  * @returns {null} For testing, returns null when there is an error
  */
@@ -59,19 +59,35 @@ export async function setUserStatus(id: string, status: boolean) {
 }
 
 /**
- * Delete user document
+ * Delete user key and remove from active set in redis database
  * @param {string} socketId - The user's socket id
  * @returns {User} The user object is returned for testing purposes
  */
 export async function deleteUserBySocketId(socketId: string) {
   try {
-    // const result = await client
-    //   .db(dbName)
-    //   .collection('users')
-    //   .findOneAndDelete({ socketId });
-    // return result.value;
+    const allUserIds = await getAllUsers();
+    if (!allUserIds) {
+      console.warn('No users found in the active set.');
+      return null;
+    }
+
+    const userToDelete = allUserIds.find((user) => user.socketId === socketId);
+
+    if (userToDelete) {
+      const userKey = `${PREFIX}:${userToDelete.id}`;
+
+      // Remove the user from the active set
+      await client.sRem(ACTIVE_SET, userToDelete.id);
+      // Delete the user hash
+      await client.del(userKey);
+
+      return userToDelete;
+    } else {
+      console.warn(`User with socketId ${socketId} not found.`);
+      return null;
+    }
   } catch (error) {
-    console.error(error);
+    console.error('Redis deleteUserBySocketId error: ', error);
   }
 }
 
