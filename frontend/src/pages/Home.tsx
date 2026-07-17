@@ -6,9 +6,9 @@ import { useAppSelector } from '../app/hooks';
 import { sendEndChat } from '../services/socket/publishers';
 
 const Home: React.FC = () => {
-  const username = useAppSelector(state => state.user.username);
-  const isUserBusy = useAppSelector(state => state.user.isBusy);
-  const roomId = useAppSelector(state => state.room.roomId);
+  const username = useAppSelector((state) => state.user.username);
+  const isUserBusy = useAppSelector((state) => state.user.isBusy);
+  const roomId = useAppSelector((state) => state.room.roomId);
 
   // If user returns to home page without ending the chat using the `End Chat`
   // button, send event to close the chat to server
@@ -18,16 +18,16 @@ const Home: React.FC = () => {
 
   return (
     <Layout>
-      {username
-        ? <p id="welcome" className="is-size-5 has-text-centered">Welcome {username}</p>
-        : <p className="is-size-5 has-text-centered">Create a username to chat.</p>
-      }
-      {!username
-        ?
-        <NewUserForm />
-        :
-        <ActiveUsers />
-      }
+      {username ? (
+        <p id="welcome" className="is-size-5 has-text-centered">
+          Welcome {username}
+        </p>
+      ) : (
+        <p className="is-size-5 has-text-centered">
+          Create a username to chat.
+        </p>
+      )}
+      {!username ? <NewUserForm /> : <ActiveUsers />}
     </Layout>
   );
 };

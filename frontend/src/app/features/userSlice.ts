@@ -4,7 +4,7 @@ import { User } from '../../util/types';
 const initialState: User = {
   socketId: '',
   username: '',
-  isBusy: false,
+  isBusy: 'false',
 };
 
 export const userSlice = createSlice({
@@ -17,15 +17,15 @@ export const userSlice = createSlice({
     setId: (state, action: PayloadAction<string>) => {
       state.socketId = action.payload;
     },
-    setIsBusy: (state, action: PayloadAction<boolean>) => {
+    setIsBusy: (state, action: PayloadAction<'true' | 'false'>) => {
       state.isBusy = action.payload;
     },
     resetUser: (state) => {
-      state.socketId =  '';
+      state.socketId = '';
       state.username = '';
-      state.isBusy = false;
-    }
-  }
+      state.isBusy = 'false';
+    },
+  },
 });
 
 export const { setNewUser, setId, setIsBusy, resetUser } = userSlice.actions;

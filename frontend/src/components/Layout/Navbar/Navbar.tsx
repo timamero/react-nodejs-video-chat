@@ -42,7 +42,7 @@ const Navbar: React.FC = () => {
               <i className="fas fa-info-circle p-1"></i>
             </span>
           </Link>
-          {!user.isBusy && user.username
+          {user.isBusy === 'false' && user.username
             ?
             <div className='buttons is-flex is-flex-direction-row is-justify-content-center'>
               <button className="button is-info" onClick={handleLogout}>

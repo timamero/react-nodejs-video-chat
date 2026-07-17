@@ -1,7 +1,7 @@
 export interface User {
   socketId: string;
   username: string;
-  isBusy: boolean;
+  isBusy: 'true' | 'false';
 }
 
 export interface ActiveUsersState {
