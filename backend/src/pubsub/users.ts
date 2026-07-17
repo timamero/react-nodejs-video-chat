@@ -1,5 +1,9 @@
 import { Server, Socket } from 'socket.io';
-import { getAllUsers, createUser, deleteUserBySocketId } from '../controllers/users';
+import {
+  getAllUsers,
+  createUser,
+  deleteUserBySocketId,
+} from '../controllers/users';
 
 /**
  * Socket event listener functions for sending and receiving
@@ -9,8 +13,13 @@ import { getAllUsers, createUser, deleteUserBySocketId } from '../controllers/us
  */
 const user = async (socket: Socket, io: Server) => {
   socket.on('user entered', async (username) => {
+    console.log('user entered', username);
     try {
-      await createUser({ socketId: socket.id, username: username, isBusy: false });
+      await createUser({
+        socketId: socket.id,
+        username: username,
+        isBusy: 'false',
+      });
 
       const usersList = await getAllUsers();
       io.emit('get user list', usersList);
