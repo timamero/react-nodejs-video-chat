@@ -33,7 +33,7 @@ const connectRedis = async () => {
     console.log('Connected to Redis');
 
     // clean database everytime the server restarts
-    await client.flushDb();
+    await client.flushDb('ASYNC');
     console.log('Redis database cleaned');
   } catch (e) {
     console.error('Failed to connect to Redis', e);
