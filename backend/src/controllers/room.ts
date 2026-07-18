@@ -67,12 +67,16 @@ export async function addUserBySocketId(roomId: string, socketId: string) {
     }
 
     // Update the room's users array
-    const updatedUsers = JSON.parse(room.users);
+    const updatedUsers = room.users;
     updatedUsers.push(user.id);
-    room.users = JSON.stringify(updatedUsers);
+    room.users = updatedUsers;
 
     // Update the room in Redis
-    await client.hSet(`${ROOM_PREFIX}:${roomId}`, 'users', room.users);
+    await client.hSet(
+      `${ROOM_PREFIX}:${roomId}`,
+      'users',
+      JSON.stringify(room.users),
+    );
 
     // Set the user's isBusy status to true
     await setUserStatus(user.id, 'true');
@@ -96,7 +100,7 @@ export async function getRoom(roomId: string) {
     } else {
       room = {
         id: rawRoom.id,
-        users: rawRoom.users,
+        users: JSON.parse(rawRoom.users),
       };
     }
 
@@ -125,7 +129,7 @@ export async function getRoomUsersSocketId(roomId: string) {
       return;
     }
 
-    const socketIds = JSON.parse(room.users)
+    const socketIds = room.users
       .map((userId: string) => {
         const user = allUsers.find((u) => u.id === userId);
         return user ? user.socketId : null;
@@ -165,7 +169,7 @@ export async function deleteRoomById(roomId: string) {
       return;
     }
 
-    const userIds = JSON.parse(room.users);
+    const userIds = room.users;
     for (const userId of userIds) {
       const user = allUsers.find((u) => u.id === userId);
       if (user) {

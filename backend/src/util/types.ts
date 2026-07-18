@@ -6,7 +6,7 @@
  */
 export interface Room {
   id: string;
-  users: string;
+  users: string[];
 }
 
 export interface User {
