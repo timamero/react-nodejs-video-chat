@@ -21,13 +21,13 @@ export async function createRoom() {
     const id = randomUUID();
     const roomKey = `${ROOM_PREFIX}:${id}`;
 
-    const roomData: Room = {
+    const roomData = {
       id,
       users: JSON.stringify([]), // Store users as a JSON string
     };
 
     // Store the room object in Redis as a hash
-    await client.hset(roomKey, roomData);
+    await client.hSet(roomKey, roomData);
 
     // Add the ID to our set of active rooms so we can query them later
     await client.sAdd(ROOMT_SET, id);
