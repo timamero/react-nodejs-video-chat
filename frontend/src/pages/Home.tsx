@@ -12,7 +12,7 @@ const Home: React.FC = () => {
 
   // If user returns to home page without ending the chat using the `End Chat`
   // button, send event to close the chat to server
-  if (isUserBusy) {
+  if (isUserBusy === 'true') {
     sendEndChat(roomId);
   }
 
