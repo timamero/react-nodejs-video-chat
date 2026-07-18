@@ -1,5 +1,11 @@
 import { Server, Socket } from 'socket.io';
-import { createRoom, addUserBySocketId, getRoomUsersSocketId, getRoom, deleteRoomById } from '../controllers/room';
+import {
+  createRoom,
+  addUserBySocketId,
+  getRoomUsersSocketId,
+  getRoom,
+  deleteRoomById,
+} from '../controllers/room';
 import { getUserById } from '../controllers/users';
 
 /**
@@ -21,15 +27,33 @@ const privateChat = async (socket: Socket, io: Server) => {
     console.log(`${socket.id} accepted chat with ${inviterId}`);
 
     try {
+      // ERROR IS THROWN HERE
       const roomId = await createRoom();
-      await addUserBySocketId(roomId!, inviterId);
-      await addUserBySocketId(roomId!, socket.id);
-      const socketIds = await getRoomUsersSocketId(roomId!);
-      const roomData = { roomId: roomId?.toString(), users: socketIds };
+      if (!roomId) {
+        throw new Error('Failed to create room');
+      }
+      console.log('DEBUG: privateChat roomId', roomId);
+      console.log('DEBUG: privateChat inviterId', inviterId);
+      await addUserBySocketId(roomId, inviterId);
+      console.log('DEBUG: privateChat socket.id', socket.id);
+      await addUserBySocketId(roomId, socket.id);
+      const socketIds = await getRoomUsersSocketId(roomId);
+      console.log('DEBUG: privateChat socketIds', socketIds);
+      if (socketIds?.length !== 2) {
+        throw new Error('Room does not have exactly 2 users');
+      }
+      const roomData = {
+        roomId: roomId,
+        users: socketIds,
+      };
+      console.log('DEBUG: privateChat roomData', roomData);
 
-      io.in(socketIds![0]).socketsJoin(roomId!.toString());
-      io.in(socketIds![1]).socketsJoin(roomId!.toString());
-      io.to(roomId!.toString()).emit('enter chat room', roomData);
+      console.log('DEBUG: calling io.in() with ', socketIds[0]);
+      console.log('DEBUG: calling .socketsJoin() with ', roomId.toString());
+      io.in(socketIds[0]).socketsJoin(roomId);
+      console.log('DEBUG: calling io.in() with ', socketIds[1]);
+      io.in(socketIds[1]).socketsJoin(roomId);
+      io.to(roomId).emit('enter chat room', roomData);
     } catch (error) {
       console.error(error);
     }
@@ -44,7 +68,7 @@ const privateChat = async (socket: Socket, io: Server) => {
   socket.on('send chat message', (sentMessageData) => {
     const messageData = {
       msg: sentMessageData.msg,
-      userId: socket.id
+      userId: socket.id,
     };
 
     io.to(sentMessageData.roomId).emit('receive chat message', messageData);
@@ -94,6 +118,15 @@ const privateChat = async (socket: Socket, io: Server) => {
   socket.on('candidate', async ({ candidate, roomId }) => {
     try {
       const room = await getRoom(roomId);
+      if (!room) {
+        console.error(`Room with id ${roomId} not found`);
+        return;
+      }
+
+      if (room.users.length !== 2) {
+        console.error(`Room with id ${roomId} does not have exactly 2 users`);
+        return;
+      }
       console.log(`ice candidate from ${socket.id}`);
 
       const user1 = await getUserById(room!.users[0]);
@@ -114,14 +147,28 @@ const privateChat = async (socket: Socket, io: Server) => {
   });
 
   socket.on('end chat', async (roomId) => {
+    console.log('DEGUG: end chat for room', roomId);
     try {
       const room = await getRoom(roomId);
+      if (!room) {
+        console.error(`Room with id ${roomId} not found`);
+        return;
+      }
       console.log(`end chat for room ${roomId}`);
 
-      const user1 = await getUserById(room!.users[0]);
-      const user2 = await getUserById(room!.users[1]);
-      const user1SocketId = user1!.socketId;
-      const user2SocketId = user2!.socketId;
+      const user1 = await getUserById(room.users[0]);
+      const user2 = await getUserById(room.users[1]);
+      if (
+        user1 === null ||
+        user2 === null ||
+        user1 === undefined ||
+        user2 === undefined
+      ) {
+        console.error(`One or both users in room ${roomId} not found`);
+        return;
+      }
+      const user1SocketId = user1.socketId;
+      const user2SocketId = user2.socketId;
 
       await deleteRoomById(roomId);
 
