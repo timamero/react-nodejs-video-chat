@@ -40,11 +40,6 @@ const PrivateRoom: React.FC = () => {
     setTimeout(() => dispatch(resetNotification()), 5000);
     return <Navigate to="/" />;
   } else {
-    // For demonstration application, the duration of chat room is set to 5 min
-    // To remove this limitation, delete the following line of code with the setTimeout
-    // setTimeout(() => sendEndChat(room.roomId), 10000); // 10 sec
-    setTimeout(() => sendEndChat(room.roomId), 5 * 60 * 1000); // 5 min
-
     return (
       <Layout>
         {userHasAccess ? <Chat /> : <p className="box">No access</p>}
