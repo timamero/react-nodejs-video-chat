@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
     "lib": ["ES2021"],
-    "module": "CommonJS",
+    "module": "node16",
     "target": "ES2021",
     "rootDirs": ["./src"],
-    "outDir": "./dist", 
+    "outDir": "dist",
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "moduleResolution": "node",
+    "moduleResolution": "node16",
     "esModuleInterop": true,
+    "types": ["jest", "node"]
   },
-  "compileOnSave": false
+  "exclude": ["./node_modules", "./tests"]
 }
