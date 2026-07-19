@@ -34,7 +34,7 @@ export interface Room {
 
 export interface RoomData {
   roomId: string;
-  users: string;
+  users: string[];
 }
 
 export interface Message {
