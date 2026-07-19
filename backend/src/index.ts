@@ -13,7 +13,6 @@ const server = http.createServer(app);
  * Create and connect socket.io server
  */
 createSocket(server);
-console.log('Server listening on port ', port);
-server.listen(Number(port), () => {
+server.listen(Number(port), '0.0.0.0', () => {
   console.log('Server listening on port', port);
 });
