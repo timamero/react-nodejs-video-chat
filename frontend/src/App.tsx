@@ -52,9 +52,7 @@ const App: React.FC = () => {
           messages: [],
         }),
       );
-      console.log('completed dispatch');
       navigate(`/p-room/${roomData.roomId}`);
-      console.log('navigated to private room');
       if (roomData.users[0] === currentUser) {
         sendVideoInvite();
       }
