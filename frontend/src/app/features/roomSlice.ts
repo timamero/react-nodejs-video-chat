@@ -30,10 +30,11 @@ export const roomSlice = createSlice({
       state.users = [];
       state.isTextChatVisible = false;
       state.messages = [];
-    }
-  }
+    },
+  },
 });
 
-export const { setRoom, resetRoom, setChatVisbility, addMessage } = roomSlice.actions;
+export const { setRoom, resetRoom, setChatVisbility, addMessage } =
+  roomSlice.actions;
 
 export default roomSlice.reducer;
