@@ -27,18 +27,13 @@ const privateChat = async (socket: Socket, io: Server) => {
     console.log(`${socket.id} accepted chat with ${inviterId}`);
 
     try {
-      // ERROR IS THROWN HERE
       const roomId = await createRoom();
       if (!roomId) {
         throw new Error('Failed to create room');
       }
-      console.log('DEBUG: privateChat roomId', roomId);
-      console.log('DEBUG: privateChat inviterId', inviterId);
       await addUserBySocketId(roomId, inviterId);
-      console.log('DEBUG: privateChat socket.id', socket.id);
       await addUserBySocketId(roomId, socket.id);
       const socketIds = await getRoomUsersSocketId(roomId);
-      console.log('DEBUG: privateChat socketIds', socketIds);
       if (socketIds?.length !== 2) {
         throw new Error('Room does not have exactly 2 users');
       }
@@ -46,12 +41,8 @@ const privateChat = async (socket: Socket, io: Server) => {
         roomId: roomId,
         users: socketIds,
       };
-      console.log('DEBUG: privateChat roomData', roomData);
 
-      console.log('DEBUG: calling io.in() with ', socketIds[0]);
-      console.log('DEBUG: calling .socketsJoin() with ', roomId.toString());
       io.in(socketIds[0]).socketsJoin(roomId);
-      console.log('DEBUG: calling io.in() with ', socketIds[1]);
       io.in(socketIds[1]).socketsJoin(roomId);
       io.to(roomId).emit('enter chat room', roomData);
     } catch (error) {
@@ -147,7 +138,6 @@ const privateChat = async (socket: Socket, io: Server) => {
   });
 
   socket.on('end chat', async (roomId) => {
-    console.log('DEGUG: end chat for room', roomId);
     try {
       const room = await getRoom(roomId);
       if (!room) {
