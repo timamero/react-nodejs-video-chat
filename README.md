@@ -4,7 +4,7 @@ A video chat app created with Socket.io, Typescript, React, Redux, Node.js, Expr
 
 ## Active Development
 
-This project is under active development. I am currently moving the frontend from Create React App to Vite and improving code organization and error handling.
+This project is under active development. I am currently updating tests, moving the frontend from Create React App to Vite, and improving code organization and error handling.
 
 ## Overview
 
