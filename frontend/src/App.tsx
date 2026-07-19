@@ -47,13 +47,15 @@ const App: React.FC = () => {
       dispatch(
         setRoom({
           roomId: roomData.roomId,
-          users: JSON.parse(roomData.users),
+          users: roomData.users,
           isTextChatVisible: false,
           messages: [],
         }),
       );
+      console.log('completed dispatch');
       navigate(`/p-room/${roomData.roomId}`);
-      if (JSON.parse(roomData.users)[0] === currentUser) {
+      console.log('navigated to private room');
+      if (roomData.users[0] === currentUser) {
         sendVideoInvite();
       }
     },
