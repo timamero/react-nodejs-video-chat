@@ -14,6 +14,9 @@ I used dev logging and the MDN WebRTC signaling sample to better understand the 
 
 Most recently, I migrated the backend from MongoDB to Redis and fixed the socket implementation to make the app simpler and more reliable.
 
+## Demo
+https://github.com/user-attachments/assets/c12aa5b9-2041-4963-ae88-e99645bea5e4
+
 ## Quick Start
 
 **Required:** Must have Docker installed
